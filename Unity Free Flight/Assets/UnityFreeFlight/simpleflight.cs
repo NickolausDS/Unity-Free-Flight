@@ -4,11 +4,11 @@ using System.Collections;
 public class simpleflight : MonoBehaviour {
 	
 //GUI buttons
-private bool toggleStatsMenu = true;
-private bool togglePhysicsMenu = true;
-private bool toggleGravity = true;
-private bool toggleLift = false;
-private bool toggleDrag = true;
+public bool toggleStatsMenu = true;
+public bool togglePhysicsMenu = true;
+public bool toggleGravity = true;
+public bool toggleLift = false;
+public bool toggleDrag = true;
 
 	
 	
@@ -66,7 +66,7 @@ void Start() {
 	aspectRatio = wingSpan / wingChord;
 		
 		
-//	rigidbody.velocity = new Vector3(1.0f, 0.0f, 10.0f);
+	rigidbody.velocity = new Vector3(0.0f, 0.0f, 5.0f);
 	// We don't want the rigidbody to determine our rotation,
 	// we will compute that ourselves
 	rigidbody.freezeRotation = true;
@@ -75,11 +75,11 @@ void Start() {
 void Update() {
 	
 	//Pitch
-	userRotationInput.x = Input.GetAxis("Vertical") * (RotationSpeed * Time.deltaTime);
+	userRotationInput.x = -Input.GetAxis("Vertical") * (RotationSpeed * Time.deltaTime);
     //Roll
-	userRotationInput.z = -Input.GetAxis("Horizontal") * (RotationSpeed * Time.deltaTime);
+	userRotationInput.y = Input.GetAxis("Horizontal") * (RotationSpeed * Time.deltaTime);
     //Yaw
-	userRotationInput.y = Input.GetAxis("Yaw") * (RotationSpeed * Time.deltaTime);	
+//	userRotationInput.y = Input.GetAxis("Yaw") * (RotationSpeed * Time.deltaTime);	
 }
 	
 void FixedUpdate() {
@@ -100,31 +100,31 @@ void FixedUpdate() {
 	angleOfAttack = getAngleOfAttack(newRotation, newVelocity);	
 	liftCoefficient = getLiftCoefficient(angleOfAttack);
 	
-	//apply lift force
-//	liftForce = getLift(newVelocity.magnitude - newVelocity.y, 0, wingArea, liftCoefficient) * Time.deltaTime;
-//	vlift =  (Vector3.up * liftForce);
-//	if (toggleLift) {
-//		rigidbody.AddForce(vlift, ForceMode.Force);
-//	}
+	// apply lift force
+	liftForce = getLift(newVelocity.magnitude - newVelocity.y, 0, wingArea, liftCoefficient) * Time.deltaTime;
+	vlift =  (Vector3.up * liftForce);
+	if (toggleLift) {
+		rigidbody.AddForce(vlift, ForceMode.Force);
+	}
 		
-	//get drag rotation
-//	dragForce = getDrag(liftForce, 0, newVelocity.magnitude, wingArea, aspectRatio) * Time.deltaTime;
-//	vdrag = (-Vector3.forward * dragForce);
-//	if (toggleDrag) {
-//		rigidbody.AddForce (vdrag);
-//	}
+	// get drag rotation
+	dragForce = getDrag(liftForce, 0, newVelocity.magnitude, wingArea, aspectRatio) * Time.deltaTime;
+	vdrag = (-Vector3.forward * dragForce);
+	if (toggleDrag) {
+		rigidbody.AddForce (vdrag);
+	}
 	
 	//Finally, apply all the physics on our actual rigidbody
 	rigidbody.rotation = newRotation;
 	rigidbody.velocity = newVelocity;	
 	
 	//MAX FORCE CONSTRAINT
-	if(rigidbody.velocity.magnitude > 100) {
-			Debug.Log(string.Format("----- MAX FORCE CONSTRAINT WARNING -----\n\nTime {0}\nVelocity: {1} \nRotation {2} \nMagnitude {3}\n\n-----  -----",
-				Time.realtimeSinceStartup, rigidbody.velocity, rigidbody.rotation.eulerAngles, rigidbody.velocity.magnitude));
-			rigidbody.velocity *= 0.9f;
-
-		}
+//	if(rigidbody.velocity.magnitude > 100) {
+//			Debug.Log(string.Format("----- MAX FORCE CONSTRAINT WARNING -----\n\nTime {0}\nVelocity: {1} \nRotation {2} \nMagnitude {3}\n\n-----  -----",
+//				Time.realtimeSinceStartup, rigidbody.velocity, rigidbody.rotation.eulerAngles, rigidbody.velocity.magnitude));
+//			rigidbody.velocity *= 0.9f;
+//
+//		}
 }
 
 Quaternion getUserRotation(Vector3 theUserRotationInput) {
@@ -177,23 +177,38 @@ Vector3 getDirectionalVelocity(Quaternion theCurrentRotation, Vector3 theCurrent
 		vel.y = theCurrentVelocity.y;	
 	return vel;
 }
-	
-float getAngleOfAttack(Quaternion theCurrentRotation, Vector3 theCurrentVelocity) {
-	float theAngleOfAttack;
-	/*
-	Vector3 velRot = Quaternion.LookRotation(theCurrentVelocity) * Vector3.forward;
-	Vector3 curRot = theCurrentRotation * Vector3.forward;
-	//Vector3 curRot = Vector3.forward;
-		
-	float velAngle = Mathf.Atan2(velRot.y, velRot.z) * Mathf.Rad2Deg;
-	float curAngle = Mathf.Atan2(curRot.y, curRot.z) * Mathf.Rad2Deg;
-		
-	theAngleOfAttack = Mathf.DeltaAngle(velAngle, curAngle);
-	//relativeWindVelocity = Quaternion.LookRotation(theCurrentVelocity).eulerAngles;
-	*/
-	theAngleOfAttack = - Mathf.Sin(theCurrentRotation.eulerAngles.x * Mathf.Deg2Rad) * Mathf.Rad2Deg;
-	return theAngleOfAttack;
-}
+	//Return angle of attack based on objects current directional Velocity and rotation
+	float getAngleOfAttack(Quaternion theCurrentRotation, Vector3 theCurrentVelocity) {
+		//Angle of attack is basically the angle air strikes a wing. Imagine a plane flying 
+		//at exact level altitude into a stable air mass. The air passes over the wing very
+		//efficiently, so we have an AOA of zero. When the plane pitches back, air starts to
+		//strike the bottom of the wing, creating more drag and lift. The angle of pitch 
+		//relative to the airmass is called angle of attack. 
+		float theAngleOfAttack = 0;
+
+		//Find the direction we are going
+		Vector3 dirVel = Quaternion.LookRotation(theCurrentVelocity) * Vector3.forward;
+
+		//Find the direction we are facing
+		Vector3 dirRot = theCurrentRotation * Vector3.forward;
+
+		//Debug.Log(string.Format ("Velocity: {0}, Rotation: {1}", velRot, curRot));
+
+
+		//The above two values are normalized. By taking the arc sin of the 'y' value, we
+		//get an angle corresponding to how far each points 'downward' (or 'upward').
+		//Note: This only ever takes into account a plane flying bottom-down to an airmass.
+		//If it flew sidways, we simply wouldn't get any data because this calculation is derived
+		//from the Y vaule only. However, this should be okay, because we fly like this 99% of the
+		//time.
+		float velocityAngle = Mathf.Asin(dirVel.y);
+		float directionalAngle = Mathf.Asin(dirRot.y);
+		//Debug.Log(string.Format ("vel angle: {0}, Dir Angle {1}", velocityAngle * Mathf.Rad2Deg, directionalAngle *Mathf.Rad2Deg));
+		//Find the difference between the two angles. Since Y = -1 is down, and Y = 1 is up, we
+		//want to subtract from the velocity angle, otherwise our angle would be inverted. 
+		theAngleOfAttack = Mathf.DeltaAngle(velocityAngle, directionalAngle) * Mathf.Rad2Deg;
+		return theAngleOfAttack;
+	}
 
 /*
 	 Velocity -- must be in meters/second
