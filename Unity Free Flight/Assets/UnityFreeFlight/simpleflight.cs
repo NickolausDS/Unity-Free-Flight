@@ -66,7 +66,7 @@ public class simpleflight : MonoBehaviour {
 		aspectRatio = wingSpan / wingChord;
 			
 			
-		rigidbody.velocity = new Vector3(0.0f, 0.0f, 5.0f);
+		rigidbody.velocity = new Vector3(0.0f, 0.0f, 0.0f);
 		// We don't want the rigidbody to determine our rotation,
 		// we will compute that ourselves
 		rigidbody.freezeRotation = true;
@@ -179,35 +179,9 @@ public class simpleflight : MonoBehaviour {
 	}
 	//Return angle of attack based on objects current directional Velocity and rotation
 	float getAngleOfAttack(Quaternion theCurrentRotation, Vector3 theCurrentVelocity) {
-		//Angle of attack is basically the angle air strikes a wing. Imagine a plane flying 
-		//at exact level altitude into a stable air mass. The air passes over the wing very
-		//efficiently, so we have an AOA of zero. When the plane pitches back, air starts to
-		//strike the bottom of the wing, creating more drag and lift. The angle of pitch 
-		//relative to the airmass is called angle of attack. 
-		float theAngleOfAttack = 0;
-
-		//Find the direction we are going
-		Vector3 dirVel = Quaternion.LookRotation(theCurrentVelocity) * Vector3.forward;
-
-		//Find the direction we are facing
-		Vector3 dirRot = theCurrentRotation * Vector3.forward;
-
-		//Debug.Log(string.Format ("Velocity: {0}, Rotation: {1}", velRot, curRot));
-
-
-		//The above two values are normalized. By taking the arc sin of the 'y' value, we
-		//get an angle corresponding to how far each points 'downward' (or 'upward').
-		//Note: This only ever takes into account a plane flying bottom-down to an airmass.
-		//If it flew sidways, we simply wouldn't get any data because this calculation is derived
-		//from the Y vaule only. However, this should be okay, because we fly like this 99% of the
-		//time.
-		float velocityAngle = Mathf.Asin(dirVel.y);
-		float directionalAngle = Mathf.Asin(dirRot.y);
-		//Debug.Log(string.Format ("vel angle: {0}, Dir Angle {1}", velocityAngle * Mathf.Rad2Deg, directionalAngle *Mathf.Rad2Deg));
-		//Find the difference between the two angles. Since Y = -1 is down, and Y = 1 is up, we
-		//want to subtract from the velocity angle, otherwise our angle would be inverted. 
-		theAngleOfAttack = Mathf.DeltaAngle(velocityAngle, directionalAngle) * Mathf.Rad2Deg;
-		return theAngleOfAttack;
+		
+		Vector3 forward = theCurrentRotation * Vector3.forward;
+		return Mathf.Asin(Vector3.Dot(forward, Vector3.up)) * Mathf.Rad2Deg;
 	}
 
 	/*
