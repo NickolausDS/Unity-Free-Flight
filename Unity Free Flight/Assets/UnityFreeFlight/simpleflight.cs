@@ -66,7 +66,7 @@ public class simpleflight : MonoBehaviour {
 		aspectRatio = wingSpan / wingChord;
 			
 			
-		rigidbody.velocity = new Vector3(0.0f, 0.0f, 0.0f);
+		rigidbody.velocity = new Vector3(-5.0f, 0.0f, 0.0f);
 		// We don't want the rigidbody to determine our rotation,
 		// we will compute that ourselves
 		rigidbody.freezeRotation = true;
@@ -179,9 +179,40 @@ public class simpleflight : MonoBehaviour {
 	}
 	//Return angle of attack based on objects current directional Velocity and rotation
 	float getAngleOfAttack(Quaternion theCurrentRotation, Vector3 theCurrentVelocity) {
-		
+		//Angle of attack is basically the angle air strikes a wing. Imagine a plane flying 
+		//at exact level altitude into a stable air mass. The air passes over the wing very
+		//efficiently, so we have an AOA of zero. When the plane pitches back, air starts to
+		//strike the bottom of the wing, creating more drag and lift. The angle of pitch 
+		//relative to the airmass is called angle of attack. 
+		float theAngleOfAttack;
+		//The direction we are going
+		Vector3 dirVel;
+
+		//We need speed in order to get directional velocity.
+		if (theCurrentVelocity != Vector3.zero) {
+			//Find the direction we are going
+			dirVel = Quaternion.LookRotation(theCurrentVelocity) * Vector3.up;
+		} else {
+			//This has the effect of 'imagining' the craft is on a level flight
+			//moving forward. Since angle of attack means nothing at zero speed,
+			//this is simply a way to visualize it when we are dead stopped.
+			dirVel = Vector3.up;
+		}
+
+		Debug.Log(string.Format ("Directional Velocity : {0}", dirVel));
+
+		//Find the rotation directly in front of us
 		Vector3 forward = theCurrentRotation * Vector3.forward;
-		return Mathf.Asin(Vector3.Dot(forward, Vector3.up)) * Mathf.Rad2Deg;
+		//The dot product returns a positive or negative float if we are 'pitched up' towards
+		//our air mass, or 'pitched down into' our airmass. Remember that our airmass also has
+		//a velocity coming towards us, which is somewhere between coming directly at us in
+		//level flight, or if we are falling directly towards the ground, it is coming directly
+		//below us. 
+
+		//The dot product always returns between -1 to 1, so taking the ArcSin will give us
+		//a reasonable angle of attack. Remember to convert to degrees from Radians. 
+		theAngleOfAttack = Mathf.Asin(Vector3.Dot(forward, dirVel)) * Mathf.Rad2Deg;
+		return theAngleOfAttack;
 	}
 
 	/*
