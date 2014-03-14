@@ -107,13 +107,18 @@ public class simpleflight : MonoBehaviour {
 			rigidbody.AddForce(vlift, ForceMode.Force);
 		}
 			
-		// get drag rotation
-		dragForce = getDrag(liftForce, 0, newVelocity.magnitude, wingArea, aspectRatio) * Time.deltaTime;
-		vdrag = (-Vector3.forward * dragForce);
-		if (toggleDrag) {
-			rigidbody.AddForce (vdrag);
-		}
+		if (newVelocity != Vector3.zero) {
+			// get drag rotation
+			dragForce = getDrag(liftForce, 0, newVelocity.magnitude, wingArea, aspectRatio) * Time.deltaTime;
+
+			Vector3 directionalDrag = Quaternion.LookRotation(newVelocity) * Vector3.back;
+			Debug.Log(string.Format ("Drag Direction: {0}, Drag Newtons/Hour: {1}", directionalDrag, dragForce * 3600.0f));
+			vdrag = (directionalDrag * dragForce);
+			if (toggleDrag) {
+				rigidbody.AddForce (vdrag);
+			}
 		
+		}
 		//Finally, apply all the physics on our actual rigidbody
 		rigidbody.rotation = newRotation;
 		rigidbody.velocity = newVelocity;	
@@ -199,7 +204,7 @@ public class simpleflight : MonoBehaviour {
 			dirVel = Vector3.up;
 		}
 
-		Debug.Log(string.Format ("Directional Velocity : {0}", dirVel));
+		//		Debug.Log(string.Format ("Directional Velocity : {0}", dirVel));
 
 		//Find the rotation directly in front of us
 		Vector3 forward = theCurrentRotation * Vector3.forward;
