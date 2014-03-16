@@ -91,7 +91,7 @@ public class simpleflight : MonoBehaviour {
 		//Find out how much our user turned us
 		newRotation *= getUserRotation(userRotationInput);
 		//Apply the user rotation in a banked turn
-	//	newRotation = getBankedTurnRotation(newRotation);
+		newRotation = getBankedTurnRotation(newRotation);
 		//Correct our velocity for the new direction we are facing
 	//	newVelocity = getDirectionalVelocity(newRotation, newVelocity);	
 				 
@@ -140,7 +140,8 @@ public class simpleflight : MonoBehaviour {
 	}
 		
 	//Get new yaw and roll, store the value in newRotation
-	Quaternion getBankedTurnRotation(float curZRot, float curLift, float curVel, float mass) {
+	Quaternion getBankedTurnRotation(Quaternion theCurrentRotation) {
+	//Quaternion getBankedTurnRotation(float curZRot, float curLift, float curVel, float mass) {
 		// The physics of a banked turn is as follows
 		//  L * Sin(0) = M * V^2 / r
 		//	L is the lift acting on the aircraft
@@ -148,27 +149,26 @@ public class simpleflight : MonoBehaviour {
 		//	m is the mass of the aircraft
 		//	v is the true airspeed of the aircraft
 		//	r is the radius of the turn	
-			
-		Quaternion angVel = Quaternion.identity;
-			
+		//
+		// Currently, we'll keep turn rotation simple. The following is not based on the above, but it provides
+		// A pretty snappy mechanism for getting the job done.
 		//Apply Yaw rotations. Yaw rotation is only applied if we have angular roll. (roll is applied directly by the 
 		//player)
+		Quaternion angVel = Quaternion.identity;
+		//Get the current amount of Roll, it will determine how much yaw we apply.
+		float zRot = Mathf.Sin (theCurrentRotation.eulerAngles.z * Mathf.Deg2Rad) * Mathf.Rad2Deg;
+		//We don't want to change the pitch in turns, so we'll preserve this value.
+		float prevX = theCurrentRotation.eulerAngles.x;
+		//Calculate the new rotation. The constants determine how fast we will turn.
+		Vector3 rot = new Vector3(0, -zRot * 0.8f, -zRot * 0.5f) * Time.deltaTime;
 			
-	//	//Get the current amount of Roll, it will determine how much yaw we apply.
-	//	float angleOfBank = Mathf.Sin (theCurrentRotation.eulerAngles.z * Mathf.Deg2Rad) * Mathf.Rad2Deg;
-	//	//We don't want to change the pitch in turns, so we'll preserve this value.
-	//	float prevX = theCurrentRotation.eulerAngles.x;
-	//	//Calculate the new rotation. The constants determine how fast we will turn.
-	//	Vector3 rot = new Vector3(0, -zRot * 0.8f, -zRot * 0.5f) * Time.deltaTime;
+		//Apply the new rotation 
+		angVel.eulerAngles = rot;
+		angVel *= theCurrentRotation;	
+		angVel.eulerAngles = new Vector3(prevX, angVel.eulerAngles.y, angVel.eulerAngles.z);
 			
-	//	//Apply the new rotation 
-	//	angVel.eulerAngles = rot;
-	//	angVel *= theCurrentRotation;	
-	//	angVel.eulerAngles = new Vector3(prevX, angVel.eulerAngles.y, angVel.eulerAngles.z);
-	//		
-	//	//Done!
-	//	return angVel;	
-			return angVel;
+		//Done!
+		return angVel;	
 	}
 		
 	//When we do a turn, we don't just want to rotate our character. We want their
