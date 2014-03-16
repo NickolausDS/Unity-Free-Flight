@@ -77,7 +77,7 @@ public class simpleflight : MonoBehaviour {
 		//Pitch
 		userRotationInput.x = -Input.GetAxis("Vertical") * (RotationSpeed * Time.deltaTime);
 	    //Roll
-		userRotationInput.y = Input.GetAxis("Horizontal") * (RotationSpeed * Time.deltaTime);
+		userRotationInput.z = -Input.GetAxis("Horizontal") * (RotationSpeed * Time.deltaTime);
 	    //Yaw
 	//	userRotationInput.y = Input.GetAxis("Yaw") * (RotationSpeed * Time.deltaTime);	
 	}
@@ -99,20 +99,21 @@ public class simpleflight : MonoBehaviour {
 		//These are required for computing lift and drag	
 		angleOfAttack = getAngleOfAttack(newRotation, newVelocity);	
 		liftCoefficient = getLiftCoefficient(angleOfAttack);
-		
-		// apply lift force
-		liftForce = getLift(newVelocity.magnitude - newVelocity.y, 0, wingArea, liftCoefficient) * Time.deltaTime;
-		vlift =  (Vector3.up * liftForce);
-		if (toggleLift) {
-			rigidbody.AddForce(vlift, ForceMode.Force);
-		}
-			
+
 		if (newVelocity != Vector3.zero) {
+
+			// apply lift force
+			liftForce = getLift(newVelocity.magnitude, 0, wingArea, liftCoefficient) * Time.deltaTime;
+			Vector3 directionalLift = Quaternion.LookRotation(newVelocity) * Vector3.up;
+			vlift =  (directionalLift * liftForce);
+			if (toggleLift) {
+				rigidbody.AddForce(vlift, ForceMode.Force);
+			}
+			
 			// get drag rotation
 			dragForce = getDrag(liftForce, 0, newVelocity.magnitude, wingArea, aspectRatio) * Time.deltaTime;
-
 			Vector3 directionalDrag = Quaternion.LookRotation(newVelocity) * Vector3.back;
-			Debug.Log(string.Format ("Drag Direction: {0}, Drag Newtons/Hour: {1}", directionalDrag, dragForce * 3600.0f));
+			// Debug.Log(string.Format ("Drag Direction: {0}, Drag Newtons/Hour: {1}", directionalDrag, dragForce * 3600.0f));
 			vdrag = (directionalDrag * dragForce);
 			if (toggleDrag) {
 				rigidbody.AddForce (vdrag);
@@ -229,12 +230,12 @@ public class simpleflight : MonoBehaviour {
 		 returns: 
 		 
 	*/ 
-	float getLift(float velocity, float pressure, float area, float attackAngle) {
+	float getLift(float velocity, float pressure, float area, float liftCoff) {
 			//pressure = .45817f;
 			pressure = 1.225f;
 			//attackAngle = 10.0f;
 			
-			float lift = velocity * velocity * pressure * area * attackAngle;
+			float lift = velocity * velocity * pressure * area * liftCoff;
 			return lift;
 	}
 		
@@ -251,13 +252,17 @@ public class simpleflight : MonoBehaviour {
 		
 	float getLiftCoefficient(float angleDegrees) {
 			float cof;
-			if(angleDegrees > 40.0f)
-				cof = 0.0f;
-			if(angleDegrees < 0.0f)
-				cof = angleDegrees/90.0f + 1.0f;
-			else
-				cof = -0.0024f * angleDegrees * angleDegrees + angleDegrees * 0.0816f + 1.0064f;
+//			if(angleDegrees > 40.0f)
+//				cof = 0.0f;
+//			if(angleDegrees < 0.0f)
+//				cof = angleDegrees/90.0f + 1.0f;
+//			else
+//				cof = -0.0024f * angleDegrees * angleDegrees + angleDegrees * 0.0816f + 1.0064f;
+		//Formula based on theoretical thin airfoil theory. We get a very rough estimate here,
+		//and this does not take into account wing aspect ratio
+		cof = 2 * Mathf.PI * angleDegrees * Mathf.Deg2Rad;
 			return cof;
+
 		}
 		
 	float getDragCoefficient(float angleDegrees) {
@@ -297,14 +302,14 @@ public class simpleflight : MonoBehaviour {
 		}
 		
 		if (togglePhysicsMenu) {
-			GUI.Box(new Rect(100,10,200,200), string.Format("Physics:\nspeed Vector: {0}\nSpeed: {1} Km/h\nDirection {2}\nGravity: {3}\nAltitude+-: {4}\nLift: {5}\nDrag: {6}\n\tInduced{7}\n\tForm {8}\n RigidBody Drag: {9} \nAngle Of Attack: {10}\nLift COF: {11}", 
+			GUI.Box(new Rect(100,10,200,200), string.Format("Physics:\nspeed Vector: {0}\nSpeed: {1} Km/h\nDirection {2}\nGravity: {3}\nAltitude+-: {4}\nLift N/H: {5}\nDrag N/H: {6}\n\tInduced{7}\n\tForm {8}\n RigidBody Drag: {9} \nAngle Of Attack: {10}\nLift COF: {11}", 
 					rigidbody.velocity,
 					rigidbody.velocity.magnitude * 3600.0f / 1000.0f,
 					rigidbody.rotation.eulerAngles,
 					Physics.gravity.y, 
-					liftForce + Physics.gravity.y, 
-					liftForce,
-					dragForce,
+					liftForce + Physics.gravity.y * 3600.0f / 1000.0f, 
+					liftForce * 3600.0f / 1000.0f,
+					dragForce * 3600.0f / 1000.0f,
 					LiftInducedDrag,
 					formDrag,
 					rigidbody.drag,
