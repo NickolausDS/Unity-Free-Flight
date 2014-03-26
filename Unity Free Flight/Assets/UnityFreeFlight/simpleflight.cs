@@ -66,7 +66,7 @@ public class simpleflight : MonoBehaviour {
 		aspectRatio = wingSpan / wingChord;
 			
 			
-		rigidbody.velocity = new Vector3(-5.0f, 0.0f, 0.0f);
+		rigidbody.velocity = new Vector3(0.0f, 0.0f, 20.0f);
 		// We don't want the rigidbody to determine our rotation,
 		// we will compute that ourselves
 		rigidbody.freezeRotation = true;
@@ -93,8 +93,9 @@ public class simpleflight : MonoBehaviour {
 		//Apply the user rotation in a banked turn
 		newRotation = getBankedTurnRotation(newRotation);
 		//Correct our velocity for the new direction we are facing
-	//	newVelocity = getDirectionalVelocity(newRotation, newVelocity);	
-				 
+		//		newVelocity = getDirectionalVelocity(newRotation, newVelocity);	
+		newVelocity = Vector3.Lerp (newVelocity, getDirectionalVelocity(newRotation, newVelocity), Time.deltaTime);	
+
 			
 		//These are required for computing lift and drag	
 		angleOfAttack = getAngleOfAttack(newRotation, newVelocity);	
@@ -174,13 +175,10 @@ public class simpleflight : MonoBehaviour {
 	//When we do a turn, we don't just want to rotate our character. We want their
 	//velocity to match the direction they are facing. 
 	Vector3 getDirectionalVelocity(Quaternion theCurrentRotation, Vector3 theCurrentVelocity) {
-		//float forwardVelocity = Mathf.Abs(rigidbody.velocity.x) + Mathf.Abs(rigidbody.velocity.z);
 		Vector3 vel = theCurrentVelocity;
-		//float angle = theCurrentRotation.eulerAngles.y;
 			
-		vel = (theCurrentRotation * Vector3.forward).normalized * theCurrentVelocity.magnitude;
-		//We don't want to change the y velocity __ WHY NOT __?
-			vel.y = theCurrentVelocity.y;	
+		vel = (theCurrentRotation * Vector3.forward).normalized * theCurrentVelocity.magnitude;	
+		//Debug.Log (string.Format ("velocity: {0}, New Velocity {1} mag1: {2}, mag2 {3}", theCurrentVelocity, vel, theCurrentVelocity.magnitude, vel.magnitude));
 		return vel;
 	}
 	//Return angle of attack based on objects current directional Velocity and rotation
