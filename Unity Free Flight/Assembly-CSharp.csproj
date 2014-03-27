@@ -5,7 +5,7 @@
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
 	<ProductVersion>10.0.20506</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
-	<ProjectGuid>{0693F558-EB33-0BDE-5B0A-BE1FDB1E4A40}</ProjectGuid>
+	<ProjectGuid>{DBDB291A-44FA-CFDA-8D22-F95EC0051BA0}</ProjectGuid>
 	<OutputType>Library</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
 	<RootNamespace></RootNamespace>
@@ -46,8 +46,10 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\UnityFreeFlight\oldflight.cs" />
-     <Compile Include="Assets\UnityFreeFlight\simpleflight.cs" />
+     <Compile Include="Assets\UnityFreeFlight\scripts\model\flightBody.cs" />
+     <Compile Include="Assets\UnityFreeFlight\scripts\model\flightPhysics.cs" />
+     <Compile Include="Assets\UnityFreeFlight\scripts\simpleflight.cs" />
+     <None Include="Assets\UnityFreeFlight\scripts\model\README.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
