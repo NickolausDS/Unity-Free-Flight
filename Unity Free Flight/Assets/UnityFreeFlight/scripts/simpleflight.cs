@@ -10,7 +10,9 @@ public class simpleflight : MonoBehaviour {
 	public bool toggleLift = false;
 	public bool toggleDrag = true;
 
-	private FlightPhysics fPhysics = new FlightPhysics ();	
+	private FlightPhysics fPhysics = new FlightPhysics ();
+	//We initialize this at start()
+	private FlightBody fBody = null;
 		
 	//angle at which flying body contacts an air mass
 	//(A plane/bird has a high angle of attack when they land, nose up, into the wind)
@@ -34,15 +36,19 @@ public class simpleflight : MonoBehaviour {
 	public float formDrag;
 		
 		
-	//FLYING BODY SPECIFICATIONS
-	public float wingChord; //in meters
-	public float wingSpan;  //in meters
-	public float weight;	// in kilograms
-	//generated vars
-	public float wingArea; // span * chord
-	public float aspectRatio; //span / chord
-	public float liftToWeightRatio; // will be important, not using it now.
-	//End flying body statistics
+//	//FLYING BODY SPECIFICATIONS
+//	[SerializeField]
+//	private float wingChord; 
+//	public float WingChord{ get{return wingChord;} set{wingChord = value;}} //in meters
+//	[SerializeField]
+//	private float wingSpan;
+//	public float WingSpan { get{return wingSpan;} set{wingSpan = value;}}  //in meters
+//	public float weight;	// in kilograms
+//	//generated vars
+//	public float wingArea { get{return fBody.WingArea;} set{fBody.WingArea = value;}} // span * chord
+//	public float aspectRatio; //span / chord
+//	public float liftToWeightRatio; // will be important, not using it now.
+//	//	End flying body statistics
 		
 		
 	public Vector3 TESTVELOCITY;
@@ -60,10 +66,18 @@ public class simpleflight : MonoBehaviour {
 	public Vector3 newVelocity;
 		
 	void Start() {
+
+		fBody = gameObject.GetComponent<FlightBody> ();
+		Debug.Log (string.Format ("{0}", fBody));
+		if (fBody == null)
+			fBody = gameObject.AddComponent<FlightBody> ();
 		//make wing dimensions
-		iAmATurkeyVulture();
-		wingArea = wingSpan * wingChord;
-		aspectRatio = wingSpan / wingChord;
+//		iAmATurkeyVulture();
+//		wingArea = wingSpan * wingChord;
+//		aspectRatio = wingSpan / wingChord;
+//		wingArea = fBody.WingArea;
+//		aspectRatio = fBody.AspectRatio;
+
 			
 			
 		rigidbody.velocity = new Vector3(0.0f, 0.0f, 20.0f);
@@ -105,7 +119,7 @@ public class simpleflight : MonoBehaviour {
 		if (newVelocity != Vector3.zero) {
 
 			// apply lift force
-			liftForce = fPhysics.getLift(newVelocity.magnitude, 0, wingArea, liftCoefficient) * Time.deltaTime;
+			liftForce = fPhysics.getLift(newVelocity.magnitude, 0, fBody.WingArea, liftCoefficient) * Time.deltaTime;
 			Vector3 directionalLift = Quaternion.LookRotation(newVelocity) * Vector3.up;
 			vlift =  (directionalLift * liftForce);
 			if (toggleLift) {
@@ -113,7 +127,7 @@ public class simpleflight : MonoBehaviour {
 			}
 			
 			// get drag rotation
-			dragForce = fPhysics.getDrag(newVelocity.magnitude,0, wingArea, dragCoefficient, liftForce, aspectRatio) * Time.deltaTime;
+			dragForce = fPhysics.getDrag(newVelocity.magnitude,0, fBody.WingArea, dragCoefficient, liftForce, fBody.AspectRatio) * Time.deltaTime;
 			Vector3 directionalDrag = Quaternion.LookRotation(newVelocity) * Vector3.back;
 			// Debug.Log(string.Format ("Drag Direction: {0}, Drag Newtons/Hour: {1}", directionalDrag, dragForce * 3600.0f));
 			vdrag = (directionalDrag * dragForce);
@@ -154,13 +168,6 @@ public class simpleflight : MonoBehaviour {
 	
 		
 		
-	void iAmATurkeyVulture() 	{
-		wingSpan = 1.715f;
-		wingChord = .7f;
-		weight = 1.55f;
-		
-	}
-		
 	//testing purposes	
 	void OnGUI() {
 			
@@ -170,12 +177,12 @@ public class simpleflight : MonoBehaviour {
 			
 		if (toggleStatsMenu) {
 			GUI.Box(new Rect(310, 10, 400, 120), string.Format ("Stats:\nWing Span: {0} M\n Wing Chord: {1} M\n Total Wing Area: {2} M^2\nAspect Ratio: {3} S/C\n Weight: {4} Newtons\n Lift-to-Weight ratio: {5}",
-					wingSpan,
-					wingChord,
-					wingArea,
-					aspectRatio,
-					weight,
-					liftToWeightRatio
+					fBody.WingSpan,
+					fBody.WingChord,
+					fBody.WingArea,
+					fBody.AspectRatio,
+					fBody.Weight,
+					fBody.LiftToWeightRatio
 				));		
 				
 		}
