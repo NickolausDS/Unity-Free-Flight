@@ -26,8 +26,6 @@ public class FlightBody : MonoBehaviour {
 	
 	
 	private float weight;	// in kilograms
-	private float liftToWeightRatio;
-	//	private float liftToWeightRatio; // will be important, not using it now.
 	//End flying body statistics
 	
 	void Start() {
@@ -96,7 +94,4 @@ public class FlightBody : MonoBehaviour {
 
 	[ExposeProperty]
 	public float Weight { get{ return weight; } set{ weight = value; } }
-
-	[ExposeProperty]
-	public float LiftToWeightRatio { get; set; }
 }
