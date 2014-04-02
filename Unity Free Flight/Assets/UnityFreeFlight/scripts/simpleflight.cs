@@ -176,13 +176,12 @@ public class simpleflight : MonoBehaviour {
 		
 			
 		if (toggleStatsMenu) {
-			GUI.Box(new Rect(310, 10, 400, 120), string.Format ("Stats:\nWing Span: {0} M\n Wing Chord: {1} M\n Total Wing Area: {2} M^2\nAspect Ratio: {3} S/C\n Weight: {4} Newtons\n Lift-to-Weight ratio: {5}",
+			GUI.Box(new Rect(310, 10, 400, 120), string.Format ("Stats:\nWing Span: {0} M\n Wing Chord: {1} M\n Total Wing Area: {2} M^2\nAspect Ratio: {3} S/C\n Weight: {4} Newtons\n",
 					fBody.WingSpan,
 					fBody.WingChord,
 					fBody.WingArea,
 					fBody.AspectRatio,
 					fBody.Weight,
-					fBody.LiftToWeightRatio
 				));		
 				
 		}
