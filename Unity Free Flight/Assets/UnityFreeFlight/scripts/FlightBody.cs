@@ -14,14 +14,15 @@ public class FlightBody : MonoBehaviour {
 
 	public enum Units{ Metric, Emperial };
 	public Units unit = Units.Metric;
+	public enum UnitTypes { Length, Area, Weight };
 	
 	public enum Presets { Custom, TurkeyVulture};
+	public Presets Preset = Presets.TurkeyVulture;
 
-	public Presets preset = Presets.TurkeyVulture;
 	//FLYING BODY SPECIFICATIONS
-	private float wingChord = 0f; //in meters
-	private float wingSpan = 0f;  //in meters
-	private float wingArea = 0f; // span * chord
+	private float _wingChord = 0f; //in meters
+	private float _wingSpan = 0f;  //in meters
+	private float _wingArea = 0f; // span * chord
 	private float aspectRatio = 0f; //span / chord
 	
 	
@@ -29,36 +30,50 @@ public class FlightBody : MonoBehaviour {
 	//End flying body statistics
 	
 	void Start() {
-		//Turkey Vulture stats. We'll modulalize this later.
+		unit = Units.Metric;
 		WingSpan = 1.715f;
-		WingChord = .7f;
+		WingChord = 0.7f;
 		weight = 1.55f;
+		setFromWingDimensions();
+
 	}
 	
 	void Update() {
 		
 	}
+
+//Doesn't bloody work, because the editor likes to call the setter every bloody second.
+//	[ExposeProperty]
+//	public Presets Preset {
+//		get {return _preset; }
+//		set {
+//			_preset = value;
+//			if (value == Presets.TurkeyVulture) {
+//				//Turkey Vulture stats. We should eventually load this data from disk.
+//				WingSpan = 1.715f;
+//				WingChord = .7f;
+//				weight = 1.55f;
+//				setFromWingDimensions();
+//			}
+//		}
+//	}
+
 	
 	[ExposeProperty]
 	public float WingChord {
 		get { 
 			if (unit == Units.Metric) {
-				return wingChord;
+				return _wingChord;
 			} else {
-				return wingChord / FT2MET;
+				return _wingChord / FT2MET;
 			}
 		}
 		set { 
 			//Set in proper units
 			if (unit == Units.Metric) {
-				wingChord = value;
+				_wingChord = value;
 			} else {
-				wingChord = value * FT2MET;
-			}
-			//Fill in the rest, if it is non-zero
-			if (wingChord > 0 && wingSpan > 0) {
-				wingArea = wingChord * wingSpan;
-				aspectRatio = wingSpan / wingChord;
+				_wingChord = value * FT2MET;
 			}
 		}
 	}
@@ -67,31 +82,114 @@ public class FlightBody : MonoBehaviour {
 	public float WingSpan {
 		get {
 			if (unit == Units.Metric) {
-				return wingSpan;
+				return _wingSpan;
 			} else {
-				return wingSpan / FT2MET;
+				return _wingSpan / FT2MET;
 			}
 		}
 		set {
 			//Set in proper units
 			if (unit == Units.Metric) {
-				wingSpan = value;
+				_wingSpan = value;
 			} else {
-				wingSpan = value * FT2MET;
+				_wingSpan = value * FT2MET;
 			}
-			if (wingChord > 0 && wingSpan > 0) {
-				wingArea = wingChord * wingSpan;
-				aspectRatio = wingSpan / wingChord;
+		}
+	}
+
+	public void setFromWingDimensions() {
+		if (_wingChord > 0 && _wingSpan > 0) {
+			_wingArea = _wingChord * _wingSpan;
+			aspectRatio = _wingSpan / _wingChord;
+		}
+	}
+
+	public void setDimensionsFromAR() {
+		//derive a new wing shape without changing the wing area
+		if (_wingChord > 0 && _wingSpan > 0) {
+			//first, we need the initial aspect ratio.
+			float initialAR = _wingChord * _wingSpan;
+
+			_wingSpan = aspectRatio * _wingSpan / initialAR;
+			_wingChord = initialAR * _wingChord / aspectRatio;
+			//This checks to make sure wing area had been previously calculated
+			//The wing area shouldn't change
+			if (_wingArea <= 0) {
+					_wingArea = _wingSpan * _wingChord;
 			}
+		}
+	}
+
+	public void setDimensionsFromArea() {
+		//derive a new wing shape without changing the wing area
+		if (_wingChord > 0 && _wingSpan > 0) {
+			//first, we need the initial aspect ratio.
+			float initialAR = _wingChord * _wingSpan;
+			
+			_wingSpan = aspectRatio * _wingSpan / initialAR;
+			_wingChord = initialAR * _wingChord / aspectRatio;
+			//This checks to make sure wing area had been previously calculated
+			//The wing area shouldn't change
+			if (_wingArea <= 0) {
+				_wingArea = _wingSpan * _wingChord;
+			}
+		}
+
+	}
+
+	public bool isValid(bool log = false) {
+		if(_wingSpan * _wingChord == _wingArea && _wingSpan / _wingChord == aspectRatio) {
+			return true;
+		} else {
+			if (log == true) {
+				Debug.LogWarning(string.Format("*FlightBody* has invalid wing dimensions. You can fix these via the Flight Body Editor in the inspector"));
+			}	
+			return false;
 		}
 	}
 	
 	[ExposeProperty]
-	public float WingArea {get{return wingArea;} set{wingArea = value;}}
+	public float WingArea {
+		get{
+			if (unit == Units.Metric) {
+				return _wingArea;
+			} else {
+				return _wingArea / FT2MET;
+			}
+		} 
+		set{
+			if (unit == Units.Metric) {
+				_wingArea = value;
+			} else {
+				_wingArea = value * FT2MET;
+			}
+		}
+
+	}
 	
 	[ExposeProperty]
-	public float AspectRatio { get { return aspectRatio; } set { aspectRatio = value; } }
+	public float AspectRatio {
+		//Dimensionless number! Yay, no converting! (wingspan / wingchord)
+		get { return aspectRatio; } 
+		set { aspectRatio = value;}
+	}
 
 	[ExposeProperty]
-	public float Weight { get{ return weight; } set{ weight = value; } }
+	public float Weight { 
+		get{ 
+			if (unit == Units.Metric) {
+				return weight; 
+			} else {
+				return weight / LB2KG;
+			}
+		} 
+		set{ 
+			if (unit == Units.Metric) {
+				weight = value;
+			} else {
+				weight = value * LB2KG;
+			}
+		}
+	}
+
 }

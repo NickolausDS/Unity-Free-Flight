@@ -23,7 +23,8 @@ public class simpleflight : MonoBehaviour {
 		
 		
 		
-	//FORCES 	
+	//FORCES 
+	//Most of these are Legacy, kept from old prototyping days. We'll get rid of them soon.
 	//The computed force of lift our flying body generates.
 	public float liftForce;
 	//The speed of our flying body
@@ -33,24 +34,7 @@ public class simpleflight : MonoBehaviour {
 	//Gravity currently set by Physics.gravity
 	//public float gravity = 0.2f;
 	public float LiftInducedDrag;
-	public float formDrag;
-		
-		
-//	//FLYING BODY SPECIFICATIONS
-//	[SerializeField]
-//	private float wingChord; 
-//	public float WingChord{ get{return wingChord;} set{wingChord = value;}} //in meters
-//	[SerializeField]
-//	private float wingSpan;
-//	public float WingSpan { get{return wingSpan;} set{wingSpan = value;}}  //in meters
-//	public float weight;	// in kilograms
-//	//generated vars
-//	public float wingArea { get{return fBody.WingArea;} set{fBody.WingArea = value;}} // span * chord
-//	public float aspectRatio; //span / chord
-//	public float liftToWeightRatio; // will be important, not using it now.
-//	//	End flying body statistics
-		
-		
+	public float formDrag;		
 	public Vector3 TESTVELOCITY;
 	public float TESTMAGNITUDE;
 	public Vector3 moveRotation;
@@ -71,14 +55,6 @@ public class simpleflight : MonoBehaviour {
 		Debug.Log (string.Format ("{0}", fBody));
 		if (fBody == null)
 			fBody = gameObject.AddComponent<FlightBody> ();
-		//make wing dimensions
-//		iAmATurkeyVulture();
-//		wingArea = wingSpan * wingChord;
-//		aspectRatio = wingSpan / wingChord;
-//		wingArea = fBody.WingArea;
-//		aspectRatio = fBody.AspectRatio;
-
-			
 			
 		rigidbody.velocity = new Vector3(0.0f, 0.0f, 20.0f);
 		// We don't want the rigidbody to determine our rotation,
@@ -181,7 +157,7 @@ public class simpleflight : MonoBehaviour {
 					fBody.WingChord,
 					fBody.WingArea,
 					fBody.AspectRatio,
-					fBody.Weight,
+					fBody.Weight
 				));		
 				
 		}
