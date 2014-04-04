@@ -14,40 +14,27 @@ public class simpleflight : MonoBehaviour {
 	//We initialize this at start()
 	private FlightBody fBody = null;
 		
+
+	//PHYSICS VARS
+	//These are defined here for efficiency, so they aren't re-initialized every time
+	//we run FixedUpdate(). They all get new derived values every update run. You probably
+	//shouldn't edit them outside of FixedUpdate()
+	private float liftForce;
+	private float dragForce;
+	private Vector3 directionalLift;
+	private Vector3 directionalDrag;
+	private float liftCoefficient;
+	private float dragCoefficient;
 	//angle at which flying body contacts an air mass
 	//(A plane/bird has a high angle of attack when they land, nose up, into the wind)
-	public float angleOfAttack;
-	public float liftCoefficient = 1.0f;
-	//Constant speed with which we'll rotate. Doesn't have effect on physics.
-	public float RotationSpeed = 200.0f;
-		
-		
-		
-	//FORCES 
-	//Most of these are Legacy, kept from old prototyping days. We'll get rid of them soon.
-	//The computed force of lift our flying body generates.
-	public float liftForce;
-	//The speed of our flying body
-	public float AmbientSpeed = 20.0f;
-	//The drag againsnt our flying body
-	public float dragForce;
-	//Gravity currently set by Physics.gravity
-	//public float gravity = 0.2f;
-	public float LiftInducedDrag;
-	public float formDrag;		
-	public Vector3 TESTVELOCITY;
-	public float TESTMAGNITUDE;
-	public Vector3 moveRotation;
-	public Vector3 anglularVelocity;
-	public Vector3 moveDirection = Vector3.forward;
-	public Vector3 vdrag = Vector3.back;
-	public Vector3 vlift = Vector3.up;
+	private float angleOfAttack;
+	private Quaternion newRotation;
+	private Vector3 newVelocity;
+	
 
-	public Vector3 userRotationInput;
-	public Quaternion curRotation;
-	public Vector3 curVelocity;
-	public Quaternion newRotation;
-	public Vector3 newVelocity;
+	private Vector3 userRotationInput;
+	//Constant speed with which we'll rotate with user controls
+	public float RotationSpeed = 200.0f;
 		
 	void Start() {
 
@@ -73,6 +60,7 @@ public class simpleflight : MonoBehaviour {
 	}
 		
 	void FixedUpdate() {
+		rigidbody.useGravity = toggleGravity;
 			
 		//These will be used to compute new values	
 		newRotation = rigidbody.rotation;	
@@ -90,25 +78,23 @@ public class simpleflight : MonoBehaviour {
 		//These are required for computing lift and drag	
 		angleOfAttack = fPhysics.getAngleOfAttack(newRotation, newVelocity);	
 		liftCoefficient = fPhysics.getLiftCoefficient(angleOfAttack);
-		float dragCoefficient = fPhysics.getDragCoefficient (angleOfAttack);
+		dragCoefficient = fPhysics.getDragCoefficient (angleOfAttack);
 
 		if (newVelocity != Vector3.zero) {
 
 			// apply lift force
 			liftForce = fPhysics.getLift(newVelocity.magnitude, 0, fBody.WingArea, liftCoefficient) * Time.deltaTime;
-			Vector3 directionalLift = Quaternion.LookRotation(newVelocity) * Vector3.up;
-			vlift =  (directionalLift * liftForce);
+			directionalLift = Quaternion.LookRotation(newVelocity) * Vector3.up;
 			if (toggleLift) {
-				rigidbody.AddForce(vlift, ForceMode.Force);
+				rigidbody.AddForce(directionalLift * liftForce);
 			}
 			
 			// get drag rotation
 			dragForce = fPhysics.getDrag(newVelocity.magnitude,0, fBody.WingArea, dragCoefficient, liftForce, fBody.AspectRatio) * Time.deltaTime;
-			Vector3 directionalDrag = Quaternion.LookRotation(newVelocity) * Vector3.back;
+			directionalDrag = Quaternion.LookRotation(newVelocity) * Vector3.back;
 			// Debug.Log(string.Format ("Drag Direction: {0}, Drag Newtons/Hour: {1}", directionalDrag, dragForce * 3600.0f));
-			vdrag = (directionalDrag * dragForce);
 			if (toggleDrag) {
-				rigidbody.AddForce (vdrag);
+				rigidbody.AddForce (directionalDrag * dragForce);
 			}
 		
 		}
@@ -130,20 +116,7 @@ public class simpleflight : MonoBehaviour {
 		theNewRotation.eulerAngles = theUserRotationInput;
 		return theNewRotation;
 	}
-		
 
-	/*
-		 Velocity -- must be in meters/second
-		 pressure -- don't worry about this for now
-		 area	  -- something good
-		 angleOfAttack -- given in forward pitch relative to speed
-		 
-		 returns: 
-		 
-	*/ 
-	
-		
-		
 	//testing purposes	
 	void OnGUI() {
 			
