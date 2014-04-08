@@ -12,7 +12,7 @@ public class simpleflight : MonoBehaviour {
 
 	private FlightPhysics fPhysics = new FlightPhysics ();
 	//We initialize this at start()
-	private FlightBody fBody = null;
+	public FlightBody fBody = new FlightBody ();
 		
 
 	//PHYSICS VARS
@@ -38,10 +38,10 @@ public class simpleflight : MonoBehaviour {
 		
 	void Start() {
 
-		fBody = gameObject.GetComponent<FlightBody> ();
-		Debug.Log (string.Format ("{0}", fBody));
-		if (fBody == null)
-			fBody = gameObject.AddComponent<FlightBody> ();
+//		fBody = gameObject.GetComponent<FlightBody> ();
+//		Debug.Log (string.Format ("{0}", fBody));
+//		if (fBody == null)
+//			fBody = gameObject.AddComponent<FlightBody> ();
 			
 		rigidbody.velocity = new Vector3(0.0f, 0.0f, 20.0f);
 		// We don't want the rigidbody to determine our rotation,
