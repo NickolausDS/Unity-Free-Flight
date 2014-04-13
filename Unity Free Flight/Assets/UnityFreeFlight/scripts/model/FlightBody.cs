@@ -40,7 +40,6 @@ public class FlightBody {
 
 
 //Doesn't bloody work, because the editor likes to call the setter every bloody second.
-	[ExposeProperty]
 	public Presets Preset {
 		get {return _preset; }
 		set {
@@ -66,7 +65,6 @@ public class FlightBody {
 	}
 
 	
-	[ExposeProperty]
 	public float WingChord {
 		get { 
 			if (unit == Units.Metric) {
@@ -85,7 +83,6 @@ public class FlightBody {
 		}
 	}
 	
-	[ExposeProperty]
 	public float WingSpan {
 		get {
 			if (unit == Units.Metric) {
@@ -158,7 +155,6 @@ public class FlightBody {
 		}
 	}
 	
-	[ExposeProperty]
 	public float WingArea {
 		get{
 			if (unit == Units.Metric) {
@@ -177,14 +173,12 @@ public class FlightBody {
 
 	}
 	
-	[ExposeProperty]
 	public float AspectRatio {
 		//Dimensionless number! Yay, no converting! (wingspan / wingchord)
 		get { return _aspectRatio; } 
 		set { _aspectRatio = value;}
 	}
 
-	[ExposeProperty]
 	public float Weight { 
 		get{ 
 			if (unit == Units.Metric) {
