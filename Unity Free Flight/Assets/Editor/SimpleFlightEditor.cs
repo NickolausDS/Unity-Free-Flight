@@ -8,7 +8,6 @@ public class SimpleFlightEditor : Editor {
 
 	public override void OnInspectorGUI() {
 		SimpleFlight sf = (SimpleFlight)target;
-//		FlightBody fb = sf.fBody;
 
 		sf.togglePhysicsMenu = EditorGUILayout.Toggle ("Physics Menu", sf.togglePhysicsMenu);
 		sf.toggleStatsMenu = EditorGUILayout.Toggle ("Stats Menu", sf.toggleStatsMenu);
@@ -16,15 +15,15 @@ public class SimpleFlightEditor : Editor {
 		sf.toggleDrag = EditorGUILayout.Toggle ("Drag", sf.toggleDrag);
 		sf.toggleGravity = EditorGUILayout.Toggle ("Gravity", sf.toggleGravity);
 
-		sf.fBody.Unit = (UnitConverter.Units) EditorGUILayout.EnumPopup (sf.fBody.Unit);
-		sf.fBody.Preset = (FlightBody.Presets)EditorGUILayout.EnumPopup (sf.fBody.Preset);
-		sf.fBody.WingSpan = EditorGUILayout.FloatField ("Wing Span", sf.fBody.WingSpan);
-		sf.fBody.WingChord = EditorGUILayout.FloatField ("Wing Chord", sf.fBody.WingChord);
-		sf.fBody.WingArea = EditorGUILayout.FloatField ("Wing Area", sf.fBody.WingArea);
-		sf.fBody.AspectRatio = EditorGUILayout.Slider ("Aspect Ratio", sf.fBody.AspectRatio, 1, 16);
-		sf.fBody.Weight = EditorGUILayout.FloatField ("Weight", sf.fBody.Weight);
-		if( GUILayout.Button("Align To Wing Dimensions" ) ) 		{sf.fBody.setFromWingDimensions ();}
-		if (GUILayout.Button ("Align Dimensions From Area & AR") ) 	{sf.fBody.setWingDimensions ();}
+		sf.fObj.Unit = (UnitConverter.Units) EditorGUILayout.EnumPopup (sf.fObj.Unit);
+		sf.fObj.Preset = (FlightObject.Presets)EditorGUILayout.EnumPopup (sf.fObj.Preset);
+		sf.fObj.WingSpan = EditorGUILayout.FloatField ("Wing Span", sf.fObj.WingSpan);
+		sf.fObj.WingChord = EditorGUILayout.FloatField ("Wing Chord", sf.fObj.WingChord);
+		sf.fObj.WingArea = EditorGUILayout.FloatField ("Wing Area", sf.fObj.WingArea);
+		sf.fObj.AspectRatio = EditorGUILayout.Slider ("Aspect Ratio", sf.fObj.AspectRatio, 1, 16);
+		sf.fObj.Weight = EditorGUILayout.FloatField ("Weight", sf.fObj.Weight);
+		if( GUILayout.Button("Align To Wing Dimensions" ) ) 		{sf.fObj.setFromWingDimensions ();}
+		if (GUILayout.Button ("Align Dimensions From Area & AR") ) 	{sf.fObj.setWingDimensions ();}
 
 		//myTarget.experience = EditorGUILayout.IntField("Experience", myTarget.experience);
 		//EditorGUILayout.LabelField("Level", myTarget.Level.ToString());

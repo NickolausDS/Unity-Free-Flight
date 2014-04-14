@@ -6,7 +6,7 @@ using System.Collections;
 //Units unit = UnitConverter.Units.Metric;
 
 
-public class FlightBody : UnitConverter {
+public class FlightObject : UnitConverter {
 	
 	//NOTE NOTE NOTE!!!!
 	//We will always store things in METRIC
@@ -30,7 +30,7 @@ public class FlightBody : UnitConverter {
 	private float _weight;	// in kilograms
 	//End flying body statistics
 
-	public FlightBody () {
+	public FlightObject () {
 		Preset = Presets.TurkeyVulture;
 	}
 
