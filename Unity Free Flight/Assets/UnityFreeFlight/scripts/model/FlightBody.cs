@@ -108,43 +108,19 @@ public class FlightBody {
 
 	public void setFromWingDimensions() {
 		if (_wingChord > 0 && _wingSpan > 0) {
-			_wingArea = _wingChord * _wingSpan;
-			_aspectRatio = _wingSpan / _wingChord;
+				_wingArea = _wingChord * _wingSpan;
+				_aspectRatio = _wingSpan / _wingChord;
+		} else {
+			throw new UnityException("Wing Span and Wing Chord must be greator than zero");
 		}
 	}
 
-	public void setDimensionsFromAR() {
-		//derive a new wing shape without changing the wing area
-		if (_wingChord > 0 && _wingSpan > 0) {
-			//first, we need the initial aspect ratio.
-			float initialAR = _wingChord * _wingSpan;
-
-			_wingSpan = _aspectRatio * _wingSpan / initialAR;
-			_wingChord = initialAR * _wingChord / _aspectRatio;
-			//This checks to make sure wing area had been previously calculated
-			//The wing area shouldn't change
-			if (_wingArea <= 0) {
-					_wingArea = _wingSpan * _wingChord;
-			}
-		}
-	}
-
-	public void setDimensionsFromArea() {
-		//derive a new wing shape without changing the wing area
-		if (_wingChord > 0 && _wingSpan > 0) {
-			//first, we need the initial aspect ratio.
-			float initialArea = _wingChord * _wingSpan;
-			
-			_wingSpan =  _wingSpan * _wingArea / initialArea;
-			_wingChord = _wingChord * _wingArea / initialArea;
-//			_wingSpan = Mathf.Sqrt (_wingArea * _aspectRatio);
-//			_wingChord = Mathf.Sqrt (_wingArea / _aspectRatio);
-
-			//This checks to make sure wing area had been previously calculated
-			//The wing area shouldn't change
-			if (_aspectRatio <= 0) {
-				_aspectRatio  = _wingSpan / _wingChord;
-			}
+	public void setWingDimensions() {
+		if (_aspectRatio > 0 && _wingArea > 0) {
+			_wingSpan = Mathf.Sqrt (_wingArea * _aspectRatio);
+			_wingChord = Mathf.Sqrt (_wingArea / _aspectRatio);
+		} else {
+			throw new UnityException("Aspect Ratio and Wing Area must be greator than zero");
 		}
 
 	}
