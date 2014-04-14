@@ -2,12 +2,12 @@
 using System.Collections;
 using UnityEditor;
 
-[CustomEditor(typeof(simpleflight)), CanEditMultipleObjects]
+[CustomEditor(typeof(SimpleFlight)), CanEditMultipleObjects]
 public class SimpleFlightEditor : Editor {
 
 
 	public override void OnInspectorGUI() {
-		simpleflight sf = (simpleflight)target;
+		SimpleFlight sf = (SimpleFlight)target;
 //		FlightBody fb = sf.fBody;
 
 		sf.togglePhysicsMenu = EditorGUILayout.Toggle ("Physics Menu", sf.togglePhysicsMenu);
@@ -16,8 +16,8 @@ public class SimpleFlightEditor : Editor {
 		sf.toggleDrag = EditorGUILayout.Toggle ("Drag", sf.toggleDrag);
 		sf.toggleGravity = EditorGUILayout.Toggle ("Gravity", sf.toggleGravity);
 
-		sf.fBody.unit = (Units) EditorGUILayout.EnumPopup (sf.fBody.unit);
-		sf.fBody.Preset = (Presets)EditorGUILayout.EnumPopup (sf.fBody.Preset);
+		sf.fBody.unit = (UnitConverter.Units) EditorGUILayout.EnumPopup (sf.fBody.unit);
+		sf.fBody.Preset = (FlightBody.Presets)EditorGUILayout.EnumPopup (sf.fBody.Preset);
 		sf.fBody.WingSpan = EditorGUILayout.FloatField ("Wing Span", sf.fBody.WingSpan);
 		sf.fBody.WingChord = EditorGUILayout.FloatField ("Wing Chord", sf.fBody.WingChord);
 		sf.fBody.WingArea = EditorGUILayout.FloatField ("Wing Area", sf.fBody.WingArea);
