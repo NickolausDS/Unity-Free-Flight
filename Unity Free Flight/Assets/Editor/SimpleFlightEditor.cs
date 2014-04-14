@@ -22,9 +22,9 @@ public class SimpleFlightEditor : Editor {
 		sf.fBody.WingChord = EditorGUILayout.FloatField ("Wing Chord", sf.fBody.WingChord);
 		sf.fBody.WingArea = EditorGUILayout.FloatField ("Wing Area", sf.fBody.WingArea);
 		sf.fBody.AspectRatio = EditorGUILayout.Slider ("Aspect Ratio", sf.fBody.AspectRatio, 1, 16);
+		sf.fBody.Weight = EditorGUILayout.FloatField ("Weight", sf.fBody.Weight);
 		if( GUILayout.Button("Align To Wing Dimensions" ) ) 		{sf.fBody.setFromWingDimensions ();}
-		if (GUILayout.Button ("Align Dimensions to Wing Area") ) 	{sf.fBody.setDimensionsFromArea ();}
-		if (GUILayout.Button ("Align Dimensions to Aspect Ratio")) 	{sf.fBody.setDimensionsFromAR ();}
+		if (GUILayout.Button ("Align Dimensions From Area & AR") ) 	{sf.fBody.setWingDimensions ();}
 
 		//myTarget.experience = EditorGUILayout.IntField("Experience", myTarget.experience);
 		//EditorGUILayout.LabelField("Level", myTarget.Level.ToString());
