@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class simpleflight : MonoBehaviour {
+public class SimpleFlight : MonoBehaviour {
 	
 	//GUI buttons
 	public bool toggleStatsMenu = true;

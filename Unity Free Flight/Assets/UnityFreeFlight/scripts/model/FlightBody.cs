@@ -1,15 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public enum Units{ Metric, Emperial };
-public enum UnitTypes { Length, Area, Weight };
-public enum UnitsImperial { Feet, SqFeet, Pounds };
-public enum UnitsMetric {Meters, sqMeters, Kilograms };
-public enum Presets { Custom, TurkeyVulture, Albatross};
 
 
-
-//Units unit = Units.Metric;
+//Units unit = UnitConverter.Units.Metric;
 
 
 public class FlightBody {
@@ -18,25 +12,30 @@ public class FlightBody {
 	//We will always store things in METRIC
 	//We convert, if we ever give things back in something else
 	//NOTE NOTE NOTE!!!
-	
-	//1 LB == 2.20462 po
-	private static float LB2KG = 0.453592f;
-	private static float FT2MET = 0.3048f;
+
 
 //	public enum Units{ Metric, Emperial };
-	public Units unit = Units.Metric;
+	private UnitConverter conv;
+	public UnitConverter.Units unit {
+		get {return conv.unit;}
+		set {conv.unit = value;}
+	}
 
+	public enum Presets { Custom, TurkeyVulture, Albatross};
 	private Presets _preset;
 
 	//FLYING BODY SPECIFICATIONS
-	private float _wingChord = 0f; //in meters
-	private float _wingSpan = 0f;  //in meters
-	private float _wingArea = 0f; // span * chord
-	private float _aspectRatio = 0f; //span / chord
-	
-	
-	private float weight;	// in kilograms
+	private float _wingChord; //in meters
+	private float _wingSpan;  //in meters
+	private float _wingArea; // span * chord
+	private float _aspectRatio; //span / chord
+	private float _weight;	// in kilograms
 	//End flying body statistics
+
+	public FlightBody () {
+		conv = new UnitConverter (UnitConverter.Units.Metric);
+		Preset = Presets.TurkeyVulture;
+	}
 
 
 //Doesn't bloody work, because the editor likes to call the setter every bloody second.
@@ -49,13 +48,13 @@ public class FlightBody {
 					//Turkey Vulture stats. We should eventually load this data from disk.
 					_wingSpan = 1.715f;
 					_wingChord = .7f;
-					weight = 1.55f;
+					_weight = 1.55f;
 					setFromWingDimensions();
 					break;
 				case Presets.Albatross:
 					_wingSpan = 3.5f;
 					_wingChord = 0.21875f;
-					weight = 11.0f;
+					_weight = 11.0f;
 					setFromWingDimensions();
 					// also a lift to drag (L/D) of 25
 					break;
@@ -64,40 +63,46 @@ public class FlightBody {
 		}
 	}
 
-	
-	public float WingChord {
-		get { 
-			if (unit == Units.Metric) {
-				return _wingChord;
-			} else {
-				return _wingChord / FT2MET;
-			}
-		}
-		set { 
-			//Set in proper units
-			if (unit == Units.Metric) {
-				_wingChord = value;
-			} else {
-				_wingChord = value * FT2MET;
-			}
-		}
-	}
-	
 	public float WingSpan {
-		get {
-			if (unit == Units.Metric) {
-				return _wingSpan;
-			} else {
-				return _wingSpan / FT2MET;
-			}
+		get { 
+			return conv.getLength (_wingSpan); 
 		}
 		set {
-			//Set in proper units
-			if (unit == Units.Metric) {
-				_wingSpan = value;
-			} else {
-				_wingSpan = value * FT2MET;
-			}
+			_wingSpan = conv.setLength (value);
+		}
+	}
+
+	public float WingChord {
+		get { 
+			return conv.getLength (_wingChord); 
+		}
+		set {
+			_wingChord = conv.setLength (value);
+		}
+	}
+
+	public float WingArea {
+		get{
+			return conv.getArea (_wingArea );
+		} 
+		set{
+			_wingArea = conv.setArea (value);
+		}
+		
+	}
+	
+	public float AspectRatio {
+		//Dimensionless number! Yay, no converting! (wingspan / wingchord)
+		get { return _aspectRatio; } 
+		set { _aspectRatio = value;}
+	}
+	
+	public float Weight { 
+		get{ 
+			return conv.getWeight(_weight);
+		} 
+		set{ 
+			_weight = conv.setWeight (value);
 		}
 	}
 
@@ -128,12 +133,12 @@ public class FlightBody {
 		//derive a new wing shape without changing the wing area
 		if (_wingChord > 0 && _wingSpan > 0) {
 			//first, we need the initial aspect ratio.
-//			float initialArea = _wingChord * _wingSpan;
+			float initialArea = _wingChord * _wingSpan;
 			
-//			_wingSpan =  _wingSpan * _wingArea / initialArea;
-//			_wingChord = _wingChord * _wingArea / initialArea;
-			_wingSpan = Mathf.Sqrt (_wingArea * _aspectRatio);
-			_wingChord = Mathf.Sqrt (_wingArea / _aspectRatio);
+			_wingSpan =  _wingSpan * _wingArea / initialArea;
+			_wingChord = _wingChord * _wingArea / initialArea;
+//			_wingSpan = Mathf.Sqrt (_wingArea * _aspectRatio);
+//			_wingChord = Mathf.Sqrt (_wingArea / _aspectRatio);
 
 			//This checks to make sure wing area had been previously calculated
 			//The wing area shouldn't change
@@ -154,46 +159,6 @@ public class FlightBody {
 			return false;
 		}
 	}
-	
-	public float WingArea {
-		get{
-			if (unit == Units.Metric) {
-				return _wingArea;
-			} else {
-				return _wingArea / FT2MET;
-			}
-		} 
-		set{
-			if (unit == Units.Metric) {
-				_wingArea = value;
-			} else {
-				_wingArea = value * FT2MET;
-			}
-		}
 
-	}
-	
-	public float AspectRatio {
-		//Dimensionless number! Yay, no converting! (wingspan / wingchord)
-		get { return _aspectRatio; } 
-		set { _aspectRatio = value;}
-	}
-
-	public float Weight { 
-		get{ 
-			if (unit == Units.Metric) {
-				return weight; 
-			} else {
-				return weight / LB2KG;
-			}
-		} 
-		set{ 
-			if (unit == Units.Metric) {
-				weight = value;
-			} else {
-				weight = value * LB2KG;
-			}
-		}
-	}
 
 }
