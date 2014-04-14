@@ -16,7 +16,7 @@ public class SimpleFlightEditor : Editor {
 		sf.toggleDrag = EditorGUILayout.Toggle ("Drag", sf.toggleDrag);
 		sf.toggleGravity = EditorGUILayout.Toggle ("Gravity", sf.toggleGravity);
 
-		sf.fBody.unit = (UnitConverter.Units) EditorGUILayout.EnumPopup (sf.fBody.unit);
+		sf.fBody.Unit = (UnitConverter.Units) EditorGUILayout.EnumPopup (sf.fBody.Unit);
 		sf.fBody.Preset = (FlightBody.Presets)EditorGUILayout.EnumPopup (sf.fBody.Preset);
 		sf.fBody.WingSpan = EditorGUILayout.FloatField ("Wing Span", sf.fBody.WingSpan);
 		sf.fBody.WingChord = EditorGUILayout.FloatField ("Wing Chord", sf.fBody.WingChord);

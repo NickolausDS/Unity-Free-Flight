@@ -6,19 +6,17 @@ using System.Collections;
 //Units unit = UnitConverter.Units.Metric;
 
 
-public class FlightBody {
+public class FlightBody : UnitConverter {
 	
 	//NOTE NOTE NOTE!!!!
 	//We will always store things in METRIC
 	//We convert, if we ever give things back in something else
 	//NOTE NOTE NOTE!!!
 
-
-//	public enum Units{ Metric, Emperial };
-	private UnitConverter conv;
-	public UnitConverter.Units unit {
-		get {return conv.unit;}
-		set {conv.unit = value;}
+	
+	public Units Unit {
+		get {return _unit;}
+		set {_unit = value;}
 	}
 
 	public enum Presets { Custom, TurkeyVulture, Albatross};
@@ -33,7 +31,6 @@ public class FlightBody {
 	//End flying body statistics
 
 	public FlightBody () {
-		conv = new UnitConverter (UnitConverter.Units.Metric);
 		Preset = Presets.TurkeyVulture;
 	}
 
@@ -65,28 +62,28 @@ public class FlightBody {
 
 	public float WingSpan {
 		get { 
-			return conv.getLength (_wingSpan); 
+			return getLength (_wingSpan); 
 		}
 		set {
-			_wingSpan = conv.setLength (value);
+			_wingSpan = setLength (value);
 		}
 	}
 
 	public float WingChord {
 		get { 
-			return conv.getLength (_wingChord); 
+			return getLength (_wingChord); 
 		}
 		set {
-			_wingChord = conv.setLength (value);
+			_wingChord = setLength (value);
 		}
 	}
 
 	public float WingArea {
 		get{
-			return conv.getArea (_wingArea );
+			return getArea (_wingArea );
 		} 
 		set{
-			_wingArea = conv.setArea (value);
+			_wingArea = setArea (value);
 		}
 		
 	}
@@ -99,10 +96,10 @@ public class FlightBody {
 	
 	public float Weight { 
 		get{ 
-			return conv.getWeight(_weight);
+			return getWeight(_weight);
 		} 
 		set{ 
-			_weight = conv.setWeight (value);
+			_weight = setWeight (value);
 		}
 	}
 
