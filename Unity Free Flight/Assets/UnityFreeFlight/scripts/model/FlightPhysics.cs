@@ -3,7 +3,7 @@ using System.Collections;
 
 public class FlightPhysics {
 
-	public FlightBody FlightBody{ get; set; }
+	public FlightObject FlightObject{ get; set; }
 
 	private float formDrag;
 	private float liftInducedDrag;

@@ -13,7 +13,7 @@ public class SimpleFlight : MonoBehaviour {
 
 	private FlightPhysics fPhysics = new FlightPhysics ();
 	//We initialize this at start()
-	public FlightBody fBody = new FlightBody ();
+	public FlightObject fObj = new FlightObject ();
 		
 
 	//PHYSICS VARS
@@ -38,12 +38,6 @@ public class SimpleFlight : MonoBehaviour {
 	public float RotationSpeed = 200.0f;
 		
 	void Start() {
-
-//		fBody = gameObject.GetComponent<FlightBody> ();
-//		Debug.Log (string.Format ("{0}", fBody));
-//		if (fBody == null)
-//			fBody = gameObject.AddComponent<FlightBody> ();
-			
 		rigidbody.velocity = new Vector3(0.0f, 0.0f, 20.0f);
 		// We don't want the rigidbody to determine our rotation,
 		// we will compute that ourselves
@@ -84,14 +78,14 @@ public class SimpleFlight : MonoBehaviour {
 		if (newVelocity != Vector3.zero) {
 
 			// apply lift force
-			liftForce = fPhysics.getLift(newVelocity.magnitude, 0, fBody.WingArea, liftCoefficient) * Time.deltaTime;
+			liftForce = fPhysics.getLift(newVelocity.magnitude, 0, fObj.WingArea, liftCoefficient) * Time.deltaTime;
 			directionalLift = Quaternion.LookRotation(newVelocity) * Vector3.up;
 			if (toggleLift) {
 				rigidbody.AddForce(directionalLift * liftForce);
 			}
 			
 			// get drag rotation
-			dragForce = fPhysics.getDrag(newVelocity.magnitude,0, fBody.WingArea, dragCoefficient, liftForce, fBody.AspectRatio) * Time.deltaTime;
+			dragForce = fPhysics.getDrag(newVelocity.magnitude,0, fObj.WingArea, dragCoefficient, liftForce, fObj.AspectRatio) * Time.deltaTime;
 			directionalDrag = Quaternion.LookRotation(newVelocity) * Vector3.back;
 			// Debug.Log(string.Format ("Drag Direction: {0}, Drag Newtons/Hour: {1}", directionalDrag, dragForce * 3600.0f));
 			if (toggleDrag) {
@@ -132,11 +126,11 @@ public class SimpleFlight : MonoBehaviour {
 			               "Total Wing Area: {4:###.#}{5}\n" +
 			               "Aspect Ratio: {6:#.#}\n " +
 			               "Weight: {7:###.#}{8}\n",
-							fBody.WingSpan, fBody.getLengthType(),
-			        		fBody.WingChord, fBody.getLengthType(),
-			               	fBody.WingArea, fBody.getAreaType(),
-							fBody.AspectRatio,
-			               	fBody.Weight, fBody.getWeightType()
+							fObj.WingSpan, fObj.getLengthType(),
+			        		fObj.WingChord, fObj.getLengthType(),
+			               	fObj.WingArea, fObj.getAreaType(),
+							fObj.AspectRatio,
+			               	fObj.Weight, fObj.getWeightType()
 				));		
 				
 		}
