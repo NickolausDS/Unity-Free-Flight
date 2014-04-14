@@ -6,6 +6,7 @@ public class SimpleFlight : MonoBehaviour {
 	//GUI buttons
 	public bool toggleStatsMenu = true;
 	public bool togglePhysicsMenu = true;
+	public bool toggleWorldPhysicsMenu = true;
 	public bool toggleGravity = true;
 	public bool toggleLift = false;
 	public bool toggleDrag = true;
@@ -125,34 +126,59 @@ public class SimpleFlight : MonoBehaviour {
 		
 			
 		if (toggleStatsMenu) {
-			GUI.Box(new Rect(310, 10, 400, 120), string.Format ("Stats:\nWing Span: {0} M\n Wing Chord: {1} M\n Total Wing Area: {2} M^2\nAspect Ratio: {3} S/C\n Weight: {4} Newtons\n",
-					fBody.WingSpan,
-					fBody.WingChord,
-					fBody.WingArea,
-					fBody.AspectRatio,
-					fBody.Weight
+			GUI.Box(new Rect(310, 10, 200, 110), 
+			        string.Format ("Stats:\nWing Span: {0:###.#}{1}\n " +
+			               "Wing Chord: {2:###.#}{3}\n " +
+			               "Total Wing Area: {4:###.#}{5}\n" +
+			               "Aspect Ratio: {6:#.#}\n " +
+			               "Weight: {7:###.#}{8}\n",
+							fBody.WingSpan, fBody.getLengthType(),
+			        		fBody.WingChord, fBody.getLengthType(),
+			               	fBody.WingArea, fBody.getAreaType(),
+							fBody.AspectRatio,
+			               	fBody.Weight, fBody.getWeightType()
 				));		
 				
 		}
 		
 		if (togglePhysicsMenu) {
-			GUI.Box(new Rect(100,10,200,200), string.Format("Physics:\nspeed Vector: {0}\nSpeed: {1} Km/h\nDirection {2}\nGravity: {3}\nAltitude+-: {4}\nLift N/H: {5}\nDrag N/H: {6}\n\tInduced{7}\n\tForm {8}\n RigidBody Drag: {9} \nAngle Of Attack: {10}\nLift COF: {11}", 
+			GUI.Box(new Rect(100,10,200,140), string.Format(
+				"Physics:\n" +
+				"Speed: {0:###.#}{1}\n" +
+				"Altitude+-: {2:###.#}{3}\n" +
+				"Lift N/H: {4:###.#}{5}\n" +
+				"Drag N/H: {6:###.#}{7}\n" +
+				"\tInduced: {8:###.#}{9}\n" +
+				"\tForm {10:###.#}{11}\n " +
+				"Angle Of Attack: {12:##}{13}\n" +
+				"Lift COF: {14:#.##}", 
+					rigidbody.velocity.magnitude * 3600.0f / 1000.0f, "KPH",
+					liftForce + Physics.gravity.y * 3600.0f / 1000.0f, "M",
+					liftForce * 3600.0f / 1000.0f, "N",
+					dragForce * 3600.0f / 1000.0f, "N",
+					fPhysics.LiftInducedDrag, "N",
+					fPhysics.FormDrag, "N",
+					angleOfAttack, "Deg",
+					liftCoefficient)
+				);
+			if (toggleWorldPhysicsMenu) {
+				GUI.Box (new Rect(100, 160, 200, 90), string.Format (
+					"World Physics:\n" +
+					"speed Vector: {0}\n" +
+					"Direction {1}\n" +
+					"Gravity: {2}\n" +
+					"RigidBody Drag: {3} \n",
 					rigidbody.velocity,
-					rigidbody.velocity.magnitude * 3600.0f / 1000.0f,
 					rigidbody.rotation.eulerAngles,
 					Physics.gravity.y, 
-					liftForce + Physics.gravity.y * 3600.0f / 1000.0f, 
-					liftForce * 3600.0f / 1000.0f,
-					dragForce * 3600.0f / 1000.0f,
-					fPhysics.LiftInducedDrag,
-					fPhysics.FormDrag,
-					rigidbody.drag,
-					angleOfAttack, 
-					liftCoefficient)
-				);	
+					rigidbody.drag
+					));
+			}
+
 			toggleLift = GUILayout.Toggle(toggleLift, "Lift Force");
 			toggleDrag = GUILayout.Toggle(toggleDrag, "Drag Force");
 			toggleGravity = GUILayout.Toggle(toggleGravity, "Gravity");
+			toggleWorldPhysicsMenu = GUILayout.Toggle(toggleWorldPhysicsMenu, "World Physics");
 		}
 				
 	}
