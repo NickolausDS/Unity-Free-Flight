@@ -27,13 +27,19 @@ public class UnitConverter {
 	public UnitConverter() {_unit = Units.Metric;}
 
 	public string getLengthType() {
-				return getUnitType (Types.Length);
-		}
+		return getUnitType (Types.Length);
+	}
+	public string getAreaType() {
+		return getUnitType (Types.Area);
+	}
+	public string getWeightType() {
+		return getUnitType (Types.Weight);
+	}
 
 	public string getUnitType(Types thetype) {
 			if (_unit == Units.Metric) {
 						return metric [(int)thetype];
-				} else if (_unit == Units.Metric) {
+				} else if (_unit == Units.Imperial) {
 						return imperial [(int)thetype];
 				} else {
 						throw new Exception ("Tried to get unit type that doesn't exist");
