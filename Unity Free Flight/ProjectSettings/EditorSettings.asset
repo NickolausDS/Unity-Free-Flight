@@ -3,8 +3,10 @@
 --- !u!159 &1
 EditorSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_ExternalVersionControlSupport: Meta Files
+  serializedVersion: 3
+  m_ExternalVersionControlSupport: Hidden Meta Files
   m_SerializationMode: 2
   m_WebSecurityEmulationEnabled: 0
   m_WebSecurityEmulationHostUrl: windwardproductions.org/projects/unityfreeflight
+  m_DefaultBehaviorMode: 808464432
+  m_SpritePackerMode: 808464432
