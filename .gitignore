@@ -11,6 +11,7 @@ release/
 Unity\ Free\ Flight/Temp/
 Unity\ Free\ Flight/Library/
 Unity\ Free\ Flight/Build/
+Unity Free Flight/Library/ScriptAssemblies/
 
 
 # ===================================== #
@@ -27,7 +28,6 @@ Unity\ Free\ Flight/*.sln
 Unity\ Free\ Flight/*.user
 Unity\ Free\ Flight/*.unityproj
 Unity\ Free\ Flight/*.booproj
-
 # ============ #
 # OS generated #
 # ============ #
