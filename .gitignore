@@ -2,8 +2,9 @@
 # This Project Specifically #
 # ========================= #
 
-release/
-
+release/v*
+release/031814
+!version.txt
 
 # =============== #
 # Unity generated #
