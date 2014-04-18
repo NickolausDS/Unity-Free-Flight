@@ -14,6 +14,8 @@ public class SimpleFlight : MonoBehaviour {
 	private FlightPhysics fPhysics = new FlightPhysics ();
 	//We initialize this at start()
 	public FlightObject fObj = new FlightObject ();
+
+	public BaseController controller = null;
 		
 
 	//PHYSICS VARS
@@ -33,28 +35,30 @@ public class SimpleFlight : MonoBehaviour {
 	private Vector3 newVelocity;
 	
 
-	private Vector3 userRotationInput;
+//	private Vector3 userRotationInput;
 	//Constant speed with which we'll rotate with user controls
-	public float RotationSpeed = 200.0f;
+//	public float RotationSpeed = 200.0f;
 		
 	void Start() {
 		rigidbody.velocity = new Vector3(0.0f, 0.0f, 20.0f);
 		// We don't want the rigidbody to determine our rotation,
 		// we will compute that ourselves
 		rigidbody.freezeRotation = true;
+		if (controller == null) {
+			GameObject go = new GameObject();
+			go.AddComponent<SimpleController>();
+			controller = (BaseController) go.GetComponent<SimpleController>();
+			Debug.LogWarning ("No controller specified for " + gameObject.name + ". Using a default one.");
+		}
 	}
 		
 	void Update() {
-		
-		//Pitch
-		userRotationInput.x = -Input.GetAxis("Vertical") * (RotationSpeed * Time.deltaTime);
-	    //Roll
-		userRotationInput.z = -Input.GetAxis("Horizontal") * (RotationSpeed * Time.deltaTime);
-	    //Yaw
-	//	userRotationInput.y = Input.GetAxis("Yaw") * (RotationSpeed * Time.deltaTime);	
+			
 	}
 		
 	void FixedUpdate() {
+
+
 		rigidbody.useGravity = toggleGravity;
 			
 		//These will be used to compute new values	
@@ -62,7 +66,7 @@ public class SimpleFlight : MonoBehaviour {
 		newVelocity = rigidbody.velocity;
 		
 		//Find out how much our user turned us
-		newRotation *= getUserRotation(userRotationInput);
+		newRotation *= controller.UserInput;
 		//Apply the user rotation in a banked turn
 		newRotation = fPhysics.getBankedTurnRotation(newRotation);
 		//Correct our velocity for the new direction we are facing
@@ -106,11 +110,11 @@ public class SimpleFlight : MonoBehaviour {
 	//		}
 	}
 
-	Quaternion getUserRotation(Vector3 theUserRotationInput) {
-		Quaternion theNewRotation = Quaternion.identity;
-		theNewRotation.eulerAngles = theUserRotationInput;
-		return theNewRotation;
-	}
+//	Quaternion getUserRotation(Vector3 theUserRotationInput) {
+//		Quaternion theNewRotation = Quaternion.identity;
+//		theNewRotation.eulerAngles = theUserRotationInput;
+//		return theNewRotation;
+//	}
 
 	//testing purposes	
 	void OnGUI() {

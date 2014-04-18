@@ -25,6 +25,14 @@ public class SimpleFlightEditor : Editor {
 		if( GUILayout.Button("Align To Wing Dimensions" ) ) 		{sf.fObj.setFromWingDimensions ();}
 		if (GUILayout.Button ("Align Dimensions From Area & AR") ) 	{sf.fObj.setWingDimensions ();}
 
+		//Can't figure this part out. We want to get a controller from the inspector, and convert it to a basecontroller so 
+		//the simple flight script knows how to use it. Without this functionality, simpleFlight always defaults to the simple
+		//controller
+//		MonoScript controllerscript;
+//		controllerscript = (MonoScript) EditorGUILayout.ObjectField ("Controller", sf.controller, typeof(MonoScript), false);
+//		if (controllerscript)
+//						sf.controller = (BaseController) MonoScript.FromMonoBehaviour ((BaseController)controllerscript);
+
 		//myTarget.experience = EditorGUILayout.IntField("Experience", myTarget.experience);
 		//EditorGUILayout.LabelField("Level", myTarget.Level.ToString());
 	}
