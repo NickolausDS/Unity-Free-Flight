@@ -574,6 +574,10 @@ Prefab:
       propertyPath: m_LocalScale.z
       value: .203251004
       objectReference: {fileID: 0}
+    - target: {fileID: 2300000, guid: 67df13aab97c661418857de04b6cc310, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: a82d7bcb7f7a2414a8c6aaa244e15c1a, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 67df13aab97c661418857de04b6cc310, type: 3}
   m_RootGameObject: {fileID: 1327423121}
