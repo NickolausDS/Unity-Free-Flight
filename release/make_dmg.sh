@@ -20,7 +20,7 @@ fi
 # you should not need to change these
 APP_EXE="${APP_NAME}.app/Contents/MacOS/${APP_NAME}"
 
-VOL_NAME="${APP_NAME} ${VERSION}"   # volume name will be "SuperCoolApp 1.0.0"
+VOL_NAME="${APP_NAME}${VERSION}"   # volume name will be "SuperCoolApp 1.0.0"
 DMG_TMP="${VOL_NAME}-temp.dmg"
 DMG_FINAL="${VOL_NAME}.dmg"         # final DMG name will be "SuperCoolApp 1.0.0.dmg"
 STAGING_DIR="./Install"             # we copy all our stuff into this dir
@@ -136,4 +136,3 @@ rm -rf "${STAGING_DIR}"
 
 echo 'Done.'
 
-exit
