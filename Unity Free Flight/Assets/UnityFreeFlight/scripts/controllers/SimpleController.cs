@@ -8,7 +8,7 @@ public class SimpleController : BaseController {
 
 	void Update() {
 		//Pitch
-		keyInput.x = -Input.GetAxis ("Vertical") * (_rotationSpeed * Time.deltaTime);
+		keyInput.x = _invertedSetting * -Input.GetAxis ("Vertical") * (_rotationSpeed * Time.deltaTime);
 		//Roll
 		keyInput.z = -Input.GetAxis ("Horizontal") * (_rotationSpeed * Time.deltaTime);
 		//Yaw
