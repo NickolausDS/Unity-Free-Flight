@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class SimpleController : BaseController {
+public class SimpleFlightController : BaseFlightController {
 
 	Vector3 keyInput;
 	

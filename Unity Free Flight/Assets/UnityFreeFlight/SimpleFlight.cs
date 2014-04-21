@@ -1,8 +1,9 @@
 using UnityEngine;
 using System.Collections;
 
+[RequireComponent (typeof(BaseFlightController))]
 public class SimpleFlight : MonoBehaviour {
-	
+
 	//GUI buttons
 	public bool toggleStatsMenu = true;
 	public bool togglePhysicsMenu = true;
@@ -15,7 +16,7 @@ public class SimpleFlight : MonoBehaviour {
 	//We initialize this at start()
 	public FlightObject fObj = new FlightObject ();
 
-	public BaseController controller = null;
+	public BaseFlightController controller = null;
 		
 
 	//PHYSICS VARS
@@ -44,12 +45,7 @@ public class SimpleFlight : MonoBehaviour {
 		// We don't want the rigidbody to determine our rotation,
 		// we will compute that ourselves
 		rigidbody.freezeRotation = true;
-		if (controller == null) {
-			GameObject go = new GameObject();
-			go.AddComponent<SimpleController>();
-			controller = (BaseController) go.GetComponent<SimpleController>();
-			Debug.LogWarning ("No controller specified for " + gameObject.name + ". Using a default one.");
-		}
+		controller = gameObject.GetComponent<BaseFlightController>();
 	}
 		
 	void Update() {
