@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-[RequireComponent (typeof(BaseFlightController))]
+
 public class SimpleFlight : MonoBehaviour {
 
 	//GUI buttons
@@ -17,8 +17,11 @@ public class SimpleFlight : MonoBehaviour {
 	public FlightObject fObj = new FlightObject ();
 
 	public BaseFlightController controller = null;
+	public MonoBehaviour groundController;
 		
 
+
+	//NOTE: 4/23/14 -- These need to be refactored and moved to the physics objects. They don't belong here.
 	//PHYSICS VARS
 	//These are defined here for efficiency, so they aren't re-initialized every time
 	//we run FixedUpdate(). They all get new derived values every update run. You probably
@@ -45,13 +48,17 @@ public class SimpleFlight : MonoBehaviour {
 		// We don't want the rigidbody to determine our rotation,
 		// we will compute that ourselves
 		rigidbody.freezeRotation = true;
-		controller = gameObject.GetComponent<BaseFlightController>();
+		//This behaviour will be done by the editor instead
+//		controller = gameObject.GetComponent<BaseFlightController>();
+//		groundController = (MonoBehaviour) gameObject.AddComponent<BaseGroundController>();
 	}
 		
 	void Update() {
 			
 	}
 		
+	//NOTE 4/23/14: Most of this needs to be refactored and moved to the physics objects.
+	//None of it should really exist here.
 	void FixedUpdate() {
 
 
@@ -105,14 +112,9 @@ public class SimpleFlight : MonoBehaviour {
 	//
 	//		}
 	}
+	
 
-//	Quaternion getUserRotation(Vector3 theUserRotationInput) {
-//		Quaternion theNewRotation = Quaternion.identity;
-//		theNewRotation.eulerAngles = theUserRotationInput;
-//		return theNewRotation;
-//	}
-
-	//testing purposes	
+	//We might consider moving this outside this class, to keep things simpler
 	void OnGUI() {
 			
 		toggleStatsMenu = GUILayout.Toggle(toggleStatsMenu, "Show Stats");
