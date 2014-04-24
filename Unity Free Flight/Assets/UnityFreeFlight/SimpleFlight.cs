@@ -5,19 +5,20 @@ using System.Collections;
 public class SimpleFlight : MonoBehaviour {
 
 	//GUI buttons
-	public bool toggleStatsMenu = true;
-	public bool togglePhysicsMenu = true;
-	public bool toggleWorldPhysicsMenu = true;
+	public bool toggleStatsMenu = false;
+	public bool togglePhysicsMenu = false;
+	public bool toggleWorldPhysicsMenu = false;
 	public bool toggleGravity = true;
-	public bool toggleLift = false;
+	public bool toggleLift = true;
 	public bool toggleDrag = true;
 
 	private FlightPhysics fPhysics = new FlightPhysics ();
 	//We initialize this at start()
 	public FlightObject fObj = new FlightObject ();
 
-	public BaseFlightController controller = null;
-	public MonoBehaviour groundController;
+	public BaseFlightController flightController = null;
+	public MonoBehaviour groundController = null;
+	public bool _groundMode = false;
 		
 
 
@@ -53,6 +54,20 @@ public class SimpleFlight : MonoBehaviour {
 //		groundController = (MonoBehaviour) gameObject.AddComponent<BaseGroundController>();
 	}
 		
+	public bool GroundMode {
+		get {return _groundMode;}
+		set {
+			if(_groundMode == value)
+				return;
+			_groundMode = value;
+			if (_groundMode)
+				switchToGround();
+			else
+				switchToFlight();
+		}
+	}
+
+
 	void Update() {
 			
 	}
@@ -61,48 +76,49 @@ public class SimpleFlight : MonoBehaviour {
 	//None of it should really exist here.
 	void FixedUpdate() {
 
-
-		rigidbody.useGravity = toggleGravity;
+		if (!_groundMode) {
+			rigidbody.useGravity = toggleGravity;
+				
+			//These will be used to compute new values	
+			newRotation = rigidbody.rotation;	
+			newVelocity = rigidbody.velocity;
 			
-		//These will be used to compute new values	
-		newRotation = rigidbody.rotation;	
-		newVelocity = rigidbody.velocity;
-		
-		//Find out how much our user turned us
-		newRotation *= controller.UserInput;
-		//Apply the user rotation in a banked turn
-		newRotation = fPhysics.getBankedTurnRotation(newRotation);
-		//Correct our velocity for the new direction we are facing
-		//		newVelocity = getDirectionalVelocity(newRotation, newVelocity);	
-		newVelocity = Vector3.Lerp (newVelocity, fPhysics.getDirectionalVelocity(newRotation, newVelocity), Time.deltaTime);	
+			//Find out how much our user turned us
+			newRotation *= flightController.UserInput;
+			//Apply the user rotation in a banked turn
+			newRotation = fPhysics.getBankedTurnRotation(newRotation);
+			//Correct our velocity for the new direction we are facing
+			//		newVelocity = getDirectionalVelocity(newRotation, newVelocity);	
+			newVelocity = Vector3.Lerp (newVelocity, fPhysics.getDirectionalVelocity(newRotation, newVelocity), Time.deltaTime);	
 
+				
+			//These are required for computing lift and drag	
+			angleOfAttack = fPhysics.getAngleOfAttack(newRotation, newVelocity);	
+			liftCoefficient = fPhysics.getLiftCoefficient(angleOfAttack);
+			dragCoefficient = fPhysics.getDragCoefficient (angleOfAttack);
+
+			if (newVelocity != Vector3.zero) {
+
+				// apply lift force
+				liftForce = fPhysics.getLift(newVelocity.magnitude, 0, fObj.WingArea, liftCoefficient) * Time.deltaTime;
+				directionalLift = Quaternion.LookRotation(newVelocity) * Vector3.up;
+				if (toggleLift) {
+					rigidbody.AddForce(directionalLift * liftForce);
+				}
+				
+				// get drag rotation
+				dragForce = fPhysics.getDrag(newVelocity.magnitude,0, fObj.WingArea, dragCoefficient, liftForce, fObj.AspectRatio) * Time.deltaTime;
+				directionalDrag = Quaternion.LookRotation(newVelocity) * Vector3.back;
+				// Debug.Log(string.Format ("Drag Direction: {0}, Drag Newtons/Hour: {1}", directionalDrag, dragForce * 3600.0f));
+				if (toggleDrag) {
+					rigidbody.AddForce (directionalDrag * dragForce);
+				}
 			
-		//These are required for computing lift and drag	
-		angleOfAttack = fPhysics.getAngleOfAttack(newRotation, newVelocity);	
-		liftCoefficient = fPhysics.getLiftCoefficient(angleOfAttack);
-		dragCoefficient = fPhysics.getDragCoefficient (angleOfAttack);
-
-		if (newVelocity != Vector3.zero) {
-
-			// apply lift force
-			liftForce = fPhysics.getLift(newVelocity.magnitude, 0, fObj.WingArea, liftCoefficient) * Time.deltaTime;
-			directionalLift = Quaternion.LookRotation(newVelocity) * Vector3.up;
-			if (toggleLift) {
-				rigidbody.AddForce(directionalLift * liftForce);
 			}
-			
-			// get drag rotation
-			dragForce = fPhysics.getDrag(newVelocity.magnitude,0, fObj.WingArea, dragCoefficient, liftForce, fObj.AspectRatio) * Time.deltaTime;
-			directionalDrag = Quaternion.LookRotation(newVelocity) * Vector3.back;
-			// Debug.Log(string.Format ("Drag Direction: {0}, Drag Newtons/Hour: {1}", directionalDrag, dragForce * 3600.0f));
-			if (toggleDrag) {
-				rigidbody.AddForce (directionalDrag * dragForce);
-			}
-		
+			//Finally, apply all the physics on our actual rigidbody
+			rigidbody.rotation = newRotation;
+			rigidbody.velocity = newVelocity;
 		}
-		//Finally, apply all the physics on our actual rigidbody
-		rigidbody.rotation = newRotation;
-		rigidbody.velocity = newVelocity;	
 		
 		//MAX FORCE CONSTRAINT
 	//	if(rigidbody.velocity.magnitude > 100) {
@@ -111,6 +127,38 @@ public class SimpleFlight : MonoBehaviour {
 	//			rigidbody.velocity *= 0.9f;
 	//
 	//		}
+	}
+
+	private void switchToGround() {
+
+		if (groundController) {
+			groundController.enabled = true;
+			flightController.flightEnabled = false;
+			CharacterController cc = gameObject.GetComponent<CharacterController> ();
+			if (cc) {
+				cc.enabled = true;
+				rigidbody.active = false;
+			}
+		} else {
+			Debug.Log ("No ground controller detected, not switching to ground controls");
+		}
+
+	}
+
+	private void switchToFlight() {
+		if (flightController) {
+			flightController.flightEnabled = true;
+			rigidbody.active = true;
+			if (groundController) {
+				groundController.enabled = false;
+				CharacterController cc = gameObject.GetComponent<CharacterController> ();
+				if (cc) {
+					cc.enabled = false;
+				}
+			}
+		} else {
+			Debug.Log ("No air controller detected, not switching to air controls");
+		}
 	}
 	
 

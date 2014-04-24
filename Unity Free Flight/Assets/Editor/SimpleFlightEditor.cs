@@ -5,9 +5,14 @@ using UnityEditor;
 [CustomEditor(typeof(SimpleFlight)), CanEditMultipleObjects]
 public class SimpleFlightEditor : Editor {
 
+	MonoBehaviour groundController = null;
+	MonoScript tempgc;
+	string cname = null;
+
 
 	public override void OnInspectorGUI() {
 		SimpleFlight sf = (SimpleFlight)target;
+		GameObject go = sf.gameObject;
 
 		sf.togglePhysicsMenu = EditorGUILayout.Toggle ("Physics Menu", sf.togglePhysicsMenu);
 		sf.toggleStatsMenu = EditorGUILayout.Toggle ("Stats Menu", sf.toggleStatsMenu);
@@ -25,15 +30,29 @@ public class SimpleFlightEditor : Editor {
 		if( GUILayout.Button("Align To Wing Dimensions" ) ) 		{sf.fObj.setFromWingDimensions ();}
 		if (GUILayout.Button ("Align Dimensions From Area & AR") ) 	{sf.fObj.setWingDimensions ();}
 
-		//Can't figure this part out. We want to get a controller from the inspector, and convert it to a basecontroller so 
-		//the simple flight script knows how to use it. Without this functionality, simpleFlight always defaults to the simple
-		//controller
-//		MonoScript controllerscript;
-//		controllerscript = (MonoScript) EditorGUILayout.ObjectField ("Controller", sf.controller, typeof(MonoScript), false);
-//		if (controllerscript)
-//						sf.controller = (BaseController) MonoScript.FromMonoBehaviour ((BaseController)controllerscript);
+		sf.flightController = go.GetComponent<BaseFlightController> ();
+		EditorGUILayout.ObjectField ("Flight Controller", sf.flightController, typeof(MonoBehaviour), false);
+		tempgc = (MonoScript) EditorGUILayout.ObjectField ("Ground Controller", tempgc, typeof(MonoScript), false);
+		sf.GroundMode = EditorGUILayout.Toggle ("Ground Controller Enabled", sf.GroundMode);
+		//		EditorGUILayout.ObjectField ("Ground Controller", groundController, typeof(MonoBehaviour), false);
 
-		//myTarget.experience = EditorGUILayout.IntField("Experience", myTarget.experience);
-		//EditorGUILayout.LabelField("Level", myTarget.Level.ToString());
+		if (cname == null && tempgc)
+			cname = tempgc.name;
+			if (cname != null && !go.GetComponent(cname)) {
+				go.AddComponent(cname);
+				groundController = (MonoBehaviour) go.GetComponent (cname);
+				if (groundController) {
+					groundController.enabled = false;
+					CharacterController cc = go.GetComponent<CharacterController>();
+					if (cc)
+						cc.enabled = false;
+				}
+		}
+
+		groundController = (MonoBehaviour) go.GetComponent (cname);
+		if (groundController) {
+			sf.groundController = groundController;
+		}
+
 	}
 }

@@ -8,6 +8,7 @@ public class BaseFlightController : MonoBehaviour {
 	protected int _invertedSetting = -1;
 
 	private bool _hasWarnedUser = false;
+	public bool flightEnabled = true;
 
 	public Quaternion UserInput { get { return _userInput; } }
 
