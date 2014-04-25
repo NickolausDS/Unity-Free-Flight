@@ -84,9 +84,10 @@ GameObject:
   - 4: {fileID: 239765972}
   - 54: {fileID: 239765971}
   - 114: {fileID: 239765970}
+  - 114: {fileID: 239765975}
   m_Layer: 0
   m_Name: FlightDummy
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -108,7 +109,9 @@ MonoBehaviour:
   toggleGravity: 1
   toggleLift: 1
   toggleDrag: 1
-  controller: {fileID: 0}
+  flightController: {fileID: 239765975}
+  groundController: {fileID: 0}
+  _groundMode: 0
 --- !u!54 &239765971
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -131,12 +134,24 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 239765969}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -204.164795, y: 356.70575, z: 137.283508}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -204.164795, y: 359.296448, z: 154.269958}
+  m_LocalScale: {x: .5, y: .5, z: 1}
   m_Children:
   - {fileID: 493986383}
   - {fileID: 1327423122}
   m_Father: {fileID: 0}
+--- !u!114 &239765975
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 239765969}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed6e5f009fa47436c84879d955b9d0c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flightEnabled: 1
 --- !u!1 &493986378
 GameObject:
   m_ObjectHideFlags: 0
@@ -212,8 +227,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 493986378}
-  m_LocalRotation: {x: .174264073, y: 0, z: 0, w: .984698951}
-  m_LocalPosition: {x: 1.73336792, y: 29.049408, z: -14.0306778}
+  m_LocalRotation: {x: .0958052874, y: 0, z: 0, w: .995400131}
+  m_LocalPosition: {x: 0, y: 19.736145, z: -8.77900696}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 239765972}
@@ -445,7 +460,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1227643083}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: afde247e4d9ac4451975e9f840518881, type: 3}
   m_Name: 
@@ -482,6 +497,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1327423122}
   - 95: {fileID: 1327423123}
+  - 65: {fileID: 1327423124}
   m_Layer: 0
   m_Name: paper_plane
   m_TagString: Untagged
@@ -496,7 +512,7 @@ Transform:
   m_PrefabInternal: {fileID: 1448974017}
   m_GameObject: {fileID: 1327423121}
   m_LocalRotation: {x: 0, y: -.707106829, z: 0, w: .707106829}
-  m_LocalPosition: {x: 2.84719849, y: 18.9591064, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: .203251004, y: .203251004, z: .203251004}
   m_Children:
   - {fileID: 1678173809}
@@ -516,6 +532,18 @@ Animator:
   m_ApplyRootMotion: 1
   m_AnimatePhysics: 0
   m_HasTransformHierarchy: 1
+--- !u!65 &1327423124
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1327423121}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 60, y: 20, z: 70}
+  m_Center: {x: 5, y: 10, z: 0}
 --- !u!1001 &1448974017
 Prefab:
   m_ObjectHideFlags: 0
@@ -525,11 +553,11 @@ Prefab:
     m_Modifications:
     - target: {fileID: 400000, guid: 67df13aab97c661418857de04b6cc310, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.84719849
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 67df13aab97c661418857de04b6cc310, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 18.9591064
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 67df13aab97c661418857de04b6cc310, type: 3}
       propertyPath: m_LocalPosition.z
