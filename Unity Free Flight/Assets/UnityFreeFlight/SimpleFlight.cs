@@ -137,7 +137,6 @@ public class SimpleFlight : MonoBehaviour {
 			CharacterController cc = gameObject.GetComponent<CharacterController> ();
 			if (cc) {
 				cc.enabled = true;
-				rigidbody.active = false;
 			}
 		} else {
 			Debug.Log ("No ground controller detected, not switching to ground controls");
@@ -148,7 +147,6 @@ public class SimpleFlight : MonoBehaviour {
 	private void switchToFlight() {
 		if (flightController) {
 			flightController.flightEnabled = true;
-			rigidbody.active = true;
 			if (groundController) {
 				groundController.enabled = false;
 				CharacterController cc = gameObject.GetComponent<CharacterController> ();
