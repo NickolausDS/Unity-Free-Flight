@@ -4,6 +4,8 @@ using System.Collections;
 
 public class SimpleFlight : MonoBehaviour {
 
+	//Note: 4/30/14 -- These, along with the GUI view, should be moved to their own separate
+	//class. They no longer belong here.
 	//GUI buttons
 	public bool toggleStatsMenu = false;
 	public bool togglePhysicsMenu = false;
@@ -38,11 +40,6 @@ public class SimpleFlight : MonoBehaviour {
 	private float angleOfAttack;
 	private Quaternion newRotation;
 	private Vector3 newVelocity;
-	
-
-//	private Vector3 userRotationInput;
-	//Constant speed with which we'll rotate with user controls
-//	public float RotationSpeed = 200.0f;
 		
 	void Start() {
 		rigidbody.velocity = new Vector3(0.0f, 0.0f, 20.0f);
@@ -65,11 +62,6 @@ public class SimpleFlight : MonoBehaviour {
 			else
 				switchToFlight();
 		}
-	}
-
-
-	void Update() {
-			
 	}
 		
 	//NOTE 4/23/14: Most of this needs to be refactored and moved to the physics objects.
@@ -119,14 +111,6 @@ public class SimpleFlight : MonoBehaviour {
 			rigidbody.rotation = newRotation;
 			rigidbody.velocity = newVelocity;
 		}
-		
-		//MAX FORCE CONSTRAINT
-	//	if(rigidbody.velocity.magnitude > 100) {
-	//			Debug.Log(string.Format("----- MAX FORCE CONSTRAINT WARNING -----\n\nTime {0}\nVelocity: {1} \nRotation {2} \nMagnitude {3}\n\n-----  -----",
-	//				Time.realtimeSinceStartup, rigidbody.velocity, rigidbody.rotation.eulerAngles, rigidbody.velocity.magnitude));
-	//			rigidbody.velocity *= 0.9f;
-	//
-	//		}
 	}
 
 	private void switchToGround() {
@@ -140,6 +124,7 @@ public class SimpleFlight : MonoBehaviour {
 			}
 		} else {
 			Debug.Log ("No ground controller detected, not switching to ground controls");
+			_groundMode = !_groundMode;
 		}
 
 	}
@@ -156,6 +141,7 @@ public class SimpleFlight : MonoBehaviour {
 			}
 		} else {
 			Debug.Log ("No air controller detected, not switching to air controls");
+			_groundMode = !_groundMode;
 		}
 	}
 	
