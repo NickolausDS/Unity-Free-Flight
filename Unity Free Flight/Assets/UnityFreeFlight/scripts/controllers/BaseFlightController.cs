@@ -25,6 +25,10 @@ public class BaseFlightController : MonoBehaviour {
 	public float minimumFlapTime = 0.2f;
 	public float flapStrength = 400.0f;
 
+	public bool flaringEnabled = false;
+	public bool divingEnabled = false;
+	public bool thrustingEnabled = false;
+
 	//These protected vars are meant to be directly used or modified by the 
 	//child class, and generally read from by the physics model. 
 	protected Quaternion _userInput;
@@ -107,6 +111,32 @@ public class BaseFlightController : MonoBehaviour {
 		}
 
 	}
+
+	//A flare is a position that birds, AND aircraft will take upon landing. It's characterized by
+	//maximizing wing area with a very high angle of attack (pitch). It's typical for birds to 
+	//enter such a high angle of attack that they stall their wings in the process.
+	public void flare() {
+		if (flaringEnabled) {
+			Debug.LogWarning("Flarring not implemented yet!");
+		}
+	}
+
+	//A dive includes folding either one or both of the wings, increasing speed and decent rate.
+	public void dive(float leftWingPercentFold, float rightWingPercentFold) {
+		if (divingEnabled) {
+			Debug.LogWarning("Diving not implemented yet!");
+		}
+	}
+
+	//Add raw thrust to the flight object
+	//Birds usually can't do this, unless they've eaten beans and are feeling tootie.
+	public void thrust(float power) {
+		if (thrustingEnabled) {
+			//I'm so embarrased! *Blush*
+			Debug.LogWarning("Thrusting not implemented yet!");
+		}
+	}
+
 
 
 }
