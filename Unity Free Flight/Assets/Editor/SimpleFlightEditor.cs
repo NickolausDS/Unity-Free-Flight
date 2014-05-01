@@ -14,8 +14,8 @@ public class SimpleFlightEditor : Editor {
 		SimpleFlight sf = (SimpleFlight)target;
 		GameObject go = sf.gameObject;
 
-		sf.togglePhysicsMenu = EditorGUILayout.Toggle ("Physics Menu", sf.togglePhysicsMenu);
-		sf.toggleStatsMenu = EditorGUILayout.Toggle ("Stats Menu", sf.toggleStatsMenu);
+//		sf.togglePhysicsMenu = EditorGUILayout.Toggle ("Physics Menu", sf.togglePhysicsMenu);
+//		sf.toggleStatsMenu = EditorGUILayout.Toggle ("Stats Menu", sf.toggleStatsMenu);
 		sf.toggleLift = EditorGUILayout.Toggle ("Lift", sf.toggleLift);
 		sf.toggleDrag = EditorGUILayout.Toggle ("Drag", sf.toggleDrag);
 		sf.toggleGravity = EditorGUILayout.Toggle ("Gravity", sf.toggleGravity);
