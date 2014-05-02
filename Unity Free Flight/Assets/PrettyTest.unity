@@ -83,8 +83,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 239765972}
   - 54: {fileID: 239765971}
-  - 114: {fileID: 239765970}
-  - 114: {fileID: 239765975}
   m_Layer: 0
   m_Name: FlightDummy
   m_TagString: Player
@@ -92,26 +90,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &239765970
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 239765969}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b89ea8d74632d426b92b28a508d1beb8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  toggleStatsMenu: 0
-  togglePhysicsMenu: 0
-  toggleWorldPhysicsMenu: 1
-  toggleGravity: 1
-  toggleLift: 1
-  toggleDrag: 1
-  flightController: {fileID: 239765975}
-  groundController: {fileID: 0}
-  _groundMode: 0
 --- !u!54 &239765971
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -140,18 +118,6 @@ Transform:
   - {fileID: 493986383}
   - {fileID: 1327423122}
   m_Father: {fileID: 0}
---- !u!114 &239765975
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 239765969}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed6e5f009fa47436c84879d955b9d0c2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  flightEnabled: 1
 --- !u!1 &493986378
 GameObject:
   m_ObjectHideFlags: 0
