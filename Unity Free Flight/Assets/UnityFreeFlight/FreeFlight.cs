@@ -3,22 +3,15 @@ using System.Collections;
 
 [RequireComponent (typeof(Rigidbody))]
 public class FreeFlight : MonoBehaviour {
+
 	
-
-//	public bool toggleGravity = true;
-//	public bool toggleLift = true;
-//	public bool toggleDrag = true;
-
-
-	public FlightPhysics fPhysics;
-
 	public BaseFlightController flightController = null;
 	public MonoBehaviour groundController = null;
-	public bool _groundMode = false;
+	private bool _groundMode = false;
+	private FlightPhysics _physicsObject;
 
 		
 	void Start() {
-		fPhysics = new FlightPhysics (rigidbody);
 		rigidbody.velocity = new Vector3(0.0f, 0.0f, 20.0f);
 		// We don't want the rigidbody to determine our rotation,
 		// we will compute that ourselves
@@ -28,6 +21,14 @@ public class FreeFlight : MonoBehaviour {
 //		groundController = (MonoBehaviour) gameObject.AddComponent<BaseGroundController>();
 	}
 		
+	public FlightPhysics PhysicsObject { 
+		get {
+			if (_physicsObject == null)
+				_physicsObject = new FlightPhysics (rigidbody);
+			return _physicsObject; 
+			} 
+		}
+
 	public bool GroundMode {
 		get {return _groundMode;}
 		set {
@@ -44,7 +45,7 @@ public class FreeFlight : MonoBehaviour {
 	void FixedUpdate() {
 
 		if (!_groundMode) {
-			fPhysics.doStandardPhysics(flightController.UserInput);
+			PhysicsObject.doStandardPhysics(flightController.UserInput);
 		}
 	}
 

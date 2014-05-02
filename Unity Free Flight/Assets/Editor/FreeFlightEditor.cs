@@ -12,23 +12,22 @@ public class FreeFlightEditor : Editor {
 
 	public override void OnInspectorGUI() {
 		FreeFlight ff = (FreeFlight)target;
+		FlightPhysics fo = ff.PhysicsObject;
 		GameObject go = ff.gameObject;
 
-//		ff.togglePhysicsMenu = EditorGUILayout.Toggle ("Physics Menu", ff.togglePhysicsMenu);
-//		ff.toggleStatsMenu = EditorGUILayout.Toggle ("Stats Menu", ff.toggleStatsMenu);
-//		ff.toggleLift = EditorGUILayout.Toggle ("Lift", ff.toggleLift);
-//		ff.toggleDrag = EditorGUILayout.Toggle ("Drag", ff.toggleDrag);
-//		ff.toggleGravity = EditorGUILayout.Toggle ("Gravity", ff.toggleGravity);
-//
-//		ff.fObj.Unit = (UnitConverter.Units) EditorGUILayout.EnumPopup (ff.fObj.Unit);
-//		ff.fObj.Preset = (FlightObject.Presets)EditorGUILayout.EnumPopup (ff.fObj.Preset);
-//		ff.fObj.WingSpan = EditorGUILayout.FloatField ("Wing Span", ff.fObj.WingSpan);
-//		ff.fObj.WingChord = EditorGUILayout.FloatField ("Wing Chord", ff.fObj.WingChord);
-//		ff.fObj.WingArea = EditorGUILayout.FloatField ("Wing Area", ff.fObj.WingArea);
-//		ff.fObj.AspectRatio = EditorGUILayout.Slider ("Aspect Ratio", ff.fObj.AspectRatio, 1, 16);
-//		ff.fObj.Weight = EditorGUILayout.FloatField ("Weight", ff.fObj.Weight);
-//		if( GUILayout.Button("Align To Wing Dimensions" ) ) 		{ff.fObj.setFromWingDimensions ();}
-//		if (GUILayout.Button ("Align Dimensions From Area & AR") ) 	{ff.fObj.setWingDimensions ();}
+		fo.liftEnabled = EditorGUILayout.Toggle ("Lift", fo.liftEnabled);
+		fo.dragEnabled = EditorGUILayout.Toggle ("Drag", fo.dragEnabled);
+		fo.gravityEnabled = EditorGUILayout.Toggle ("Gravity", fo.gravityEnabled);
+
+		fo.Unit = (UnitConverter.Units) EditorGUILayout.EnumPopup (fo.Unit);
+		fo.Preset = (FlightObject.Presets)EditorGUILayout.EnumPopup (fo.Preset);
+		fo.WingSpan = EditorGUILayout.FloatField ("Wing Span", fo.WingSpan);
+		fo.WingChord = EditorGUILayout.FloatField ("Wing Chord", fo.WingChord);
+		fo.WingArea = EditorGUILayout.FloatField ("Wing Area", fo.WingArea);
+		fo.AspectRatio = EditorGUILayout.Slider ("Aspect Ratio", fo.AspectRatio, 1, 16);
+		fo.Weight = EditorGUILayout.FloatField ("Weight", fo.Weight);
+		if( GUILayout.Button("Align To Wing Dimensions" ) ) 		{fo.setFromWingDimensions ();}
+		if (GUILayout.Button ("Align Dimensions From Area & AR") ) 	{fo.setWingDimensions ();}
 
 		ff.flightController = go.GetComponent<BaseFlightController> ();
 		EditorGUILayout.ObjectField ("Flight Controller", ff.flightController, typeof(MonoBehaviour), false);

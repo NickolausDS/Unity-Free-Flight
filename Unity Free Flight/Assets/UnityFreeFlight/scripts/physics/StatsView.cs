@@ -7,15 +7,11 @@ public class StatsView : MonoBehaviour {
 
 	public GameObject flightObject;
 	private FreeFlight ff;
-	private FlightPhysics fPhysics;
-	private FlightObject fObj;
+	private FlightPhysics fObj;
 
 	public bool toggleStatsMenu = false;
 	public bool togglePhysicsMenu = false;
 	public bool toggleWorldPhysicsMenu = false;
-//	public bool toggleGravity = true;
-//	public bool toggleLift = true;
-//	public bool toggleDrag = true;
 
 
 	void OnGUI() {
@@ -78,9 +74,9 @@ public class StatsView : MonoBehaviour {
 //					));
 //			}
 			
-//			toggleLift = GUILayout.Toggle(toggleLift, "Lift Force");
-//			toggleDrag = GUILayout.Toggle(toggleDrag, "Drag Force");
-//			toggleGravity = GUILayout.Toggle(toggleGravity, "Gravity");
+			fObj.liftEnabled = GUILayout.Toggle(fObj.liftEnabled, "Lift Force");
+			fObj.dragEnabled = GUILayout.Toggle(fObj.dragEnabled, "Drag Force");
+			fObj.gravityEnabled = GUILayout.Toggle(fObj.gravityEnabled, "Gravity");
 			toggleWorldPhysicsMenu = GUILayout.Toggle(toggleWorldPhysicsMenu, "World Physics");
 		}
 		
@@ -99,7 +95,7 @@ public class StatsView : MonoBehaviour {
 				Debug.LogWarning (gameObject.name + " doesn't seem to have any flight scripts attached. Unable to display flight stats");
 				return false;
 			}
-			fPhysics = ff.fPhysics;
+			fObj = ff.PhysicsObject;
 
 		}
 		return true;
