@@ -30,8 +30,18 @@ public class FlightObject : UnitConverter {
 	private float _weight;	// in kilograms
 	//End flying body statistics
 
+	//Dimensions which will be needed by physics. They must always be in metric, so
+	//we can never have them be public.
+	//current wing area is calculated from the base area and percentage of wings open
+	//It is always calculated as its set, so this will always be the latest value.
+	protected float currentWingArea;
+	protected float leftWingExposure;
+	protected float rightWingExposure;
+		
+
 	public FlightObject () {
 		Preset = Presets.TurkeyVulture;
+		setWingPosition (1.0f, 1.0f);
 	}
 
 
@@ -58,6 +68,13 @@ public class FlightObject : UnitConverter {
 
 			}
 		}
+	}
+
+	public void setWingPosition(float cleftWingExposure, float crightWingExposure) {
+		leftWingExposure = cleftWingExposure;
+		rightWingExposure = crightWingExposure;
+		currentWingArea = _wingSpan * _wingChord * 2 * (leftWingExposure + rightWingExposure);
+
 	}
 
 	public float WingSpan {

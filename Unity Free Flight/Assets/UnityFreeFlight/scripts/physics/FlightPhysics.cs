@@ -1,13 +1,35 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class FlightPhysics {
+public class FlightPhysics : FlightObject {
 
-	public FlightObject FlightObject{ get; set; }
+	//public FlightObject FlightObject{ get; set; }
+	public bool liftEnabled = true;
+	public bool dragEnabled = true;
+	public bool gravityEnabled = true;
+
 
 	private float formDrag;
 	private float liftInducedDrag;
 
+
+	//These are defined here for efficiency, so they aren't re-initialized every time
+	//we run FixedUpdate(). They all get new derived values every update run. You probably
+	//shouldn't edit them outside of FixedUpdate()
+	private float liftForce;
+	private float dragForce;
+	private Vector3 directionalLift;
+	private Vector3 directionalDrag;
+	private float liftCoefficient;
+	private float dragCoefficient;
+	//angle at which flying body contacts an air mass
+	//(A plane/bird has a high angle of attack when they land, nose up, into the wind)
+	private float angleOfAttack;
+	private Quaternion newRotation;
+	private Vector3 newVelocity;
+
+	private Rigidbody rigidbody;
+	
 	public float FormDrag{ 
 		get {return formDrag;}
 	}
@@ -16,6 +38,59 @@ public class FlightPhysics {
 	}
 
 
+	public FlightPhysics(Rigidbody rb) {
+		rigidbody = rb;
+	}
+
+	public void doStandardPhysics(Quaternion userInput) {
+		rigidbody.useGravity = gravityEnabled;
+		
+		//These will be used to compute new values	
+		newRotation = rigidbody.rotation;	
+		newVelocity = rigidbody.velocity;
+		
+		//Find out how much our user turned us
+		newRotation *= userInput;
+		//Apply the user rotation in a banked turn
+		newRotation = getBankedTurnRotation(newRotation);
+		//Correct our velocity for the new direction we are facing
+		//		newVelocity = getDirectionalVelocity(newRotation, newVelocity);	
+		newVelocity = Vector3.Lerp (newVelocity, getDirectionalVelocity(newRotation, newVelocity), Time.deltaTime);	
+		
+		
+		//These are required for computing lift and drag	
+		angleOfAttack = getAngleOfAttack(newRotation, newVelocity);	
+
+		if (newVelocity != Vector3.zero) {
+
+			if (liftEnabled) {
+				liftCoefficient = getLiftCoefficient(angleOfAttack);
+				// apply lift force
+				liftForce = getLift(newVelocity.magnitude, 0, currentWingArea, liftCoefficient) * Time.deltaTime;
+				directionalLift = Quaternion.LookRotation(newVelocity) * Vector3.up;
+				rigidbody.AddForce(directionalLift * liftForce);
+			}
+
+			if (dragEnabled) {
+				dragCoefficient = getDragCoefficient (angleOfAttack);
+				// get drag rotation
+				dragForce = getDrag(newVelocity.magnitude,0, currentWingArea, dragCoefficient, liftForce, AspectRatio) * Time.deltaTime;
+				directionalDrag = Quaternion.LookRotation(newVelocity) * Vector3.back;
+				// Debug.Log(string.Format ("Drag Direction: {0}, Drag Newtons/Hour: {1}", directionalDrag, dragForce * 3600.0f));
+				rigidbody.AddForce (directionalDrag * dragForce);
+			}
+			
+		}
+		//Finally, apply all the physics on our actual rigidbody
+		rigidbody.rotation = newRotation;
+		rigidbody.velocity = newVelocity;
+		
+		
+	}
+	
+	
+	
+	
 	public float getLift(float velocity, float pressure, float area, float liftCoff) {
 		pressure = 1.225f;
 		float lift = velocity * velocity * pressure * area * liftCoff;

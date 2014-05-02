@@ -14,6 +14,7 @@
 using UnityEngine;
 using System.Collections;
 
+[RequireComponent (typeof(SimpleFlight))]
 public class BaseFlightController : MonoBehaviour {
 	
 	//The public vars are intended to be modified by the inspector. Anything that
@@ -32,6 +33,10 @@ public class BaseFlightController : MonoBehaviour {
 	//These protected vars are meant to be directly used or modified by the 
 	//child class, and generally read from by the physics model. 
 	protected Quaternion _userInput;
+	[Range(0.0f, 1.0f)]
+	protected float _leftWingExposure;
+	[Range(0.0f, 1.0f)]
+	protected float _rightWingExposure;
 	protected int _invertedSetting = -1;
 
 	//Even though Inverted as a property here is invisible to the inspector, 
@@ -53,6 +58,8 @@ public class BaseFlightController : MonoBehaviour {
 
 	//Property to get the user rotation
 	public Quaternion UserInput { get { return _userInput; } }
+	public float LeftWingExposure { get { return _leftWingExposure; } }
+	public float RightWingExposure { get { return _rightWingExposure; } }
 
 	//Private vars, meant only for the Base Flight Controller.
 	private bool _hasWarnedUser = false;

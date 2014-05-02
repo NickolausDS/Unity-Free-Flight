@@ -100,7 +100,6 @@ public class StatsView : MonoBehaviour {
 				return false;
 			}
 			fPhysics = sf.fPhysics;
-			fObj = sf.fObj;
 
 		}
 		return true;
