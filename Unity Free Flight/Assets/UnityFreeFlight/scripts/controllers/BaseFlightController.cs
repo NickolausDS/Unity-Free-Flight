@@ -14,7 +14,7 @@
 using UnityEngine;
 using System.Collections;
 
-[RequireComponent (typeof(SimpleFlight))]
+[RequireComponent (typeof(FreeFlight))]
 public class BaseFlightController : MonoBehaviour {
 	
 	//The public vars are intended to be modified by the inspector. Anything that

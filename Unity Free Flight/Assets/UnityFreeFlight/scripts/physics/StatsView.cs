@@ -6,7 +6,7 @@ using System.Collections;
 public class StatsView : MonoBehaviour {
 
 	public GameObject flightObject;
-	private SimpleFlight sf;
+	private FreeFlight ff;
 	private FlightPhysics fPhysics;
 	private FlightObject fObj;
 
@@ -93,13 +93,13 @@ public class StatsView : MonoBehaviour {
 			Debug.LogWarning ("Unable to display stat information: No flight object set for " + gameObject.name);
 			return false;
 		}
-		if (!sf) {
-			sf = flightObject.GetComponent<SimpleFlight>(); 
-			if (!sf) {
+		if (!ff) {
+			ff = flightObject.GetComponent<FreeFlight>(); 
+			if (!ff) {
 				Debug.LogWarning (gameObject.name + " doesn't seem to have any flight scripts attached. Unable to display flight stats");
 				return false;
 			}
-			fPhysics = sf.fPhysics;
+			fPhysics = ff.fPhysics;
 
 		}
 		return true;

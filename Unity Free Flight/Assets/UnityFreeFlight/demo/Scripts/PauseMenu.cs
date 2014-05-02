@@ -14,8 +14,8 @@ public class PauseMenu : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		if (playerObject != null) {
-			SimpleFlight sf = playerObject.GetComponentInChildren<SimpleFlight>();
-			bc = sf.flightController;
+			FreeFlight ff = playerObject.GetComponentInChildren<FreeFlight>();
+			bc = ff.flightController;
 		} else {
 			string msg = "The player object is not set for the in-game menu. " +
 				"Please set the 'player object' in the 'pause menu' to whatever object is controlled by the player.";

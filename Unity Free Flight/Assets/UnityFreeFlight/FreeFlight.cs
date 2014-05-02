@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 [RequireComponent (typeof(Rigidbody))]
-public class SimpleFlight : MonoBehaviour {
+public class FreeFlight : MonoBehaviour {
 	
 
 //	public bool toggleGravity = true;
