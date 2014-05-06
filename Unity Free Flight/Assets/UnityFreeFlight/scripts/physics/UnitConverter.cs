@@ -10,12 +10,6 @@ public class UnitConverter {
 
 	public static string[] metric = {"M", "M^2", "KG", "N"};
 	public static string[] imperial = {"FT", "FT^2", "LB", "LBf"};
-
-	private static float METSQ2FTSQ = 	10.7640f;
-	private static float MET2FT = 		3.28084f;
-	private static float KG2LB = 		2.20462f;
-	private static float N2LBF = 		0.22481f;
-	
 	static float[,] formulas = new float[,] {
 		//We store everything in metric, so any metric conversions are always 1.
 		{1.0f, 1.0f, 1.0f},
@@ -63,14 +57,6 @@ public class UnitConverter {
 		return v;
 	}
 
-
-//	private static float linearConversion(float value, float formula) {
-//		if (_unit == Units.Metric) {
-//
-//
-//	}
-
-
 	public Units _unit = Units.Metric;
 
 	public UnitConverter(Units theunit) {
@@ -99,70 +85,4 @@ public class UnitConverter {
 				}
 	}
 
-	
-	public static float MetersToFeet(float value) {return value * MET2FT;}
-	public float getLength(float value) {
-				if (_unit == Units.Metric) {
-						return value;
-				} else if (_unit == Units.Imperial) { 
-						return MetersToFeet (value);
-				} else {
-						throw new Exception ("Unit Length conversion dosen't exist");
-				}
-		}
-
-	public static float FeetToMeters(float value) {return value / MET2FT;}
-	public float setLength(float value) {
-		if (_unit == Units.Metric) {
-			return value;
-		} else if (_unit == Units.Imperial) { 
-			return FeetToMeters (value);
-		} else {
-			throw new Exception ("Unit Length conversion dosen't exist");
-		}
-	}
-
-	public static float SQMetersToSQFeet(float value) {return value * METSQ2FTSQ;}
-	public float getArea(float value) {
-			if (_unit == Units.Metric) {
-					return value;
-			} else if (_unit == Units.Imperial) { 
-					return SQMetersToSQFeet (value);
-			} else {
-					throw new Exception ("Unit Area conversion dosen't exist");
-			}
-		}
-
-	public static float SQFeetToSQMeters(float value) {return value / METSQ2FTSQ;}
-	public float setArea(float value) {
-		if (_unit == Units.Metric) {
-			return value;
-		} else if (_unit == Units.Imperial) { 
-			return SQFeetToSQMeters (value);
-		} else {
-			throw new Exception ("Unit Area conversion dosen't exist");
-		}
-	}
-
-	public static float KilogramsToPounds(float value) {return value * KG2LB;}
-	public float getWeight(float value) {
-		if (_unit == Units.Metric) {
-			return value;
-		} else if (_unit == Units.Imperial) { 
-			return KilogramsToPounds (value);
-		} else {
-			throw new Exception ("Unit Area conversion dosen't exist");
-		}
-	}
-	
-	public static float PoundsToKilograms(float value) {return value / KG2LB;}
-	public float setWeight(float value) {
-		if (_unit == Units.Metric) {
-			return value;
-		} else if (_unit == Units.Imperial) { 
-			return PoundsToKilograms (value);
-		} else {
-			throw new Exception ("Unit Area conversion dosen't exist");
-		}
-	}
 }
