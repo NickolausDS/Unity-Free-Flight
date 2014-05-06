@@ -29,7 +29,11 @@ public class FlightPhysics : FlightObject {
 	private Vector3 newVelocity;
 
 	private Rigidbody rigidbody;
-	
+
+	public FlightPhysics(Rigidbody rb) {
+		rigidbody = rb;
+	}
+
 	public float FormDrag{ 
 		get {return formDrag;}
 	}
@@ -37,9 +41,16 @@ public class FlightPhysics : FlightObject {
 		get {return liftInducedDrag;}
 	}
 
+	public float Drag {
+		get { return dragForce; }
+	}
 
-	public FlightPhysics(Rigidbody rb) {
-		rigidbody = rb;
+	public float Lift {
+		get { return liftForce; }
+	}
+
+	public float AngleOfAttack {
+		get { return angleOfAttack; }
 	}
 
 	public void doStandardPhysics(Quaternion userInput) {
