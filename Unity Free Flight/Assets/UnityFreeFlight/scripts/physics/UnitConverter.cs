@@ -45,10 +45,10 @@ public class UnitConverter {
 	}
 
 	public static float convert(Units fromUnit, Units toUnit, Types theType, float theValue) {
-		float val = theValue;
-		if (fromUnit != Units.Metric)
-			val = setConv(fromUnit, theType, theValue);
-		return getConv (toUnit, theType, theValue);
+		//Set Conversion to metric, so we can convert it to anything else
+		float val = setConv(fromUnit, theType, theValue);
+		//Return metric to whatever conversion
+		return getConv (toUnit, theType, val);
 	}
 
 	static float linearGetConversion (float value, float formula) {

@@ -78,31 +78,18 @@ public class FlightObject : UnitConverter {
 	}
 
 	public float WingSpan {
-		get { 
-			return getLength (_wingSpan); 
-		}
-		set {
-			_wingSpan = setLength (value);
-		}
+		get {return convert (Units.Metric, _unit, Types.Length, _wingSpan);}
+		set {_wingSpan = convert (_unit, Units.Metric, Types.Length, value);}
 	}
 
 	public float WingChord {
-		get { 
-			return getLength (_wingChord); 
-		}
-		set {
-			_wingChord = setLength (value);
-		}
+		get {return convert(Units.Metric, _unit, Types.Length, _wingChord);}
+		set {_wingChord = convert (_unit, Units.Metric, Types.Length, value);}
 	}
 
 	public float WingArea {
-		get{
-			return getArea (_wingArea );
-		} 
-		set{
-			_wingArea = setArea (value);
-		}
-		
+		get{return convert (Units.Metric, _unit, Types.Area, _wingArea);} 
+		set{_wingArea = convert (_unit, Units.Metric, Types.Area, value);}
 	}
 	
 	public float AspectRatio {
@@ -112,12 +99,8 @@ public class FlightObject : UnitConverter {
 	}
 	
 	public float Weight { 
-		get{ 
-			return getWeight(_weight);
-		} 
-		set{ 
-			_weight = setWeight (value);
-		}
+		get{return convert (Units.Metric, _unit, Types.Weight, _weight);} 
+		set{_weight = convert (_unit, Units.Metric, Types.Weight, value);}
 	}
 
 	public void setFromWingDimensions() {
