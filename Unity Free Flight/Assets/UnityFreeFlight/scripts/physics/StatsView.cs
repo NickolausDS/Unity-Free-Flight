@@ -40,27 +40,28 @@ public class StatsView : MonoBehaviour {
 			               ));		
 			
 		}
-		
+
+		//I'm not sure the numbers displayed are accurate. These need to be checked over.
 		if (togglePhysicsMenu) {
-//			GUI.Box(new Rect(100,10,200,140), string.Format(
-//				"Physics:\n" +
-//				"Speed: {0:###.#}{1}\n" +
-//				"Altitude+-: {2:###.#}{3}\n" +
-//				"Lift N/H: {4:###.#}{5}\n" +
-//				"Drag N/H: {6:###.#}{7}\n" +
-//				"\tInduced: {8:###.#}{2}\n" +
-//				"\tForm {10:###.#}{3}\n ",
-//				"Angle Of Attack: {12:##}{13}\n" +
-//				"Lift COF: {14:#.##}", 
-//				rigidbody.velocity.magnitude * 3600.0f / 1000.0f, "KPH",
-//				liftForce + Physics.gravity.y * 3600.0f / 1000.0f, "M",
-//				liftForce * 3600.0f / 1000.0f, "N",
-//				dragForce * 3600.0f / 1000.0f, "N",
-//				fPhysics.LiftInducedDrag, "N",
-//				fPhysics.FormDrag, "N",
-//				angleOfAttack, "Deg",
-//				liftCoefficient)
-//			        );
+			GUI.Box(new Rect(100,10,200,140), string.Format(
+				"Physics:\n" +
+				"Speed: {0:###.#}{1}\n" +
+				"Altitude+-: {2:###.#}{3}\n" +
+				"Lift: {4:###.#}{5}\n" +
+				"Drag: {6:###.#}{7}\n" +
+				"\tInduced: {8:###.#}{9}\n" +
+				"\tForm: {10:###.#}{11}\n " +
+				"Angle Of Attack: {12:##}{13}\n" +
+				"Lift COF: {14:#.##}", 
+				flightObject.rigidbody.velocity.magnitude * 3600.0f / 1000.0f, 	"KPH",
+				fObj.Lift + Physics.gravity.y, 									fObj.getForceType (showAbbreviations),
+				fObj.Lift * 3600.0f / 1000.0f, 									fObj.getForceType (showAbbreviations),
+				fObj.Drag * 3600.0f / 1000.0f, 									fObj.getForceType(showAbbreviations),
+				fObj.LiftInducedDrag, 											fObj.getForceType(showAbbreviations),
+				fObj.FormDrag, 													fObj.getForceType(showAbbreviations),
+				fObj.AngleOfAttack, 											"Deg",
+				fObj.LiftCoefficient)
+			        );
 ////			if (toggleWorldPhysicsMenu) {
 //				GUI.Box (new Rect(100, 160, 200, 90), string.Format (
 //					"World Physics:\n" +
