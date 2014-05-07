@@ -70,8 +70,10 @@ public class PauseMenu : MonoBehaviour {
 			}
 			bc.Inverted = GUI.Toggle (new Rect (25, 20, 200, 20), bc.Inverted, "Inverted Controls");
 			StatsView sv = gameObject.GetComponent<StatsView>();
-			if (sv)
+			if (sv) {
 				sv.enabled = GUI.Toggle (new Rect (25, 40, 200, 20), sv.enabled, "Show Physics Statistics");
+				sv.showAbbreviations = GUI.Toggle(new Rect (25, 60, 200, 20), sv.showAbbreviations, "Show Unit Abbreviations");
+			}
 			GUI.EndGroup();
 
 		}

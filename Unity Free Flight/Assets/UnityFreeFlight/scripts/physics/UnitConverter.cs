@@ -13,7 +13,7 @@ public class UnitConverter {
 		{"Feet", "Square Feet", "Pounds", "Force Pounds"}
 	};
 
-	public static string[,] abreviations = {
+	public static string[,] abbreviations = {
 		{"M", "M^2", "KG", "N"},
 		{"FT", "FT^2", "LB", "LBf"}
 	};
@@ -77,7 +77,7 @@ public class UnitConverter {
 
 	public string getTypeName(Units theUnit, Types theType, bool abrev=true){
 		if (abrev)
-			return abreviations [(int) theUnit, (int) theType];
+			return abbreviations [(int) theUnit, (int) theType];
 		return names[(int) theUnit, (int) theType];
 	}
 

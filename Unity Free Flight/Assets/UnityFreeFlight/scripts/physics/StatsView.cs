@@ -12,6 +12,7 @@ public class StatsView : MonoBehaviour {
 	public bool toggleStatsMenu = false;
 	public bool togglePhysicsMenu = false;
 	public bool toggleWorldPhysicsMenu = false;
+	public bool showAbbreviations = true;
 
 
 	void OnGUI() {
@@ -19,7 +20,7 @@ public class StatsView : MonoBehaviour {
 		if (!sanityCheck ())
 			this.enabled = false;
 
-		
+
 		toggleStatsMenu = GUILayout.Toggle(toggleStatsMenu, "Show Stats");
 		togglePhysicsMenu = GUILayout.Toggle(togglePhysicsMenu, "Show Physics");
 		
@@ -31,11 +32,11 @@ public class StatsView : MonoBehaviour {
 			               "Total Wing Area: {4:###.#}{5}\n" +
 			               "Aspect Ratio: {6:#.#}\n " +
 			               "Weight: {7:###.#}{8}\n",
-			               fObj.WingSpan, fObj.getLengthType(),
-			               fObj.WingChord, fObj.getLengthType(),
-			               fObj.WingArea, fObj.getAreaType(),
+			               fObj.WingSpan, fObj.getLengthType(showAbbreviations),
+			               fObj.WingChord, fObj.getLengthType(showAbbreviations),
+			               fObj.WingArea, fObj.getAreaType(showAbbreviations),
 			               fObj.AspectRatio,
-			               fObj.Weight, fObj.getWeightType()
+			               fObj.Weight, fObj.getWeightType(showAbbreviations)
 			               ));		
 			
 		}
@@ -96,7 +97,6 @@ public class StatsView : MonoBehaviour {
 				return false;
 			}
 			fObj = ff.PhysicsObject;
-
 		}
 		return true;
 
