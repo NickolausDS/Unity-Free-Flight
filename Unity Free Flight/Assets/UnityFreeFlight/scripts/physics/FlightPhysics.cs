@@ -3,7 +3,6 @@ using System.Collections;
 
 public class FlightPhysics : FlightObject {
 
-	//public FlightObject FlightObject{ get; set; }
 	public bool liftEnabled = true;
 	public bool dragEnabled = true;
 	public bool gravityEnabled = true;
@@ -34,24 +33,37 @@ public class FlightPhysics : FlightObject {
 		rigidbody = rb;
 	}
 
+	//Forces
+
 	public float FormDrag{ 
-		get {return formDrag;}
+		get {return convert (Units.Metric, _unit, Types.Force, formDrag);}
 	}
 	public float LiftInducedDrag { 
-		get {return liftInducedDrag;}
+		get {return convert (Units.Metric, _unit, Types.Force, liftInducedDrag);}
 	}
 
 	public float Drag {
-		get { return dragForce; }
+		get { return convert (Units.Metric, _unit, Types.Force, dragForce); }
 	}
 
 	public float Lift {
-		get { return liftForce; }
+		get { return convert (Units.Metric, _unit, Types.Force, liftForce); }
 	}
+
+	//Dimensionless numbers
 
 	public float AngleOfAttack {
 		get { return angleOfAttack; }
 	}
+
+	public float LiftCoefficient {
+		get { return liftCoefficient; }
+	}
+
+	public float DragCoefficient {
+		get { return dragCoefficient; }
+	}
+
 
 	public void doStandardPhysics(Quaternion userInput) {
 		rigidbody.useGravity = gravityEnabled;
