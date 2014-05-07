@@ -2,8 +2,40 @@
 using System.Collections;
 using System;
 
-
+/*
+ * Never worry about which units to use ever again! Unit Converter has you covered!
+ * 
+ * This class was created to reduce the need for users to adhere to a specific unit type.
+ * If you're comfortable using feet, use feet, ect. 
+ * 
+ * By default, the converter uses metric as a 'base' and converts everything else to and
+ * from metric. It's intended that all physics (or computationally complex) math is done
+ * using metric, and any time an End User wants a given number in something else, this 
+ * converts it for them. 
+ * 
+ */
 public class UnitConverter {
+
+	/*
+	 * On adding new Units:
+	 * 	1. Add your units to the unit enum
+	 *  2. add all the names and abreviations to the list below
+	 * 		Your new list must match the length of the others!
+	 * 	3. Add formula conversions, from metric to your specific type
+	 * 	4. Add another list of conversion methods. If it's a linear conversion, 
+	 * 		you may use the simple linear conversion methods, otherwise you need
+	 * 		to write your own method for getting and setting the type to and from metric
+	 * 
+	 * On adding new Types
+	 * 
+	 * Pretty much the same as the above. Make sure you fill in:
+	 * 	1. The name of the unit in "Types"
+	 * 	2. The name and abreviation in string form
+	 * 	3. The formula for converting to and from metric
+	 * 	4. the get and set conversion methods
+	 * Additionally, you may want to add another convienience method at
+	 * the bottom for your type (such as getLengthType).
+	 */ 
 
 	public enum Units{ Metric, Imperial };
 	public enum Types { Length, Area, Weight, Force };
@@ -17,9 +49,7 @@ public class UnitConverter {
 		{"M", "M^2", "KG", "N"},
 		{"FT", "FT^2", "LB", "LBf"}
 	};
-
-//	public static string[] metric = {"M", "M^2", "KG", "N"};
-//	public static string[] imperial = {"FT", "FT^2", "LB", "LBf"};
+	
 	static float[,] formulas = new float[,] {
 		//We store everything in metric, so any metric conversions are always 1.
 		{1.0f, 1.0f, 1.0f, 1.0f},
@@ -27,12 +57,14 @@ public class UnitConverter {
 		{ 3.28084f, 10.7640f, 2.20462f, 0.22481f }
 	};
 
+	//Ignore this if you are adding a new type or new unit
 	private delegate float linearConv (float value, float formula);
+
+	//Get and set conversions
 	static linearConv[,] getConversions = new linearConv[,] { 
 		{ reflexive, reflexive, reflexive, reflexive },		
 		{ linearGetConversion, linearGetConversion, linearGetConversion, linearGetConversion }
 	};
-
 	static linearConv[,] setConversions = new linearConv[,] { 
 		{ reflexive, reflexive, reflexive, reflexive },		
 		{ linearSetConversion, linearSetConversion, linearSetConversion, linearSetConversion }
