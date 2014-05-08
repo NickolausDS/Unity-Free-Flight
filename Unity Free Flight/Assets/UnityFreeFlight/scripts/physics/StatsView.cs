@@ -46,35 +46,33 @@ public class StatsView : MonoBehaviour {
 			GUI.Box(new Rect(100,10,200,140), string.Format(
 				"Physics:\n" +
 				"Speed: {0:###.#}{1}\n" +
-				"Altitude+-: {2:###.#}{3}\n" +
+				"Altitude: {2:###.#}{3}\n" +
 				"Lift: {4:###.#}{5}\n" +
 				"Drag: {6:###.#}{7}\n" +
 				"\tInduced: {8:###.#}{9}\n" +
 				"\tForm: {10:###.#}{11}\n " +
 				"Angle Of Attack: {12:##}{13}\n" +
 				"Lift COF: {14:#.##}", 
-				flightObject.rigidbody.velocity.magnitude * 3600.0f / 1000.0f, 	"KPH",
-				fObj.Lift + Physics.gravity.y, 									fObj.getForceType (showAbbreviations),
-				fObj.Lift * 3600.0f / 1000.0f, 									fObj.getForceType (showAbbreviations),
-				fObj.Drag * 3600.0f / 1000.0f, 									fObj.getForceType(showAbbreviations),
-				fObj.LiftInducedDrag, 											fObj.getForceType(showAbbreviations),
-				fObj.FormDrag, 													fObj.getForceType(showAbbreviations),
-				fObj.AngleOfAttack, 											"Deg",
+				fObj.Speed, 			fObj.getLongDistanceType(showAbbreviations),
+				fObj.VerticalSpeed, 	fObj.getShortDistanceType (showAbbreviations),
+				fObj.Lift, 				fObj.getForceType (showAbbreviations),
+				fObj.Drag, 				fObj.getForceType(showAbbreviations),
+				fObj.LiftInducedDrag, 	fObj.getForceType(showAbbreviations),
+				fObj.FormDrag, 			fObj.getForceType(showAbbreviations),
+				fObj.AngleOfAttack, 	"Deg",
 				fObj.LiftCoefficient)
 			        );
-////			if (toggleWorldPhysicsMenu) {
-//				GUI.Box (new Rect(100, 160, 200, 90), string.Format (
-//					"World Physics:\n" +
-//					"speed Vector: {0}\n" +
-//					"Direction {1}\n" +
-//					"Gravity: {2}\n" +
-//					"RigidBody Drag: {3} \n",
-//					rigidbody.velocity,
-//					rigidbody.rotation.eulerAngles,
-//					Physics.gravity.y, 
-//					rigidbody.drag
-//					));
-//			}
+			if (toggleWorldPhysicsMenu) {
+				GUI.Box (new Rect(100, 160, 200, 90), string.Format (
+					"World Physics:\n" +
+					"speed Vector: {0}\n" +
+					"Direction {1}\n" +
+					"Gravity: {2}\n",
+					fObj.Velocity,
+					fObj.Rotation,
+					Physics.gravity.y 
+					));
+			}
 			
 			fObj.liftEnabled = GUILayout.Toggle(fObj.liftEnabled, "Lift Force");
 			fObj.dragEnabled = GUILayout.Toggle(fObj.dragEnabled, "Drag Force");

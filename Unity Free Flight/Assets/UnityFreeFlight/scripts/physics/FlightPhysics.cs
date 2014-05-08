@@ -64,6 +64,30 @@ public class FlightPhysics : FlightObject {
 		get { return dragCoefficient; }
 	}
 
+	//Rates of Lengthy stuff over time
+	public float VerticalSpeed {
+		get {
+			float MPS = rigidbody.velocity.y;
+			return convert (Units.Metric, _unit, Types.ShortDistance, MPS);
+		}
+	}
+
+	public float Speed {
+		get {
+			float KPH = rigidbody.velocity.magnitude * 3.6f;
+			return convert (Units.Metric, _unit, Types.LongDistance, KPH);
+		}
+	}
+
+	//Vectors
+	public Vector3 Velocity {
+		get { return rigidbody.velocity; }
+	}
+
+	public Vector3 Rotation {
+		get { return rigidbody.rotation.eulerAngles; }
+	}
+
 
 	public void doStandardPhysics(Quaternion userInput) {
 		rigidbody.useGravity = gravityEnabled;
