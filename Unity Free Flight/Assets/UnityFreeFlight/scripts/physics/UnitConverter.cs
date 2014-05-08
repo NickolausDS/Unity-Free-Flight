@@ -38,23 +38,23 @@ public class UnitConverter {
 	 */ 
 
 	public enum Units{ Metric, Imperial };
-	public enum Types { Length, Area, Weight, Force };
+	public enum Types { Length, Area, Weight, Force, ShortDistance, LongDistance };
 
 	public static string[,] names = {
-		{"Meters", "Square Meters", "Kilograms", "Newtons"},
-		{"Feet", "Square Feet", "Pounds", "Force Pounds"}
+		{"Meters", "Square Meters", "Kilograms", "Newtons", "Meters/Second", "Kilometers/Hour"},
+		{"Feet", "Square Feet", "Pounds", "Force Pounds", "Feet/Second", "Miles/Hour"}
 	};
 
 	public static string[,] abbreviations = {
-		{"M", "M^2", "KG", "N"},
-		{"FT", "FT^2", "LB", "LBf"}
+		{"M", "M^2", "KG", "N", "MPS", "KPH"},
+		{"FT", "FT^2", "LB", "LBf", "FPS", "MPH"}
 	};
 	
 	static float[,] formulas = new float[,] {
 		//We store everything in metric, so any metric conversions are always 1.
-		{1.0f, 1.0f, 1.0f, 1.0f},
+		{1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f},
 		//meters to feet, sqm to sqft, kg to lb, Newtons to lbForce 
-		{ 3.28084f, 10.7640f, 2.20462f, 0.22481f }
+		{ 3.28084f, 10.7640f, 2.20462f, 0.22481f, 3.28084f, 0.621371f }
 	};
 
 	//Ignore this if you are adding a new type or new unit
@@ -62,12 +62,12 @@ public class UnitConverter {
 
 	//Get and set conversions
 	static linearConv[,] getConversions = new linearConv[,] { 
-		{ reflexive, reflexive, reflexive, reflexive },		
-		{ linearGetConversion, linearGetConversion, linearGetConversion, linearGetConversion }
+		{ reflexive, reflexive, reflexive, reflexive, reflexive, reflexive },		
+		{ linearGetConversion, linearGetConversion, linearGetConversion, linearGetConversion, linearGetConversion, linearGetConversion }
 	};
 	static linearConv[,] setConversions = new linearConv[,] { 
-		{ reflexive, reflexive, reflexive, reflexive },		
-		{ linearSetConversion, linearSetConversion, linearSetConversion, linearSetConversion }
+		{ reflexive, reflexive, reflexive, reflexive, reflexive, reflexive },		
+		{ linearSetConversion, linearSetConversion, linearSetConversion, linearSetConversion, linearSetConversion, linearSetConversion }
 	};
 
 	public static float getConv(Units theUnit, Types theType, float theValue) {
@@ -131,6 +131,14 @@ public class UnitConverter {
 
 	public string getForceType(bool abrev=true) {
 		return getTypeName (Types.Force, abrev);
+	}
+
+	public string getShortDistanceType(bool abrev=true) {
+		return getTypeName (Types.ShortDistance, abrev);
+	}
+
+	public string getLongDistanceType(bool abrev=true) {
+		return getTypeName (Types.LongDistance, abrev);
 	}
 
 }
