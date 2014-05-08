@@ -8,6 +8,7 @@ public class StatsView : MonoBehaviour {
 	public GameObject flightObject;
 	private FreeFlight ff;
 	private FlightPhysics fObj;
+	public GUISkin guiskin;
 
 	public bool toggleStatsMenu = false;
 	public bool togglePhysicsMenu = false;
@@ -20,6 +21,7 @@ public class StatsView : MonoBehaviour {
 		if (!sanityCheck ())
 			this.enabled = false;
 
+		GUI.skin = guiskin;
 
 		toggleStatsMenu = GUILayout.Toggle(toggleStatsMenu, "Show Stats");
 		togglePhysicsMenu = GUILayout.Toggle(togglePhysicsMenu, "Show Physics");
@@ -27,8 +29,8 @@ public class StatsView : MonoBehaviour {
 		
 		if (toggleStatsMenu) {
 			GUI.Box(new Rect(310, 10, 200, 110), 
-			        string.Format ("Stats:\nWing Span: {0:###.#}{1}\n " +
-			               "Wing Chord: {2:###.#}{3}\n " +
+			        string.Format ("Wing Span: {0:###.#}{1}\n" +
+			               "Wing Chord: {2:###.#}{3}\n" +
 			               "Total Wing Area: {4:###.#}{5}\n" +
 			               "Aspect Ratio: {6:#.#}\n " +
 			               "Weight: {7:###.#}{8}\n",
@@ -44,13 +46,12 @@ public class StatsView : MonoBehaviour {
 		//I'm not sure the numbers displayed are accurate. These need to be checked over.
 		if (togglePhysicsMenu) {
 			GUI.Box(new Rect(100,10,200,140), string.Format(
-				"Physics:\n" +
 				"Speed: {0:###.#}{1}\n" +
 				"Altitude: {2:###.#}{3}\n" +
 				"Lift: {4:###.#}{5}\n" +
 				"Drag: {6:###.#}{7}\n" +
 				"\tInduced: {8:###.#}{9}\n" +
-				"\tForm: {10:###.#}{11}\n " +
+				"\tForm: {10:###.#}{11}\n" +
 				"Angle Of Attack: {12:##}{13}\n" +
 				"Lift COF: {14:#.##}", 
 				fObj.Speed, 			fObj.getLongDistanceType(showAbbreviations),
@@ -64,7 +65,6 @@ public class StatsView : MonoBehaviour {
 			        );
 			if (toggleWorldPhysicsMenu) {
 				GUI.Box (new Rect(100, 160, 200, 90), string.Format (
-					"World Physics:\n" +
 					"speed Vector: {0}\n" +
 					"Direction {1}\n" +
 					"Gravity: {2}\n",
