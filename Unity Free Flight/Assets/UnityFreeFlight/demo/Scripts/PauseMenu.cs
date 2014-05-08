@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEditor;
+
 
 public class PauseMenu : MonoBehaviour {
 
@@ -73,6 +75,18 @@ public class PauseMenu : MonoBehaviour {
 			if (sv) {
 				sv.enabled = GUI.Toggle (new Rect (25, 40, 200, 20), sv.enabled, "Show Physics Statistics");
 				sv.showAbbreviations = GUI.Toggle(new Rect (25, 60, 200, 20), sv.showAbbreviations, "Show Unit Abbreviations");
+				FreeFlight ff = sv.flightObject.GetComponent<FreeFlight>();
+				if (ff) {
+					//Admittedly, this is a bit hacky. We convert the Unit enum to an integer, 
+					//asign the selection to a string array that *matches* the enums by index, 
+					//then convert the integer back to a Unit enum. Hacky, but works. Maybe it
+					//would be better to add string-settable unit types to the unit converter.
+					int unitSelection = (int) ff.PhysicsObject.Unit;
+					string[] choices = new string[] {"Metric", "Imperial"};
+					unitSelection = GUI.SelectionGrid(new Rect(25, 80, 150, 30), unitSelection, choices, 2);
+					ff.PhysicsObject.Unit = (UnitConverter.Units) unitSelection;
+
+				}
 			}
 			GUI.EndGroup();
 
