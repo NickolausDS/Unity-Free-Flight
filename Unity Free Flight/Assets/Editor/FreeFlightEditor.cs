@@ -21,11 +21,11 @@ public class FreeFlightEditor : Editor {
 
 		fo.Unit = (UnitConverter.Units) EditorGUILayout.EnumPopup (fo.Unit);
 		fo.Preset = (FlightObject.Presets)EditorGUILayout.EnumPopup (fo.Preset);
-		fo.WingSpan = EditorGUILayout.FloatField ("Wing Span", fo.WingSpan);
-		fo.WingChord = EditorGUILayout.FloatField ("Wing Chord", fo.WingChord);
-		fo.WingArea = EditorGUILayout.FloatField ("Wing Area", fo.WingArea);
+		fo.WingSpan = EditorGUILayout.FloatField ("Wing Span (" + fo.getLengthType() + ")", fo.WingSpan);
+		fo.WingChord = EditorGUILayout.FloatField ("Wing Chord (" + fo.getLengthType() + ")", fo.WingChord);
+		fo.WingArea = EditorGUILayout.FloatField ("Wing Area (" + fo.getAreaType() + ")", fo.WingArea);
 		fo.AspectRatio = EditorGUILayout.Slider ("Aspect Ratio", fo.AspectRatio, 1, 16);
-		fo.Weight = EditorGUILayout.FloatField ("Weight", fo.Weight);
+		fo.Weight = EditorGUILayout.FloatField ("Weight (" + fo.getWeightType() + ")", fo.Weight);
 		if( GUILayout.Button("Align To Wing Dimensions" ) ) 		{fo.setFromWingDimensions ();}
 		if (GUILayout.Button ("Align Dimensions From Area & AR") ) 	{fo.setWingDimensions ();}
 
