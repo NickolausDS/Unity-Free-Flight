@@ -10,6 +10,9 @@ PACKAGEDEST="$VERSION"
 LINUX_DEP=(${NAME}.x86 ${NAME}_Data)
 MAC_DEP=(${NAME}.app)
 WINDOWS_DEP=(${NAME}.exe ${NAME}_Data)
+WEB_DEP=(${NAME})
+UNITYPACKAGE_DEP=(${NAME}.unitypackage)
+
 
 function sanity() {
 	if [ `uname` != "Darwin" ] 
@@ -63,6 +66,8 @@ printf "To be Packaged:\n"
 printf "\tLinux:   `has_dep ${LINUX_DEP[@]}`\n"
 printf "\tMac:     `has_dep ${MAC_DEP[@]}`\n"
 printf "\tWindows: `has_dep ${WINDOWS_DEP[@]}`\n"
+printf "\tWeb:     `has_dep ${WEB_DEP[@]}`\n"
+printf "\tUnity:   `has_dep ${UNITYPACKAGE_DEP[@]}`\n"
 printf "`sanity`"
 printf "\n\n`check_packages_exist`\n\n"
 printf "Continue? (y/n) "
@@ -109,16 +114,33 @@ then
 		rm -rf $PACKAGENAME
 		MAC_RET=$?	
 	fi
-
+	if has_dep ${WEB_DEP[@]} &> /dev/null
+	then
+		WEBNAME="${NAME}Web${VERSION}"
+		rm "$PACKAGEDEST/$WEBNAME" 2> /dev/null
+		echo "Moving Web Files..." &&
+		mv -v "$NAME" "$PACKAGEDEST/$WEBNAME" &&
+		WEB_RET=$?	
+	fi
+	if has_dep ${UNITYPACKAGE_DEP[@]} &> /dev/null
+	then
+		rm "$PACKAGEDEST/$PACKAGENAME.unitypackage" 2> /dev/null
+		echo "Moving Unity Package..." &&
+		mv -v "$NAME.unitypackage" "$PACKAGEDEST/$PACKAGENAME.unitypackage" &&
+		UNITYPACKAGE_RET=$?	
+	fi
 	printf "\n\n"
 	printf "Linux:   `print_status $LIN_RET`\n"
 	printf "Windows: `print_status $WIN_RET`\n"
 	printf "Mac:     `print_status $MAC_RET`\n"
+	printf "Web:     `print_status $WEB_RET`\n"
+	printf "Unity:   `print_status $UNITYPACKAGE_RET`\n"
 
-	if [ "$WIN_RE" != "1" -a "$MAC_RET" != "1" -a "$LIN_RET" != "1" ] 
+
+	if [ "$WIN_RET" != "1" -a "$MAC_RET" != "1" -a "$LIN_RET" != "1" -a "$WEB_RET" != "1" -a "$UNITYPACKAGE_RET" != "1" ] 
 	then
 		printf "\nFinishing cleanup...\n"
-		rm -rf ${MAC_DEP[@]} ${LINUX_DEP[@]} ${WINDOWS_DEP[@]}
+		rm -rf ${MAC_DEP[@]} ${LINUX_DEP[@]} ${WINDOWS_DEP[@]} ${WEB_DEP[@]} ${UNITYPACKAGE_DEP[@]}
 	else
 		printf "\nAborting cleanup due to errors.\n"
 	fi
