@@ -32,6 +32,11 @@ Version 0.1.x will focus on flight physics, and basic usability.
 * Version 0.1.2
 	* An options menu added, controls can be inverted
 	* Flight controllers are better
+* Version 0.1.3
+	* Menu options added
+	* Flight statistic information improved
+	* Small cosmetic improvements
+	* Many backend changes and refactors, in preparation for version 0.2!
 	
 ####Version 0.2.x	
 
@@ -49,6 +54,8 @@ There is no support for the following features, but they should be given attenti
 	* Dynamic wind-map generation, for any Unity Terrain
 * thermals
 	* Dynamic Thermal generation, for Terrains
+* Mobile Support
+	* Physics optimized for small devices
 
 ###Contact
 
