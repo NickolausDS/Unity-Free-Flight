@@ -15,11 +15,12 @@ public class StatsView : MonoBehaviour {
 	public bool toggleWorldPhysicsMenu = false;
 	public bool showAbbreviations = true;
 
-
 	void OnGUI() {
 
-		if (!sanityCheck ())
+		if (!sanityCheck ()) {
 			this.enabled = false;
+			return;
+		}
 
 		GUI.skin = guiskin;
 
@@ -86,13 +87,17 @@ public class StatsView : MonoBehaviour {
 
 
 		if (!flightObject) {
-			Debug.LogWarning ("Unable to display stat information: No flight object set for " + gameObject.name);
+			string msg = "Unable to display stat information: No flight object set for " + gameObject.name;
+			msg += " Please set the \'Flight Object\' variable to an object which has the \'FreeFlight\' script attached";
+			Debug.LogWarning (msg);
 			return false;
 		}
 		if (!ff) {
 			ff = flightObject.GetComponent<FreeFlight>(); 
 			if (!ff) {
-				Debug.LogWarning (gameObject.name + " doesn't seem to have any flight scripts attached. Unable to display flight stats");
+				string msg = "GameObject '"+ flightObject.name + "' doesn't have the 'FreeFlight' script attached. Unable " +
+					"to display flight statistics.";
+				Debug.LogWarning (msg);
 				return false;
 			}
 			fObj = ff.PhysicsObject;
