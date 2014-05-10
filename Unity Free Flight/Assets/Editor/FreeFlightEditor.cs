@@ -37,7 +37,7 @@ public class FreeFlightEditor : Editor {
 
 		if (cname == null && tempgc)
 			cname = tempgc.name;
-			if (cname != null && !go.GetComponent(cname)) {
+			if (cname != null && cname != "" && !go.GetComponent(cname)) {
 				go.AddComponent(cname);
 				groundController = (MonoBehaviour) go.GetComponent (cname);
 				if (groundController) {
