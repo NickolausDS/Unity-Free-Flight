@@ -60,7 +60,7 @@ public class FreeFlight : MonoBehaviour {
 			}
 		} else {
 			Debug.Log ("No ground controller detected, not switching to ground controls");
-			_groundMode = !_groundMode;
+			GroundMode = !GroundMode;
 		}
 
 	}
@@ -70,14 +70,14 @@ public class FreeFlight : MonoBehaviour {
 			flightController.flightEnabled = true;
 			if (groundController) {
 				groundController.enabled = false;
-				CharacterController cc = gameObject.GetComponent<CharacterController> ();
-				if (cc) {
-					cc.enabled = false;
-				}
+			}
+			CharacterController cc = gameObject.GetComponent<CharacterController> ();
+			if (cc) {
+				cc.enabled = false;
 			}
 		} else {
 			Debug.Log ("No air controller detected, not switching to air controls");
-			_groundMode = !_groundMode;
+			GroundMode = !GroundMode;
 		}
 	}
 
