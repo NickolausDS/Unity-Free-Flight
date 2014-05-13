@@ -13,7 +13,7 @@ public class FreeFlight : MonoBehaviour {
 	 */ 
 	public BaseFlightController flightController = null;
 	public MonoBehaviour groundController = null;
-	private Modes _mode = Modes.Flight;
+	private Modes _mode;
 	private FlightPhysics _physicsObject;
 
 		
