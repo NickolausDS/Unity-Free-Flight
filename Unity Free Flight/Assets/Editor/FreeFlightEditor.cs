@@ -5,14 +5,18 @@ using UnityEditor;
 [CustomEditor(typeof(FreeFlight)), CanEditMultipleObjects]
 public class FreeFlightEditor : Editor {
 
+	//All used for setting the ground controller. 
+	//It's more complicated than it should be, see
+	//setting ground controllers below
 	MonoBehaviour groundController = null;
-
 	MonoScript tempgc;
 	string cname = null;
 
+	//vars for foldouts
 	private bool _showPhysicsAttrs = false;
 	private bool _showDimensionAttrs = false;
 	private bool _showControllers = true;
+	
 
 
 	public override void OnInspectorGUI() {
@@ -47,27 +51,39 @@ public class FreeFlightEditor : Editor {
 			ff.Mode = (FreeFlight.Modes) EditorGUILayout.EnumPopup ("Flight Mode", ff.Mode);
 			
 
-			if (ff.groundController)
-				ff.groundController = (MonoBehaviour) EditorGUILayout.ObjectField("Ground Controller", ff.groundController, typeof(MonoBehaviour), false);
-			else
-				tempgc = (MonoScript) EditorGUILayout.ObjectField ("Ground Controller", tempgc, typeof(MonoScript), false);
-			//		EditorGUILayout.ObjectField ("Ground Controller", groundController, typeof(MonoBehaviour), false);
+			tempgc = (MonoScript) EditorGUILayout.ObjectField ("Ground Controller", tempgc, typeof(MonoScript), false);
+			setGroundController(ff, go);
+			//Used for debugging
+//			EditorGUILayout.ObjectField ("Ground Controller", groundController, typeof(MonoBehaviour), false);
+//			EditorGUILayout.LabelField(cname);
+
 		}
 
+
+	}
+
+	//As you may notice, setting ground controllers are a complicated mess.
+	//The problem lies with adding the component to the game object. Every time
+	//that happens, the monoscript for 'tempgc' mysteriously disappears. I've done
+	//hours of research and have yet to figure out why this happens. 
+	//
+	//We circumvent the problem by using a string 'cname' to keep track of the class
+	//when it disappears. 
+	private void setGroundController(FreeFlight ff, GameObject go) {
 
 		if (cname == null && tempgc)
 			cname = tempgc.name;
-			if (cname != null && cname != "" && !go.GetComponent(cname)) {
-				go.AddComponent(cname);
-				groundController = (MonoBehaviour) go.GetComponent (cname);
-				if (groundController) {
-					groundController.enabled = false;
-					CharacterController cc = go.GetComponent<CharacterController>();
-					if (cc)
-						cc.enabled = false;
-				}
+		if (cname != null && cname != "" && !go.GetComponent(cname)) {
+			groundController = (MonoBehaviour) go.AddComponent(cname);
+			if (groundController) {
+				groundController.enabled = false;
+				CharacterController cc = go.GetComponent<CharacterController>();
+				if (cc)
+					cc.enabled = false;
+			}
 		}
 
+		//if the new ground controller is different, swap it.
 		groundController = (MonoBehaviour) go.GetComponent (cname);
 		if (groundController) {
 			if (ff.groundController && ff.groundController.name != groundController.name) {
