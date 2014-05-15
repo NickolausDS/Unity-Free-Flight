@@ -24,12 +24,13 @@ public class FlightMechanics : FlightPhysics {
 		return;
 	}
 
-	public void wingDive() {
-		return;
+	public void wingFold(float left, float right) {
+		setWingPosition (left, right);
+
 	}
 
-	public void thrust() {
-		return;
+	public void thrust(float forceNewtons) {
+//		rigidbody.AddForce(new Vector3(0.0f, 0.0f, forceNewtons); 
 	}
 
 

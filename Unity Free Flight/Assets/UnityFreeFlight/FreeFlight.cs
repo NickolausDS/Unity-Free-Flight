@@ -14,7 +14,7 @@ public class FreeFlight : MonoBehaviour {
 	public BaseFlightController flightController = null;
 	public MonoBehaviour groundController = null;
 	private Modes _mode;
-	private FlightPhysics _physicsObject;
+	private FlightMechanics _physicsObject;
 
 		
 	void Start() {
@@ -27,10 +27,10 @@ public class FreeFlight : MonoBehaviour {
 //		groundController = (MonoBehaviour) gameObject.AddComponent<BaseGroundController>();
 	}
 		
-	public FlightPhysics PhysicsObject { 
+	public FlightMechanics PhysicsObject { 
 		get {
 			if (_physicsObject == null)
-				_physicsObject = new FlightPhysics (rigidbody);
+				_physicsObject = new FlightMechanics (rigidbody);
 			return _physicsObject; 
 			} 
 		}
@@ -64,7 +64,11 @@ public class FreeFlight : MonoBehaviour {
 	void FixedUpdate() {
 
 		if (_mode == Modes.Flight || _mode == Modes.Hybrid) {
+			if (flightController.divingEnabled)
+				PhysicsObject.wingFold (flightController.LeftWingExposure, flightController.RightWingExposure);
+
 			PhysicsObject.doStandardPhysics(flightController.UserInput);
+
 		}
 	}
 

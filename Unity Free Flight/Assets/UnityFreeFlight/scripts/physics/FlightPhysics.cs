@@ -27,7 +27,7 @@ public class FlightPhysics : FlightObject {
 	private Quaternion newRotation;
 	private Vector3 newVelocity;
 
-	private Rigidbody rigidbody;
+	protected Rigidbody rigidbody;
 
 	public FlightPhysics(Rigidbody rb) {
 		rigidbody = rb;

@@ -20,6 +20,23 @@ public class SimpleFlightController : BaseFlightController {
 			flapWings ();
 		}
 
+		if (Input.GetButton("FoldLeftWing")) {
+			_leftWingExposure = 0.0f;
+		} else {
+			_leftWingExposure = 1.0f;
+		}
+
+		if (Input.GetButton("FoldRightWing")) {
+			_rightWingExposure = 0.0f;
+		} else {
+			_rightWingExposure = 1.0f;
+		}
+
+
+
+
+
+
 	}
 
 
