@@ -71,24 +71,32 @@ public class FlightObject : UnitConverter {
 	}
 
 	public void setWingPosition(float cleftWingExposure, float crightWingExposure) {
-		leftWingExposure = cleftWingExposure;
-		rightWingExposure = crightWingExposure;
-		currentWingArea = _wingSpan * _wingChord * 2 * (leftWingExposure + rightWingExposure);
+		//Make sure area is never actually zero, as this is technically impossible and 
+		//causes physics to fail.
+		if (cleftWingExposure == 0.0f)
+			leftWingExposure = 0.01f;
+		else
+			leftWingExposure = cleftWingExposure;
+		if (crightWingExposure == 0.0f)
+			rightWingExposure = 0.01f;
+		else
+			rightWingExposure = crightWingExposure;
+		currentWingArea = _wingSpan * _wingChord * (leftWingExposure + rightWingExposure) / 2;
 
 	}
 
 	public float WingSpan {
-		get {return convert (Units.Metric, _unit, Types.Length, _wingSpan);}
+		get {return convert (Units.Metric, _unit, Types.Length, _wingSpan) * (leftWingExposure + rightWingExposure) / 2;}
 		set {_wingSpan = convert (_unit, Units.Metric, Types.Length, value);}
 	}
 
 	public float WingChord {
-		get {return convert(Units.Metric, _unit, Types.Length, _wingChord);}
+		get {return convert(Units.Metric, _unit, Types.Length, _wingChord) * (leftWingExposure + rightWingExposure) / 2;}
 		set {_wingChord = convert (_unit, Units.Metric, Types.Length, value);}
 	}
 
 	public float WingArea {
-		get{return convert (Units.Metric, _unit, Types.Area, _wingArea);} 
+		get{return convert (Units.Metric, _unit, Types.Area, _wingArea) * (leftWingExposure + rightWingExposure) / 2;} 
 		set{_wingArea = convert (_unit, Units.Metric, Types.Area, value);}
 	}
 	
