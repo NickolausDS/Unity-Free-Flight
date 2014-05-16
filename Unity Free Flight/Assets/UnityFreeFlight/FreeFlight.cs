@@ -14,6 +14,7 @@ public class FreeFlight : MonoBehaviour {
 	public BaseFlightController flightController = null;
 	public MonoBehaviour groundController = null;
 	private Modes _mode;
+	public Modes Mode;
 	private FlightMechanics _physicsObject;
 
 		
@@ -38,12 +39,11 @@ public class FreeFlight : MonoBehaviour {
 	//Tries to swap to the vairous controller modes.
 	//Success if controllers are set up properly, otherwise
 	//fails with an error to console and reverts mode to None
-	public Modes Mode {
-		get {return _mode;}
-		set {
-			if(_mode == value)
-				return;
-			_mode = value;
+	public void setMode() {
+		if (_mode == Mode)
+			return;
+		else {
+			_mode = Mode;
 			if (_mode == Modes.None) {
 				disableFlight();
 				disableGround();
@@ -62,6 +62,7 @@ public class FreeFlight : MonoBehaviour {
 	}
 		
 	void FixedUpdate() {
+		setMode ();
 
 		if (_mode == Modes.Flight || _mode == Modes.Hybrid) {
 			if (flightController.divingEnabled)

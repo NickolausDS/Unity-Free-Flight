@@ -49,6 +49,7 @@ public class FreeFlightEditor : Editor {
 			ff.flightController = go.GetComponent<BaseFlightController> ();
 			EditorGUILayout.ObjectField ("Flight Controller", ff.flightController, typeof(BaseFlightController), false);
 			ff.Mode = (FreeFlight.Modes) EditorGUILayout.EnumPopup ("Flight Mode", ff.Mode);
+			ff.setMode();
 			
 
 			tempgc = (MonoScript) EditorGUILayout.ObjectField ("Ground Controller", tempgc, typeof(MonoScript), false);
