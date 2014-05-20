@@ -116,7 +116,7 @@ public class FlightPhysics : FlightObject {
 				directionalLift = Quaternion.LookRotation(newVelocity) * Vector3.up;
 				rigidbody.AddForce(directionalLift * liftForce);
 
-				//newRotation = getStallRotation (newRotation, liftForce, Weight);
+				newRotation = getStallRotation (newRotation, newVelocity.magnitude);
 
 			}
 
@@ -156,18 +156,13 @@ public class FlightPhysics : FlightObject {
 		return LiftInducedDrag + FormDrag;
 	}
 
-	public Quaternion getStallRotation (Quaternion curRot, float liftNewtons, float weightKilos) {
-		float pitchRotationSpeed = (Mathf.Sqrt (liftNewtons) - weightKilos) / weightKilos;
-		Quaternion pitchrot;
-		if (pitchRotationSpeed < 0)
-			pitchrot = Quaternion.LookRotation (Vector3.up);
-		else
-			pitchrot = Quaternion.LookRotation (Vector3.down);
-				
+	//Rotates the object down when velocity gets low enough to simulate "stalling"
+	public Quaternion getStallRotation (Quaternion curRot, float velocity) {
+		//This equation isn't based on any real-world physics. But it seems to work pretty well as is.
+		float pitchRotationSpeed = 10.0f / (velocity * velocity);
+		Quaternion pitchrot = Quaternion.LookRotation (Vector3.down);
 		Quaternion newRot = Quaternion.Lerp (curRot, pitchrot, Mathf.Abs (pitchRotationSpeed) * Time.deltaTime);
 		return newRot;
-
-	
 	}
 
 	//When we do a turn, we don't just want to rotate our character. We want their
