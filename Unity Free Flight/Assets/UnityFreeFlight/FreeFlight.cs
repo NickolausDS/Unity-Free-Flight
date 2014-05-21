@@ -19,13 +19,14 @@ public class FreeFlight : MonoBehaviour {
 
 		
 	void Start() {
-		rigidbody.velocity = new Vector3(0.0f, 0.0f, 20.0f);
+		setMode ();
+		//If the object is in the sky when we start, give it a little push. The physics
+		//get weird if something appears in the sky at zero velocity (works, just looks weird). 
+		if (_mode == Modes.Flight)
+			rigidbody.velocity = new Vector3(0.0f, 0.0f, 20.0f);
 		// We don't want the rigidbody to determine our rotation,
 		// we will compute that ourselves
 		rigidbody.freezeRotation = true;
-		//This behaviour will be done by the editor instead
-//		controller = gameObject.GetComponent<BaseFlightController>();
-//		groundController = (MonoBehaviour) gameObject.AddComponent<BaseGroundController>();
 	}
 		
 	public FlightMechanics PhysicsObject { 
@@ -119,38 +120,4 @@ public class FreeFlight : MonoBehaviour {
 		return false;
 	}
 
-//	private void switchToGround() {
-//
-//		if (groundController) {
-//			groundController.enabled = true;
-//			flightController.flightEnabled = false;
-//			CharacterController cc = gameObject.GetComponent<CharacterController> ();
-//			if (cc) {
-//				cc.enabled = true;
-//			}
-//		} else {
-//			Debug.Log ("No ground controller detected, not switching to ground controls");
-//			GroundMode = !GroundMode;
-//		}
-//
-//	}
-//
-//	private void switchToFlight() {
-//		if (flightController) {
-//			flightController.flightEnabled = true;
-//			if (groundController) {
-//				groundController.enabled = false;
-//			}
-//			CharacterController cc = gameObject.GetComponent<CharacterController> ();
-//			if (cc) {
-//				cc.enabled = false;
-//			}
-//		} else {
-//			Debug.Log ("No air controller detected, not switching to air controls");
-//			GroundMode = !GroundMode;
-//		}
-//	}
-
-
-	
 }
