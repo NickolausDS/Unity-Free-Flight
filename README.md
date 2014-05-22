@@ -37,6 +37,9 @@ Version 0.1.x will focus on flight physics, and basic usability.
 	* Flight statistic information improved
 	* Small cosmetic improvements
 	* Many backend changes and refactors, in preparation for version 0.2!
+* Version 0.1.3R2
+	* Bug fix for Windows release only.
+
 	
 ####Version 0.2.x	
 
