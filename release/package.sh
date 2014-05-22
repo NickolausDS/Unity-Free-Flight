@@ -22,6 +22,21 @@ function sanity() {
 		echo "unpredictable results on your current platform."
 		echo ""
 	fi
+	local ret1=`has_dep ${LINUX_DEP[@]}`
+	local ret2=`has_dep ${WINDOWS_DEP[@]}`
+	if [ "$ret1" == "Yes" -a "$ret2" == "Yes" ]
+	then
+		echo ""
+		echo "ERROR: Both windows and linux packages detected. You can't build"
+		echo "both at the same time! Unity's latest build has overwritten the"
+		echo "other's files, rendering one build useless!" 
+		echo "..."
+		echo "YOU SHOULD NOT CONTINUE!!!"
+		echo "..."
+		echo "Please redo the builds for both windows and linux to ensure there isn't"
+		echo "corruption. Anything else not using '${NAME}_Data' should be fine."
+		echo ""
+	fi
 }
 
 #Function is actually multipurpose. We can check the return value
