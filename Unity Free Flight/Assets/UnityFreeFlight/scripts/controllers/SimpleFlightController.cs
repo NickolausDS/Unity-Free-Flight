@@ -16,6 +16,7 @@ public class SimpleFlightController : BaseFlightController {
 
 		if (Input.GetButtonDown("Jump") ) {
 			flapWings (true);
+			flightEnabled = true;
 		} else if (Input.GetButton ("Jump")) {
 			flapWings ();
 		}

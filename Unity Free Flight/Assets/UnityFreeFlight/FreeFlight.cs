@@ -37,6 +37,16 @@ public class FreeFlight : MonoBehaviour {
 			} 
 		}
 
+	public void OnCollisionEnter(Collision col) {
+		if (Mode != Modes.Hybrid || Mode != Modes.Ground) {
+			float curvel = PhysicsObject.Velocity.magnitude;
+			if (curvel > 10)
+					Debug.Log ("LEGS BREAKING!!! AHHH");
+			Mode = Modes.Ground;
+		}
+
+	}
+
 	//Tries to swap to the vairous controller modes.
 	//Success if controllers are set up properly, otherwise
 	//fails with an error to console and reverts mode to None
@@ -63,12 +73,21 @@ public class FreeFlight : MonoBehaviour {
 	}
 		
 	void FixedUpdate() {
+		//This is where we detect and change flightmodes. 
+		if (flightController.flightEnabled && _mode == Modes.Ground)
+			Mode = Modes.Flight;
+
+		//Update mode if it has changed
 		setMode ();
 
+		//Do flight physics if its enabled
 		if (_mode == Modes.Flight || _mode == Modes.Hybrid) {
 			if (flightController.divingEnabled)
 				PhysicsObject.wingFold (flightController.LeftWingExposure, flightController.RightWingExposure);
 
+			//Physics and user input should be separated. We should be able to exert
+			//flight physics on an object without also adding user input.
+			//(Indended change for the future)
 			PhysicsObject.doStandardPhysics(flightController.UserInput);
 
 		}
