@@ -37,16 +37,6 @@ public class FreeFlight : MonoBehaviour {
 			} 
 		}
 
-	public void OnCollisionEnter(Collision col) {
-		if (Mode != Modes.Hybrid || Mode != Modes.Ground) {
-			float curvel = PhysicsObject.Velocity.magnitude;
-			if (curvel > 10)
-					Debug.Log ("LEGS BREAKING!!! AHHH");
-			Mode = Modes.Ground;
-		}
-
-	}
-
 	//Tries to swap to the vairous controller modes.
 	//Success if controllers are set up properly, otherwise
 	//fails with an error to console and reverts mode to None
@@ -72,10 +62,15 @@ public class FreeFlight : MonoBehaviour {
 		}
 	}
 		
+	//NOTE: Hybrid mode doesn't work since the introduction of stalling
+	//When we're sitting on the ground at zero velocity, flight-physics
+	//thinks we're in stall (and executes stall rotations)
 	void FixedUpdate() {
 		//This is where we detect and change flightmodes. 
-		if (flightController.flightEnabled && _mode == Modes.Ground)
+		if (flightController.EnableFlight)
 			Mode = Modes.Flight;
+		else if (flightController.EnableGround)
+			Mode = Modes.Ground;
 
 		//Update mode if it has changed
 		setMode ();

@@ -38,6 +38,10 @@ public class BaseFlightController : MonoBehaviour {
 	[Range(0.0f, 1.0f)]
 	protected float _rightWingExposure;
 	protected int _invertedSetting = -1;
+	//These are checked by Free Flight every fixed update and control
+	//whether we should activate either mode.
+	protected bool enableGround = false;
+	protected bool enableFlight = false;
 
 	//Even though Inverted as a property here is invisible to the inspector, 
 	//using the property in this way makes it convienient to access via a menu,
@@ -60,6 +64,9 @@ public class BaseFlightController : MonoBehaviour {
 	public Quaternion UserInput { get { return _userInput; } }
 	public float LeftWingExposure { get { return _leftWingExposure; } }
 	public float RightWingExposure { get { return _rightWingExposure; } }
+	//Returns it's value, then sets itself back to false
+	public bool EnableGround { get { bool ret = enableGround; enableGround = false; return ret; } }
+	public bool EnableFlight { get { bool ret = enableFlight; enableFlight = false; return ret; } }
 
 	//Private vars, meant only for the Base Flight Controller.
 	private bool _hasWarnedUser = false;

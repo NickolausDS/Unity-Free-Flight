@@ -8,37 +8,48 @@ public class SimpleFlightController : BaseFlightController {
 
 
 	void Update() {
-		//Pitch
-		keyInput.x = _invertedSetting * -Input.GetAxis ("Vertical") * rotationSpeed * Time.deltaTime;
-		//Roll
-		keyInput.z = -Input.GetAxis ("Horizontal") * (rotationSpeed * Time.deltaTime);
-		_userInput.eulerAngles = keyInput;
 
-		if (Input.GetButtonDown("Jump") ) {
-			flapWings (true);
-			flightEnabled = true;
-		} else if (Input.GetButton ("Jump")) {
-			flapWings ();
-		}
+		//Don't allow any user flight controls when we're grounded. This lets
+		//Ground controls take over so we don't interfere. 
+		if (flightEnabled) {
+			//Pitch
+			keyInput.x = _invertedSetting * -Input.GetAxis ("Vertical") * rotationSpeed * Time.deltaTime;
+			//Roll
+			keyInput.z = -Input.GetAxis ("Horizontal") * (rotationSpeed * Time.deltaTime);
+			_userInput.eulerAngles = keyInput;
 
-		if (Input.GetButton("FoldLeftWing")) {
-			_leftWingExposure = 0.0f;
+			if (Input.GetButtonDown("Jump") ) {
+				flapWings (true);
+			} else if (Input.GetButton ("Jump")) {
+				flapWings ();
+			}
+
+			if (Input.GetButton("FoldLeftWing")) {
+				_leftWingExposure = 0.0f;
+			} else {
+				_leftWingExposure = 1.0f;
+			}
+
+			if (Input.GetButton("FoldRightWing")) {
+				_rightWingExposure = 0.0f;
+			} else {
+				_rightWingExposure = 1.0f;
+			}
+		//The jump button re-enables flight-mode
 		} else {
-			_leftWingExposure = 1.0f;
+			if (Input.GetButtonDown("Jump") ) {
+				enableFlight = true;
+			}
 		}
-
-		if (Input.GetButton("FoldRightWing")) {
-			_rightWingExposure = 0.0f;
-		} else {
-			_rightWingExposure = 1.0f;
-		}
-
-
-
-
-
 
 	}
+
+	//Switch to a ground controller when we collide with the ground
+	public void OnCollisionEnter(Collision col) {
+		if (flightEnabled)
+			enableGround = true;
+	}
+	
 
 
 }
