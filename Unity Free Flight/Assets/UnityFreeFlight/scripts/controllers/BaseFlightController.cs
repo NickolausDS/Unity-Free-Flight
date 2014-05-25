@@ -6,7 +6,9 @@
  * 
  * Inherit from this class if you want to write your own controller. Lots of effort was
  * put in to decouple the mechanic from the controller. The functionality is here, while
- * the feel for how it works is left up to the controller. 
+ * the feel for how it works is left up to the controller. If you find yourself writing
+ * complicated controllers, check here to make sure the functionality you need doesn't 
+ * already exist here.
  * 
  */
 
@@ -84,8 +86,6 @@ public class BaseFlightController : MonoBehaviour {
 			_hasWarnedUser = true;
 			Debug.LogWarning ("Base Flight Controller is not a valid controller! Please add a different flight controller," +
 				"or inherit from this class if you intend to write your own. Offending Game Object: " + gameObject.name);
-//			MonoBehaviour thisobj = gameObject.GetComponent<BaseFlightController>();
-//			thisobj.SendMessage("setDefaultController", SendMessageOptions.DontRequireReceiver);
 		}
 	}
 
