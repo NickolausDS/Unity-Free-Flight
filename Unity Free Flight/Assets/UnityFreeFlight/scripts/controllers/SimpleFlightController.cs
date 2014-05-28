@@ -6,6 +6,8 @@ public class SimpleFlightController : BaseFlightController {
 	Vector3 keyInput;
 	float rotationSpeed = 200.0f;
 
+	public bool useGroundController = true;
+
 
 	void Update() {
 
@@ -46,7 +48,7 @@ public class SimpleFlightController : BaseFlightController {
 
 	//Switch to a ground controller when we collide with the ground
 	public void OnCollisionEnter(Collision col) {
-		if (flightEnabled)
+		if (flightEnabled && useGroundController)
 			enableGround = true;
 	}
 	
