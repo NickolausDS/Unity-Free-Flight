@@ -111,6 +111,7 @@ MonoBehaviour:
   flaringEnabled: 0
   divingEnabled: 0
   thrustingEnabled: 0
+  useGroundController: 0
 --- !u!54 &239765971
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -152,6 +153,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   flightController: {fileID: 239765970}
   groundController: {fileID: 0}
+  Mode: 2
 --- !u!1 &493986378
 GameObject:
   m_ObjectHideFlags: 0
