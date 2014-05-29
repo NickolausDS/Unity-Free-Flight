@@ -116,7 +116,7 @@ public class FlightPhysics : FlightObject {
 				directionalLift = Quaternion.LookRotation(newVelocity) * Vector3.up;
 				rigidbody.AddForce(directionalLift * liftForce);
 
-				newRotation = getStallRotation (newRotation, newVelocity.magnitude);
+				//newRotation = getStallRotation (newRotation, newVelocity.magnitude);
 
 			}
 

@@ -89,24 +89,32 @@ public class FreeFlight : MonoBehaviour {
 	}
 
 	private bool disableGround() {
+		bool ret = false;
+		if (groundController) {
+			groundController.enabled = false;	
+			ret = true;
+		}
 		CharacterController cc = gameObject.GetComponent<CharacterController> ();
 		if (cc) {
 			cc.enabled = false;
 		}
-		if (groundController) {
-			groundController.enabled = false;		
-			return true;
-		}
-		return false;
+		return ret;
 	}
 
 	private bool enableGround() {
 		if (groundController) {
-			groundController.enabled = true;
+			rigidbody.isKinematic = true;
+			Quaternion rot;
+			if (transform.rotation.eulerAngles.x != 0.0f && transform.rotation.eulerAngles.z != 0.0f)
+				rot = Quaternion.LookRotation (new Vector3(transform.rotation.eulerAngles.x, 0.0f, transform.rotation.eulerAngles.z));
+			else
+				rot = Quaternion.identity; 
+			transform.rotation = rot;
 			CharacterController cc = gameObject.GetComponent<CharacterController> ();
 			if (cc) {
 				cc.enabled = true;
 			}
+			groundController.enabled = true;
 			return true;
 		}
 		Debug.LogError ("Failed to switch " + gameObject.name + " to ground controller. " +
@@ -125,6 +133,7 @@ public class FreeFlight : MonoBehaviour {
 
 	private bool enableFlight() {
 		if (flightController) {
+			rigidbody.isKinematic = false;
 			flightController.flightEnabled = true;
 			return true;
 		}
