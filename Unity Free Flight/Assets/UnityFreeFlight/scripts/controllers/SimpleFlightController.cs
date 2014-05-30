@@ -8,6 +8,9 @@ public class SimpleFlightController : BaseFlightController {
 
 	public bool useGroundController = true;
 
+	public float doubleJumpTimer = 0.7f;
+	private float doubleJump;
+
 
 	void Update() {
 
@@ -40,9 +43,15 @@ public class SimpleFlightController : BaseFlightController {
 		//The jump button re-enables flight-mode
 		} else {
 			if (Input.GetButtonDown("Jump") ) {
-				enableFlight = true;
+				if (doubleJump > 0.0f)
+					enableFlight = true;
+				else
+					//Reset the timer
+					doubleJump = doubleJumpTimer;
 			}
 		}
+
+		doubleJump -= Time.deltaTime;
 
 	}
 
