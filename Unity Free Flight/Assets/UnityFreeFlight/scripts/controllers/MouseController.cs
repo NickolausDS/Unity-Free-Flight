@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class SimpleFlightController : BaseFlightController {
+public class MouseController : BaseFlightController {
 
 	Vector3 keyInput;
 	float rotationSpeed = 200.0f;
@@ -18,9 +18,9 @@ public class SimpleFlightController : BaseFlightController {
 		//Ground controls take over so we don't interfere. 
 		if (flightEnabled) {
 			//Pitch
-			keyInput.x = _invertedSetting * -Input.GetAxis ("Vertical") * rotationSpeed * Time.deltaTime;
+			keyInput.x = _invertedSetting * -Input.GetAxis ("Mouse Y") * rotationSpeed * Time.deltaTime;
 			//Roll
-			keyInput.z = -Input.GetAxis ("Horizontal") * (rotationSpeed * Time.deltaTime);
+			keyInput.z = -Input.GetAxis ("Mouse X") * (rotationSpeed * Time.deltaTime);
 			_userInput.eulerAngles = keyInput;
 
 			if (Input.GetButtonDown("Jump") ) {
