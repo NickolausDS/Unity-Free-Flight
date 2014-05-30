@@ -30,12 +30,18 @@ public class ModifiedMouseLook : MonoBehaviour {
 
 	float rotationY = 0F;
 
+	public PauseMenu pm;
+
 	void Update ()
 	{
 		//HACK -- This basically turns off the script when flight is in progress
 		//We'll fix this when ground controllers can turn off multiple scripts
 		BaseFlightController bfc = gameObject.GetComponent<BaseFlightController> ();
 		if (bfc && bfc.flightEnabled)
+			return;
+		//ANOTHER HACK!!!
+		//I'm on a roll today!
+		if (pm && pm.isPaused)
 			return;
 
 		if (axes == RotationAxes.MouseXAndY)

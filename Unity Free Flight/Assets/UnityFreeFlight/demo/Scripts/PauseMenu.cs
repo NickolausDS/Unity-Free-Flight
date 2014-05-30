@@ -3,12 +3,12 @@ using System.Collections;
 
 public class PauseMenu : MonoBehaviour {
 
-	private bool isPaused = false;
+	public bool isPaused = false;
 	public GameObject playerObject = null;
 	private BaseFlightController bc;
-
-	private bool mainMenu = true;
-	private bool optionsMenu = false;
+	
+	private enum Menus { None, Main, Options }
+	private Menus currentMenu;
 
 
 	// Use this for initialization
@@ -26,7 +26,10 @@ public class PauseMenu : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (Input.GetKeyDown(KeyCode.Escape)) {
-			pause ();
+			if (isPaused)
+				unpause ();
+			else
+				pause ();
 		}
 	
 	}
@@ -34,6 +37,7 @@ public class PauseMenu : MonoBehaviour {
 	void pause() {
 		Time.timeScale = 0.0f;
 		isPaused = true;
+		currentMenu = Menus.Main;
 	}
 
 	void unpause() {
@@ -42,7 +46,7 @@ public class PauseMenu : MonoBehaviour {
 	}
 
 	void OnGUI() {
-		if (isPaused && mainMenu) {
+		if (isPaused && currentMenu == Menus.Main) {
 			GUI.BeginGroup (new Rect (Screen.width / 2 - 125, Screen.height / 2 - 125, 250, 300));
 			GUI.Box (new Rect (0, 0, 250, 500), "Menu");
 			if (GUI.Button (new Rect (25, 20, 200, 50), "Resume")) {
@@ -50,8 +54,7 @@ public class PauseMenu : MonoBehaviour {
 			}
 			if (GUI.Button (new Rect (25, 90, 200, 50), "Options")) {
 				if (playerObject) {
-					mainMenu = false;
-					optionsMenu = true;
+					currentMenu = Menus.Options;
 				}
 			}
 			if (GUI.Button (new Rect (25, 160, 200, 50), "Restart")) {
@@ -61,12 +64,11 @@ public class PauseMenu : MonoBehaviour {
 				Application.Quit();
 			}
 			GUI.EndGroup();
-		} else if (isPaused && optionsMenu && playerObject) {
+		} else if (isPaused && currentMenu == Menus.Options && playerObject) {
 			GUI.BeginGroup (new Rect (Screen.width / 2 - 250, Screen.height / 2 - 125, 500, 300));
 			GUI.Box (new Rect (0, 0, 500, 300), "Menu");
 			if (GUI.Button (new Rect (150, 240, 200, 50), "Done")) {
-				mainMenu = true;
-				optionsMenu = false;
+				currentMenu = Menus.Main;
 			}
 			bc.Inverted = GUI.Toggle (new Rect (25, 20, 200, 20), bc.Inverted, "Inverted Controls");
 			StatsView sv = gameObject.GetComponent<StatsView>();
