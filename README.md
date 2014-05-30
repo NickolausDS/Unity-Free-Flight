@@ -41,13 +41,24 @@ Version 0.1.x will focus on flight physics, and basic usability.
 	* Bug fix for Windows release only.
 
 	
-####Version 0.2.x	
+####Version 0.2.x -- Codename *Grounded*
 
 Version 0.2.x will focus on extending flight controls to include flapping, flaring, and wing-fold diving. Ground controllers will also be introduced, to enable walking/running as well as transition to flight.
 
+* Version 0.2.0
+	* New Scene! First Person View, where the player now starts on the ground
+	* Brand new controls! (Kinda)
+	* Player can now takeoff and land!
+	* Introduction of simple flapping
+
 ####Version 0.3.x
 
-Version 0.3.x will focus on making flight animations easily addable and configurable. 
+Version 0.3.x will add various sounds, such as flapping and wind
+
+####Version 0.4.x
+
+Version 0.4.x will focus on making flight animations easily addable and configurable. 
+
 
 ###Future Features 
 
