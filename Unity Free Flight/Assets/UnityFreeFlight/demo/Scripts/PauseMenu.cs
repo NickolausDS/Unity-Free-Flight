@@ -7,8 +7,9 @@ public class PauseMenu : MonoBehaviour {
 	public GameObject playerObject = null;
 	private BaseFlightController bc;
 	
-	private enum Menus { None, Main, Options }
+	private enum Menus { None, Main, Levels, Options }
 	private Menus currentMenu;
+	private string[] availableLevels = {"Paper Airplane", "Grounded"};
 
 
 	// Use this for initialization
@@ -46,24 +47,47 @@ public class PauseMenu : MonoBehaviour {
 	}
 
 	void OnGUI() {
-		if (isPaused && currentMenu == Menus.Main) {
-			GUI.BeginGroup (new Rect (Screen.width / 2 - 125, Screen.height / 2 - 125, 250, 300));
-			GUI.Box (new Rect (0, 0, 250, 500), "Menu");
+		if (!isPaused)
+			return;
+
+		if (currentMenu == Menus.Main) {
+			GUI.BeginGroup (new Rect (Screen.width / 2 - 125, Screen.height / 2 - 125, 250, 370));
+			GUI.Box (new Rect (0, 0, 250, 570), "Menu");
 			if (GUI.Button (new Rect (25, 20, 200, 50), "Resume")) {
 				unpause ();
 			}
-			if (GUI.Button (new Rect (25, 90, 200, 50), "Options")) {
+			if (GUI.Button (new Rect (25, 90, 200, 50), "Levels")) {
+				currentMenu = Menus.Levels;
+			}
+			if (GUI.Button (new Rect (25, 160, 200, 50), "Options")) {
 				if (playerObject) {
 					currentMenu = Menus.Options;
 				}
 			}
-			if (GUI.Button (new Rect (25, 160, 200, 50), "Restart")) {
-				Application.LoadLevel(0);
+			if (GUI.Button (new Rect (25, 230, 200, 50), "Restart")) {
+				Application.LoadLevel(Application.loadedLevel);
 			}
-			if (GUI.Button (new Rect (25, 230, 200, 50), "Exit")) {
+			if (GUI.Button (new Rect (25, 290, 200, 50), "Exit")) {
 				Application.Quit();
 			}
 			GUI.EndGroup();
+
+		} else if (currentMenu == Menus.Levels) {
+			GUI.BeginGroup (new Rect (Screen.width / 2 - 125, Screen.height / 2 - 125, 500, 370));
+			GUI.Box (new Rect (0, 0, 250, 570), "Levels");
+			for (int i = 0; i < availableLevels.Length; i++) {
+				if (GUI.Button (new Rect (25, i*70+20 , 200, 50), availableLevels[i] )) {
+					Application.LoadLevel(i);
+					unpause();
+				}
+			}
+
+			if (GUI.Button (new Rect (25, 290, 200, 50), "Back")) {
+				currentMenu = Menus.Main;
+			}
+			GUI.EndGroup();
+
+
 		} else if (isPaused && currentMenu == Menus.Options && playerObject) {
 			GUI.BeginGroup (new Rect (Screen.width / 2 - 250, Screen.height / 2 - 125, 500, 300));
 			GUI.Box (new Rect (0, 0, 500, 300), "Menu");
