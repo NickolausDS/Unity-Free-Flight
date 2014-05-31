@@ -37,6 +37,24 @@ public class FreeFlight : MonoBehaviour {
 			} 
 		}
 
+	public BaseFlightController FlightController {
+		get {
+			if (flightController == null) {
+				flightController = gameObject.AddComponent<KeyboardController>();
+				Debug.Log ("Free Flight: No Flight Controller detected. Using a " +
+					"defalt 'Keyboard' flight controller. You may set a different " +
+			           "flight controller from FreeFlight/scripts/controllers/");
+			}
+			return flightController;
+		}
+		set {
+			if(value != flightController) {
+				Destroy (flightController);
+				flightController = value;
+			}
+		}
+	}
+
 	//Tries to swap to the vairous controller modes.
 	//Success if controllers are set up properly, otherwise
 	//fails with an error to console and reverts mode to None
@@ -67,9 +85,9 @@ public class FreeFlight : MonoBehaviour {
 	//thinks we're in stall (and executes stall rotations)
 	void FixedUpdate() {
 		//This is where we detect and change flightmodes. 
-		if (flightController.EnableFlight)
+		if (FlightController.EnableFlight)
 			Mode = Modes.Flight;
-		else if (flightController.EnableGround)
+		else if (FlightController.EnableGround)
 			Mode = Modes.Ground;
 
 		//Update mode if it has changed
@@ -77,8 +95,8 @@ public class FreeFlight : MonoBehaviour {
 
 		//Do flight physics if its enabled
 		if (_mode == Modes.Flight || _mode == Modes.Hybrid) {
-			if (flightController.divingEnabled)
-				PhysicsObject.wingFold (flightController.LeftWingExposure, flightController.RightWingExposure);
+			if (FlightController.divingEnabled)
+				PhysicsObject.wingFold (FlightController.LeftWingExposure, FlightController.RightWingExposure);
 
 			//Physics and user input should be separated. We should be able to exert
 			//flight physics on an object without also adding user input.
@@ -132,7 +150,7 @@ public class FreeFlight : MonoBehaviour {
 	}
 
 	private bool enableFlight() {
-		if (flightController) {
+		if (FlightController) {
 			rigidbody.isKinematic = false;
 			flightController.flightEnabled = true;
 			return true;
