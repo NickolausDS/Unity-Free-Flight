@@ -12,6 +12,8 @@ public class FreeFlightEditor : Editor {
 	MonoScript tempgc;
 	string cname = null;
 
+	private bool _shouldCheckAddDefaultCollider = true;
+
 	//vars for foldouts
 	private bool _showPhysicsAttrs = false;
 	private bool _showDimensionAttrs = false;
@@ -57,7 +59,9 @@ public class FreeFlightEditor : Editor {
 			//Used for debugging
 //			EditorGUILayout.ObjectField ("Ground Controller", groundController, typeof(MonoBehaviour), false);
 //			EditorGUILayout.LabelField(cname);
-
+			_shouldCheckAddDefaultCollider = EditorGUILayout.Toggle ("Check/Add Collider", _shouldCheckAddDefaultCollider);
+			if (_shouldCheckAddDefaultCollider)
+				checkAddDefaultCollider(go);
 		}
 
 
@@ -93,5 +97,24 @@ public class FreeFlightEditor : Editor {
 			ff.groundController = groundController;
 		}
 
+	}
+
+	private void checkAddDefaultCollider(GameObject go) {
+		Collider[] col = go.GetComponentsInChildren <Collider> ();
+		int numRealColliders = col.Length;
+		foreach (Collider thing in col) {
+			//Character controllers don't count as colliders
+			if (thing.GetType() == typeof(CharacterController))
+				numRealColliders -= 1;
+		}
+		if (numRealColliders < 1) {
+			Debug.Log (string.Format ("Free Flight: No collider detected on {0}; adding a default one. " +
+				"A collider is necessary to determine when we should land, and to keep the object from " +
+				"bumping into objects in-flight. You can stop this check from ever happening by unchecking " +
+				"'Check/Add Collider' in the Free Flight Editor", go.name));
+			CapsuleCollider newCol = go.AddComponent<CapsuleCollider>();
+			newCol.radius = 0.5f;
+			newCol.height = 2.0f;
+		}
 	}
 }
