@@ -28,17 +28,18 @@ public class MouseController : BaseFlightController {
 			} else if (Input.GetButton ("Jump")) {
 				flapWings ();
 			}
-
-			if (Input.GetButton("FoldLeftWing")) {
-				_leftWingExposure = 0.0f;
-			} else {
-				_leftWingExposure = 1.0f;
-			}
-
-			if (Input.GetButton("FoldRightWing")) {
-				_rightWingExposure = 0.0f;
-			} else {
-				_rightWingExposure = 1.0f;
+			if (divingEnabled) {
+				if (Input.GetButton("FoldLeftWing")) {
+					_leftWingExposure = 0.0f;
+				} else {
+					_leftWingExposure = 1.0f;
+				}
+				
+				if (Input.GetButton("FoldRightWing")) {
+					_rightWingExposure = 0.0f;
+				} else {
+					_rightWingExposure = 1.0f;
+				}
 			}
 		//The jump button re-enables flight-mode
 		} else {
