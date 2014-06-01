@@ -24,9 +24,9 @@ public class BaseFlightController : MonoBehaviour {
 	public bool flightEnabled = true;
 
 	public bool flappingEnabled = false;
-	public float regularFlaptime = 0.7f;
+	public float regularFlaptime = 0.5f;
 	public float minimumFlapTime = 0.2f;
-	public float flapStrength = 400.0f;
+	public float flapStrength = 600.0f;
 
 	public bool flaringEnabled = false;
 	public bool divingEnabled = false;
