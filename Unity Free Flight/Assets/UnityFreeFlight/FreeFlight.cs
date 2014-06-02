@@ -70,11 +70,13 @@ public class FreeFlight : MonoBehaviour {
 				disableGround();
 				if (!enableFlight()) {
 					_mode = Modes.None;
+					Mode = Modes.None;
 				}
 			} else if (_mode == Modes.Ground || _mode == Modes.Hybrid) {
 				disableFlight ();
 				if (!enableGround()) {
 					_mode = Modes.None;
+					Mode = Modes.None;
 				}
 			}
 		}
