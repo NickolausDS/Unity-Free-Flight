@@ -5,9 +5,7 @@ public class KeyboardController : BaseFlightController {
 
 	Vector3 keyInput;
 	float rotationSpeed = 200.0f;
-
-	public bool useGroundController = true;
-
+	
 	public float doubleJumpTimer = 0.7f;
 	private float doubleJump;
 
@@ -56,12 +54,6 @@ public class KeyboardController : BaseFlightController {
 
 	}
 
-	//Switch to a ground controller when we collide with the ground
-	public void OnCollisionEnter(Collision col) {
-		if (flightEnabled && useGroundController)
-			enableGround = true;
-	}
-	
 
 
 }

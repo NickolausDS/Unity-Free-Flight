@@ -124,12 +124,6 @@ public class FreeFlight : MonoBehaviour {
 	private bool enableGround() {
 		if (groundController) {
 			rigidbody.isKinematic = true;
-			Quaternion rot;
-			if (transform.rotation.eulerAngles.x != 0.0f && transform.rotation.eulerAngles.z != 0.0f)
-				rot = Quaternion.LookRotation (new Vector3(transform.rotation.eulerAngles.x, 0.0f, transform.rotation.eulerAngles.z));
-			else
-				rot = Quaternion.identity; 
-			transform.rotation = rot;
 			CharacterController cc = gameObject.GetComponent<CharacterController> ();
 			if (cc) {
 				cc.enabled = true;

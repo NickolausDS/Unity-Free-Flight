@@ -89,6 +89,34 @@ public class BaseFlightController : MonoBehaviour {
 		}
 	}
 
+	//Default behavior used to transition from flight to ground. You're welcome to 
+	//override this in a controller to change the default behaviour.
+	protected IEnumerator standUp() {
+		Quaternion rot;
+		if (transform.rotation.eulerAngles.x != 0.0f && transform.rotation.eulerAngles.z != 0.0f)
+			rot = Quaternion.LookRotation (new Vector3(transform.rotation.eulerAngles.x, 0.0f, transform.rotation.eulerAngles.z));
+		else
+			rot = Quaternion.identity;
+		float maxTime = 1.0f;
+		transform.Translate (0.0f, 1.0f, 0.0f);
+		
+		while (!flightEnabled && maxTime > 0.0f && (Mathf.Abs (transform.rotation.eulerAngles.x) > 1.0f || Mathf.Abs (transform.rotation.eulerAngles.z) > 1.0f)) {
+			transform.rotation = Quaternion.Lerp (transform.rotation, rot, 2.0f * Time.deltaTime);
+			maxTime -= Time.deltaTime;
+			yield return null;
+		}
+	}
+
+	//Default behaviour when we hit an object (usually the ground) is to switch to a ground controller. 
+	//Override in controller to change this behaviour.
+	protected void OnCollisionEnter(Collision col) {
+		if (flightEnabled) {
+			enableGround = true;
+			flightEnabled = false;
+			StartCoroutine (standUp ());
+		}
+	}
+
 	//Flap the wings to gain altitude. Flapping wings while rotated in any direction will 
 	//instead cause momentum in the opposite direction (think of flapping to slow down).
 	//
