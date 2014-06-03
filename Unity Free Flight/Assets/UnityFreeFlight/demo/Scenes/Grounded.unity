@@ -109,13 +109,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   flightEnabled: 0
   flappingEnabled: 1
-  regularFlaptime: .699999988
+  regularFlaptime: .5
   minimumFlapTime: .200000003
-  flapStrength: 400
+  flapStrength: 600
   flaringEnabled: 0
   divingEnabled: 0
   thrustingEnabled: 0
-  useGroundController: 1
   doubleJumpTimer: .699999988
 --- !u!54 &239765971
 Rigidbody:
