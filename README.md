@@ -50,6 +50,11 @@ Version 0.2.x will focus on extending flight controls to include flapping, flari
 	* Brand new controls! (Kinda)
 	* Player can now takeoff and land!
 	* Introduction of simple flapping
+* Version 0.2.1
+	* Free Flight dev package is much more stable -- right out of the box
+	* Added more intuitive default support to Free Flight dev package
+	* Added smooth transition for landings
+	* Fixed "fall through world" bug
 
 ####Version 0.3.x
 
