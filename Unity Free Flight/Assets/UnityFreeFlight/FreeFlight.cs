@@ -81,10 +81,18 @@ public class FreeFlight : MonoBehaviour {
 			}
 		}
 	}
-		
-	//NOTE: Hybrid mode doesn't work since the introduction of stalling
-	//When we're sitting on the ground at zero velocity, flight-physics
-	//thinks we're in stall (and executes stall rotations)
+
+
+
+	/// <summary>
+	/// Where user input meets physics. This method is responsible for taking 
+	/// user input from the controller (regular Update) and processing it through
+	/// the physics pipeline (through fixed update). 
+	/// 
+	///NOTE: Hybrid mode doesn't work since the introduction of stalling
+	///When we're sitting on the ground at zero velocity, flight-physics
+	///thinks we're in stall (and executes stall rotations)
+	/// </summary>
 	void FixedUpdate() {
 		//This is where we detect and change flightmodes. 
 		if (FlightController.EnableFlight)

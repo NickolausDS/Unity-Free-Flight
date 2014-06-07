@@ -2,7 +2,7 @@
 using System.Collections;
 
 /*
- * Flight Mechanics is responsible for taking user input and 
+ * Flight Mechanics is responsible for converting user input into 
  * manipulating the wing for various physics effects.
  * 
  * It handles the math behind flapping, flarring, diving,
@@ -13,10 +13,32 @@ using System.Collections;
  * allowing the flight object to plummet.
  */ 
 
+/// <summary>
+///Flight Mechanics is responsible for converting user input into 
+///manipulating the wing for various physics effects.
+/// 
+///It handles the math behind flapping, flarring, and diving
+///to change how physics effects the flight object. It does NOT
+///directly interact with the user, ever. Instead, it's intended
+///that the main free flight script pass in all user input, and
+///call methods from here through Fixed Update()
+/// </summary>
+/// 
 public class FlightMechanics : FlightPhysics {
+
+	protected bool isFlapping = 0.0f;
+	protected float currentFlapTime = 0.0f;
 
 	public FlightMechanics(Rigidbody rb) : base(rb) {
 
+	}
+
+
+	public void flap(float flapStrength) {
+		if (wingsOpen ()) {
+			//do stuff
+			return;
+		}
 	}
 
 

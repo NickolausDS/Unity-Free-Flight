@@ -85,6 +85,17 @@ public class FlightObject : UnitConverter {
 
 	}
 
+
+	/// <summary>
+	/// Check if the object's wings are completely extended
+	/// </summary>
+	/// <returns><c>true</c>, if wings are completely open, <c>false</c> otherwise.</returns>
+	public bool wingsOpen() {
+		if (currentWingArea == _wingArea)
+			return true;
+		return false;
+	}
+
 	public float WingSpan {
 		get {return convert (Units.Metric, _unit, Types.Length, _wingSpan) * (leftWingExposure + rightWingExposure) / 2;}
 		set {_wingSpan = convert (_unit, Units.Metric, Types.Length, value);}
