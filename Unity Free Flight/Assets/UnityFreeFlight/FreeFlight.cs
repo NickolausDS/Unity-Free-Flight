@@ -32,7 +32,7 @@ public class FreeFlight : MonoBehaviour {
 	public FlightMechanics PhysicsObject { 
 		get {
 			if (_physicsObject == null)
-				_physicsObject = new FlightMechanics (rigidbody);
+				_physicsObject = new FlightMechanics (rigidbody, FlightController);
 			return _physicsObject; 
 			} 
 		}
@@ -51,6 +51,7 @@ public class FreeFlight : MonoBehaviour {
 			if(value != flightController) {
 				Destroy (flightController);
 				flightController = value;
+				_physicsObject.Controller = flightController;
 			}
 		}
 	}
@@ -105,14 +106,7 @@ public class FreeFlight : MonoBehaviour {
 
 		//Do flight physics if its enabled
 		if (_mode == Modes.Flight || _mode == Modes.Hybrid) {
-			if (FlightController.divingEnabled)
-				PhysicsObject.wingFold (FlightController.LeftWingExposure, FlightController.RightWingExposure);
-
-			//Physics and user input should be separated. We should be able to exert
-			//flight physics on an object without also adding user input.
-			//(Indended change for the future)
-			PhysicsObject.doStandardPhysics(flightController.UserInput);
-
+			PhysicsObject.execute(FlightController.UserInput);
 		}
 	}
 

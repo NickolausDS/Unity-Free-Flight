@@ -73,10 +73,14 @@ public class BaseFlightController : MonoBehaviour {
 	//Private vars, meant only for the Base Flight Controller.
 	private bool _hasWarnedUser = false;
 	//Private flapping vars
-	private bool flapping;
-	private bool wingsHaveFlappedInDownPosition;
-	private float currentFlaptime;
-	
+//	private bool flapping;
+//	private bool wingsHaveFlappedInDownPosition;
+//	private float currentFlaptime;
+	private bool regularFlap = false;
+	private bool quickFlap = false;
+
+	public bool RegularFlap { get { bool ret = regularFlap; regularFlap = false; return ret; } }
+	public bool QuickFlap { get { bool ret = quickFlap; quickFlap = false; return ret; } }
 
 	//We do the warning here, since Update() is really the only method that needs to be overridden.
 	//The child class should put all user controls in this method (and not fixedUpdate(), since we're
@@ -127,29 +131,8 @@ public class BaseFlightController : MonoBehaviour {
 	public void flapWings(bool interruptFlap = false) {
 
 		if (flappingEnabled) {
-
-			//We can only flap if we're not currently flapping, or the user triggered
-			//an 'interruptFlap', which just means "We're flapping faster than the regular
-			//flap speed." InterruptFlaps are usually triggered by the user mashing the flap
-			//button rather than just holding it down.
-			if (!flapping || (interruptFlap && currentFlaptime > minimumFlapTime)) {
-				flapping = true;
-				currentFlaptime = 0.0f;
-				rigidbody.AddForce (new Vector3 (0, flapStrength, 0));
-			}
-
-			//Here we deal with flapping at a regular interval. It may be better to use something
-			//other than time.deltatime, it may give us incorrect readings
-			if (flapping) {
-				currentFlaptime += Time.deltaTime;
-				if (currentFlaptime > regularFlaptime * 0.9f && !wingsHaveFlappedInDownPosition) {
-					rigidbody.AddForce( new Vector3 (0, -flapStrength/4, 0));
-					wingsHaveFlappedInDownPosition = true;
-				} else if (currentFlaptime > regularFlaptime) {
-					flapping = false;
-					wingsHaveFlappedInDownPosition = false;
-				}
-			}
+			regularFlap = true;
+			quickFlap = interruptFlap;
 		}
 
 	}

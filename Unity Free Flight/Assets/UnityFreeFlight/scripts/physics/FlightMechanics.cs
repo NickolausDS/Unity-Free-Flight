@@ -26,21 +26,51 @@ using System.Collections;
 /// 
 public class FlightMechanics : FlightPhysics {
 
-	protected bool isFlapping = 0.0f;
+	protected bool isFlapping = false;
+	private bool wingsHaveFlappedInDownPosition = false;
 	protected float currentFlapTime = 0.0f;
+	protected BaseFlightController controller; 
 
-	public FlightMechanics(Rigidbody rb) : base(rb) {
-
+	public FlightMechanics(Rigidbody rb, BaseFlightController bfc) : base(rb) {
+		controller = bfc;
 	}
 
+	public BaseFlightController Controller { set{controller = value;}}
+
+	public void execute(Quaternion userInput) {
+		base.doStandardPhysics (userInput);
+		flap (controller.flapStrength);
+	}
 
 	public void flap(float flapStrength) {
-		if (wingsOpen ()) {
+		currentFlapTime += Time.deltaTime;
+
+		if (controller.RegularFlap && wingsOpen ()) {
 			//do stuff
-			return;
+			//We can only flap if we're not currently flapping, or the user triggered
+			//an 'interruptFlap', which just means "We're flapping faster than the regular
+			//flap speed." InterruptFlaps are usually triggered by the user mashing the flap
+			//button rather than just holding it down.
+			if (!isFlapping || (controller.QuickFlap && currentFlapTime > controller.minimumFlapTime)) {
+				isFlapping = true;
+				currentFlapTime = 0.0f;
+				rigidbody.AddForce (new Vector3 (0, flapStrength, 0));
+			}
+			
+			//Here we deal with flapping at a regular interval. It may be better to use something
+			//other than time.deltatime, it may give us incorrect readings
+			if (isFlapping) {
+				if (currentFlapTime > controller.regularFlaptime * 0.9f && !wingsHaveFlappedInDownPosition) {
+					rigidbody.AddForce( new Vector3 (0, -flapStrength/4, 0));
+					wingsHaveFlappedInDownPosition = true;
+				} else if (currentFlapTime > controller.regularFlaptime) {
+					isFlapping = false;
+					wingsHaveFlappedInDownPosition = false;
+				}
+			}
+
 		}
 	}
-
 
 	public void wingFlare() {
 		return;
