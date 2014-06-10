@@ -120,19 +120,23 @@ public class BaseFlightController : MonoBehaviour {
 			StartCoroutine (standUp ());
 		}
 	}
+	
 
-	//Flap the wings to gain altitude. Flapping wings while rotated in any direction will 
-	//instead cause momentum in the opposite direction (think of flapping to slow down).
-	//
-	//Flapping has two modes, regular and interrupted. Regular is designed for flaps only
-	//at regular intervals, and makes sense when the player holds down the 'flap' button. 
-	//Interrupted flapping allows the player to flap faster than regular, and makes sense
-	//when the user mashes the 'flap' button in quick succession. 
-	public void flapWings(bool interruptFlap = false) {
+	/// <summary>
+	///Flap the wings to gain altitude. Flapping wings while rotated in any direction will 
+	///instead cause momentum in the opposite direction (think of flapping to slow down).
+	///
+	///Flapping has two modes, regular and interrupted. Regular is designed for flaps only
+	///at regular intervals, and makes sense when the player holds down the 'flap' button. 
+	///Quick flapping allows the player to flap faster than regular, and makes sense
+	///when the user mashes the 'flap' button in quick succession. 
+	/// </summary>
+	/// <param name="isQuickFlap">If set to <c>true</c> quick flap.</param>
+	public void flapWings(bool isQuickFlap = false) {
 
 		if (flappingEnabled) {
 			regularFlap = true;
-			quickFlap = interruptFlap;
+			quickFlap = isQuickFlap;
 		}
 
 	}

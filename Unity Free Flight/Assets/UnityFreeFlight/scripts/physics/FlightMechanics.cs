@@ -48,9 +48,18 @@ public class FlightMechanics : FlightPhysics {
 	public FlightMechanics(Rigidbody rb) : base(rb) {}
 
 	
-
+	/// <summary>
+	/// Try to execute a flap. A regular flap can only happen in regular intervals
+	/// determined by regFlapTime. A quickFlap is faster, and can happen in minFlapTime
+	/// intervals or regular flaptime intervals. If we are not flapping, and the wings are
+	/// open, we are guaranteed a flap. 
+	/// </summary>
+	/// <param name="minFlapTime">Minimum flap time.</param>
+	/// <param name="regFlapTime">Reg flap time.</param>
+	/// <param name="flapStrength">Flap strength.</param>
+	/// <param name="regFlap">If set to <c>true</c> reg flap.</param>
+	/// <param name="quickFlap">If set to <c>true</c> quick flap.</param>
 	public void flap(float minFlapTime, float regFlapTime, float flapStrength, bool regFlap, bool quickFlap) {
-		Debug.Log (string.Format ("FLIGHT FLAPPING: RegFlap: {0} QuickFlap: {1}", regFlap, quickFlap));
 		currentFlapTime += Time.deltaTime;
 
 		if (regFlap && wingsOpen ()) {
