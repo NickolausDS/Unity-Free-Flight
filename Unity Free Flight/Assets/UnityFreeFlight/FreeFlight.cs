@@ -32,7 +32,7 @@ public class FreeFlight : MonoBehaviour {
 	public FlightMechanics PhysicsObject { 
 		get {
 			if (_physicsObject == null)
-				_physicsObject = new FlightMechanics (rigidbody, FlightController);
+				_physicsObject = new FlightMechanics (rigidbody);
 			return _physicsObject; 
 			} 
 		}
@@ -51,7 +51,6 @@ public class FreeFlight : MonoBehaviour {
 			if(value != flightController) {
 				Destroy (flightController);
 				flightController = value;
-				_physicsObject.Controller = flightController;
 			}
 		}
 	}
@@ -106,7 +105,7 @@ public class FreeFlight : MonoBehaviour {
 
 		//Do flight physics if its enabled
 		if (_mode == Modes.Flight || _mode == Modes.Hybrid) {
-			PhysicsObject.execute(FlightController.UserInput);
+			PhysicsObject.execute(FlightController);
 		}
 	}
 

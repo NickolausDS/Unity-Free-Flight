@@ -36,9 +36,9 @@ public class BaseFlightController : MonoBehaviour {
 	//child class, and generally read from by the physics model. 
 	protected Quaternion _userInput;
 	[Range(0.0f, 1.0f)]
-	protected float _leftWingExposure;
+	protected float _leftWingExposure = 1.0f;
 	[Range(0.0f, 1.0f)]
-	protected float _rightWingExposure;
+	protected float _rightWingExposure = 1.0f;
 	protected int _invertedSetting = -1;
 	//These are checked by Free Flight every fixed update and control
 	//whether we should activate either mode.
