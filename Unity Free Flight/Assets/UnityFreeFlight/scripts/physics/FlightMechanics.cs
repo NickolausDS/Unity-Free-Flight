@@ -39,6 +39,7 @@ public class FlightMechanics : FlightPhysics {
 			controller.minimumFlapTime,
 			controller.regularFlaptime,
 			controller.flapStrength,
+			controller.downbeatStrength,
 			controller.RegularFlap,
 			controller.QuickFlap
 		);
@@ -57,9 +58,11 @@ public class FlightMechanics : FlightPhysics {
 	/// <param name="minFlapTime">Minimum flap time.</param>
 	/// <param name="regFlapTime">Reg flap time.</param>
 	/// <param name="flapStrength">Flap strength.</param>
+	/// <param name="downbeatStrength">Reverse of flap, when the wings are going back to normal position and we loose a little height. 
+	/// This number is usually greator than real world values, as it gives the user the 'bobbing feeling of flight'. 
 	/// <param name="regFlap">If set to <c>true</c> reg flap.</param>
 	/// <param name="quickFlap">If set to <c>true</c> quick flap.</param>
-	public void flap(float minFlapTime, float regFlapTime, float flapStrength, bool regFlap, bool quickFlap) {
+	public void flap(float minFlapTime, float regFlapTime, float flapStrength, float downBeatStrength, bool regFlap, bool quickFlap) {
 		currentFlapTime += Time.deltaTime;
 
 		if (regFlap && wingsOpen ()) {
@@ -71,14 +74,14 @@ public class FlightMechanics : FlightPhysics {
 			if (!isFlapping || (quickFlap && currentFlapTime > minFlapTime)) {
 				isFlapping = true;
 				currentFlapTime = 0.0f;
-				rigidbody.AddForce (new Vector3 (0, flapStrength, 0));
+				rigidbody.AddForce (rigidbody.rotation * Vector3.up * flapStrength);
 			}
 			
 			//Here we deal with flapping at a regular interval. It may be better to use something
 			//other than time.deltatime, it may give us incorrect readings
 			if (isFlapping) {
 				if (currentFlapTime > regFlapTime * 0.9f && !wingsHaveFlappedInDownPosition) {
-					rigidbody.AddForce( new Vector3 (0, -flapStrength/4, 0));
+					rigidbody.AddForce(rigidbody.rotation * Vector3.down * downBeatStrength);
 					wingsHaveFlappedInDownPosition = true;
 				} else if (currentFlapTime > regFlapTime) {
 					isFlapping = false;
