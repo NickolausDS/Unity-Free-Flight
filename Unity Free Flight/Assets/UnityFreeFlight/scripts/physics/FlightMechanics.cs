@@ -98,6 +98,8 @@ public class FlightMechanics : FlightPhysics {
 
 	public void wingFold(float left, float right) {
 		setWingPosition (left, right);
+		rigidbody.AddTorque (rigidbody.rotation * Vector3.forward * (right - left) * 2.0f);
+		rigidbody.angularDrag = left * right * 3.0f;
 
 	}
 

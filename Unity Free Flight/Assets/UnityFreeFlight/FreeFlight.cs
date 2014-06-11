@@ -24,9 +24,6 @@ public class FreeFlight : MonoBehaviour {
 		//get weird if something appears in the sky at zero velocity (works, just looks weird). 
 		if (_mode == Modes.Flight)
 			rigidbody.velocity = new Vector3(0.0f, 0.0f, 20.0f);
-		// We don't want the rigidbody to determine our rotation,
-		// we will compute that ourselves
-		rigidbody.freezeRotation = true;
 	}
 		
 	public FlightMechanics PhysicsObject { 
