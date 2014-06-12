@@ -1,6 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+
+/// <summary>
+/// 	Simulate the flow of air around an airfoil. This class applies
+/// 	passive forces on a flight object, such as lift and drag. It 
+/// 	only applies these forces based on the current state of the wing,
+/// 	but never changes the actual wing itself (so no flapping). 
+/// </summary>
 public class FlightPhysics : FlightObject {
 
 	public bool liftEnabled = true;
@@ -88,7 +95,12 @@ public class FlightPhysics : FlightObject {
 		get { return rigidbody.rotation.eulerAngles; }
 	}
 
-
+	/// <summary>
+	/// 	Apply the regular flight physics to the flight object.
+	/// 
+	/// 	Precondition: This must be called at regular intervals
+	/// to have a smooth effect on the physics object (use FixedUpdate). 
+	/// </summary>
 	public void doStandardPhysics(Quaternion userInput) {
 		rigidbody.useGravity = gravityEnabled;
 		
@@ -139,13 +151,34 @@ public class FlightPhysics : FlightObject {
 	
 	
 	
-	
+	/// <summary>
+	/// 	Get the current lift force on the object based on the paramaters. 
+	/// 
+	/// 	All dimensions must be in metric.
+	/// </summary>
+	/// <returns>The lift in Newtons</returns>
+	/// <param name="velocity">Velocity Meters/Second</param>
+	/// <param name="pressure">Pressure (something)</param>
+	/// <param name="area">Area Meters^2</param>
+	/// <param name="liftCoff">Lift coff. (dimensionless)</param>
 	public float getLift(float velocity, float pressure, float area, float liftCoff) {
 		pressure = 1.225f;
 		float lift = velocity * velocity * pressure * area * liftCoff;
 		return lift;
 	}
 
+	/// <summary>
+	/// 	Get the current drag force on the object based on the parameters. 
+	/// 
+	/// 	All dimensions must be in metric.
+	/// </summary>
+	/// <returns>The drag in Newtons</returns>
+	/// <param name="velocity">Velocity Meters/Second</param>
+	/// <param name="pressure">Pressure (something)</param>
+	/// <param name="area">Area Meters^2</param>
+	/// <param name="dragCoff">Drag coff (dimensionless)</param>
+	/// <param name="lift">Lift Newtons</param>
+	/// <param name="aspectR">Aspect r. (dimensionless)</param>
 	public float getDrag(float velocity, float pressure, float area, float dragCoff, float lift, float aspectR) {
 		//wing span efficiency value
 		float VSEV = .9f;
