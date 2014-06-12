@@ -31,7 +31,11 @@ public class FlightMechanics : FlightPhysics {
 	protected float currentFlapTime = 0.0f;
 		
 	public void execute(BaseFlightController controller) {
-		base.doStandardPhysics (controller.UserInput);
+
+		//Find out how much our user turned us
+		rigidbody.rotation *= controller.UserInput;
+
+		base.doStandardPhysics ();
 
 		wingFold (controller.LeftWingExposure, controller.RightWingExposure);
 
