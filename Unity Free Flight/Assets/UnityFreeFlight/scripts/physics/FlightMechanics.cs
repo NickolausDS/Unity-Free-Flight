@@ -1,18 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-/*
- * Flight Mechanics is responsible for converting user input into 
- * manipulating the wing for various physics effects.
- * 
- * It handles the math behind flapping, flarring, diving,
- * to change how physics effects the flight object.
- * 
- * Example: In order to do a 'dive', this class reduces the
- * wing area. flight physics then calculates smaller lift forces,
- * allowing the flight object to plummet.
- */ 
-
 /// <summary>
 ///Flight Mechanics is responsible for converting user input into 
 ///manipulating the wing for various physics effects.
