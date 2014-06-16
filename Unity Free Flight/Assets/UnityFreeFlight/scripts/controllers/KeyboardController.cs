@@ -39,6 +39,11 @@ public class KeyboardController : BaseFlightController {
 					_rightWingExposure = 1.0f;
 				}
 			}
+			if (flaringEnabled && Input.GetButton ("WingFlare")) {
+				doFlare = true;
+			} else {
+				doFlare = false;
+			}
 		//The jump button re-enables flight-mode
 		} else {
 			if (Input.GetButtonDown("Jump") ) {

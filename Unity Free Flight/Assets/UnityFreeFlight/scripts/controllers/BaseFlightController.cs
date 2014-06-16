@@ -83,6 +83,10 @@ public class BaseFlightController : MonoBehaviour {
 	public bool RegularFlap { get { bool ret = regularFlap; regularFlap = false; return ret; } }
 	public bool QuickFlap { get { bool ret = quickFlap; quickFlap = false; return ret; } }
 
+	protected bool doFlare = false;
+	public bool DoFlare { get { return doFlare; } }
+
+
 	//We do the warning here, since Update() is really the only method that needs to be overridden.
 	//The child class should put all user controls in this method (and not fixedUpdate(), since we're
 	//not doing any physics).

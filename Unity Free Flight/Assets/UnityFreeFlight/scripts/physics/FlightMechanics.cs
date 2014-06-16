@@ -25,7 +25,11 @@ public class FlightMechanics : FlightPhysics {
 
 		base.doStandardPhysics ();
 
-		wingFold (controller.LeftWingExposure, controller.RightWingExposure);
+		if (controller.DoFlare) {
+			wingFlare();
+		} else {
+			wingFold (controller.LeftWingExposure, controller.RightWingExposure);
+		}
 
 		flap (
 			controller.minimumFlapTime,
@@ -35,6 +39,8 @@ public class FlightMechanics : FlightPhysics {
 			controller.RegularFlap,
 			controller.QuickFlap
 		);
+
+
 
 	}
 
@@ -85,7 +91,10 @@ public class FlightMechanics : FlightPhysics {
 	}
 
 	public void wingFlare() {
-		return;
+		setWingPosition (1.0f, 1.0f);
+		Quaternion flareRotation = Quaternion.LookRotation(Vector3.up);
+		rigidbody.rotation = Quaternion.Lerp (rigidbody.rotation, flareRotation, 3.0f * Time.deltaTime);
+
 	}
 
 	public void wingFold(float left, float right) {
