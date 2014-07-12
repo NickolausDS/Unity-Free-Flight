@@ -84,6 +84,11 @@ public class BaseFlightController : MonoBehaviour {
 	public bool QuickFlap { get { bool ret = quickFlap; quickFlap = false; return ret; } }
 
 	protected bool doFlare = false;
+	//The default pitch (x) we rotate to when we do a flare
+	public float defaultFlareAngle = 30.0f;
+	//The current flare angle. This may change based on user input
+	protected float flareAngle = 30.0f;
+	public float FlareAngle { get { return flareAngle; } }
 	public bool DoFlare { get { return doFlare; } }
 
 

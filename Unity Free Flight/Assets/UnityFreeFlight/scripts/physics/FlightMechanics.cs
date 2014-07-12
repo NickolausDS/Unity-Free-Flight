@@ -26,7 +26,7 @@ public class FlightMechanics : FlightPhysics {
 		base.doStandardPhysics ();
 
 		if (controller.DoFlare) {
-			wingFlare();
+			wingFlare(controller.FlareAngle, 3.0f);
 		} else {
 			wingFold (controller.LeftWingExposure, controller.RightWingExposure);
 		}
@@ -90,11 +90,18 @@ public class FlightMechanics : FlightPhysics {
 		}
 	}
 
-	public void wingFlare() {
+	public void wingFlare(float flareAngle, float flareSpeed) {
+		//Set wings fully open
 		setWingPosition (1.0f, 1.0f);
-		Quaternion flareRotation = Quaternion.LookRotation(Vector3.up);
-		rigidbody.rotation = Quaternion.Lerp (rigidbody.rotation, flareRotation, 3.0f * Time.deltaTime);
 
+		//Expose the true pitch, by rotating the Y value to zero
+		Quaternion rotation = Quaternion.LookRotation (new Vector3 (0, -rigidbody.rotation.eulerAngles.y, 0));
+		rotation = rigidbody.rotation * rotation;
+
+		//Rotate to flare angle
+		if (rotation.eulerAngles.x > flareAngle) {
+			rigidbody.rotation = Quaternion.Lerp (rigidbody.rotation, Quaternion.LookRotation(Vector3.up), flareSpeed * Time.deltaTime);
+		}
 	}
 
 	public void wingFold(float left, float right) {
