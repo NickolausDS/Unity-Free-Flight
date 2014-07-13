@@ -100,7 +100,8 @@ public class FlightMechanics : FlightPhysics {
 
 		//Rotate to flare angle
 		if (rotation.eulerAngles.x > flareAngle) {
-			rigidbody.rotation = Quaternion.Lerp (rigidbody.rotation, Quaternion.LookRotation(Vector3.up), flareSpeed * Time.deltaTime);
+			Quaternion desiredRotation = rigidbody.rotation * Quaternion.LookRotation(new Vector3(0, flareAngle, 0));
+			rigidbody.rotation = Quaternion.Lerp (rigidbody.rotation, desiredRotation, flareSpeed * Time.deltaTime);
 		}
 	}
 
