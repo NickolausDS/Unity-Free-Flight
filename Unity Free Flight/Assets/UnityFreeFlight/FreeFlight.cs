@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 [RequireComponent (typeof(Rigidbody))]
 public class FreeFlight : MonoBehaviour {
@@ -12,7 +13,7 @@ public class FreeFlight : MonoBehaviour {
 	 * Hybrid -- Flight controller disabled, ground controller active, flight physics active
 	 */ 
 	public BaseFlightController flightController = null;
-	public MonoBehaviour groundController = null;
+	public List<MonoBehaviour> groundControllers = new List<MonoBehaviour> ();
 	private Modes _mode;
 	public Modes Mode;
 	private FlightMechanics _physicsObject;
@@ -108,10 +109,13 @@ public class FreeFlight : MonoBehaviour {
 
 	private bool disableGround() {
 		bool ret = false;
-		if (groundController) {
-			groundController.enabled = false;	
+		if (groundControllers.Count > 0) {
+			foreach (MonoBehaviour gc in groundControllers) {
+				gc.enabled = false;
+			}	
 			ret = true;
 		}
+
 		CharacterController cc = gameObject.GetComponent<CharacterController> ();
 		if (cc) {
 			cc.enabled = false;
@@ -120,13 +124,16 @@ public class FreeFlight : MonoBehaviour {
 	}
 
 	private bool enableGround() {
-		if (groundController) {
+		if (groundControllers.Count > 0) {
 			rigidbody.isKinematic = true;
 			CharacterController cc = gameObject.GetComponent<CharacterController> ();
 			if (cc) {
 				cc.enabled = true;
 			}
-			groundController.enabled = true;
+			foreach (MonoBehaviour gc in groundControllers) {
+				gc.enabled = true;
+			}
+
 			return true;
 		}
 		Debug.LogError ("Failed to switch " + gameObject.name + " to ground controller. " +

@@ -1,16 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEditor;
 
 [CustomEditor(typeof(FreeFlight)), CanEditMultipleObjects]
 public class FreeFlightEditor : Editor {
-
-	//All used for setting the ground controller. 
-	//It's more complicated than it should be, see
-	//setting ground controllers below
-	MonoBehaviour groundController = null;
-	MonoScript tempgc;
-	string cname = null;
 
 	private bool _shouldCheckAddDefaultCollider = true;
 
@@ -18,7 +12,9 @@ public class FreeFlightEditor : Editor {
 	private bool _showPhysicsAttrs = false;
 	private bool _showDimensionAttrs = false;
 	private bool _showControllers = true;
-	
+	private bool _showGroundControllers = true;
+
+	private List<MonoScript> gcMasterList = new List<MonoScript>();
 
 
 	public override void OnInspectorGUI() {
@@ -52,13 +48,39 @@ public class FreeFlightEditor : Editor {
 			EditorGUILayout.ObjectField ("Flight Controller", ff.flightController, typeof(BaseFlightController), false);
 			ff.Mode = (FreeFlight.Modes) EditorGUILayout.EnumPopup ("Flight Mode", ff.Mode);
 			ff.setMode();
-			
 
-			tempgc = (MonoScript) EditorGUILayout.ObjectField ("Ground Controller", tempgc, typeof(MonoScript), false);
-			setGroundController(ff, go);
-			//Used for debugging
-//			EditorGUILayout.ObjectField ("Ground Controller", groundController, typeof(MonoBehaviour), false);
-//			EditorGUILayout.LabelField(cname);
+			_showGroundControllers = EditorGUILayout.Foldout (_showGroundControllers, "Ground Controllers");
+			if (_showGroundControllers) {
+
+				buildMasterList(ff);
+
+				for ( int i = 0; i < gcMasterList.Count; i++) {
+					gcMasterList[i] = (MonoScript) EditorGUILayout.ObjectField("Script Priority#" + i, gcMasterList[i], typeof(MonoScript), false);
+				}
+
+				EditorGUILayout.BeginHorizontal();
+				if (GUILayout.Button("+")) gcMasterList.Add (null);
+				if (GUILayout.Button("-")) gcMasterList.RemoveAt(gcMasterList.Count-1);
+				EditorGUILayout.EndHorizontal();
+				List<MonoBehaviour> gcs = new List<MonoBehaviour>();
+				MonoBehaviour newMB;
+				foreach ( MonoScript scriptItem in gcMasterList) {
+					if (scriptItem == null)
+						continue;
+					newMB = (MonoBehaviour) go.GetComponent(scriptItem.GetClass().ToString() );
+					if (newMB == null) {
+						Debug.LogWarning(go.name + " does not have component: " + scriptItem.name);
+					} else {
+						//Debug.Log ("Successfully added " + scriptItem.name);
+						gcs.Add (newMB);
+					}
+				}
+
+				ff.groundControllers = gcs;
+			}
+
+
+
 			_shouldCheckAddDefaultCollider = EditorGUILayout.Toggle ("Check/Add Collider", _shouldCheckAddDefaultCollider);
 			if (_shouldCheckAddDefaultCollider)
 				checkAddDefaultCollider(go);
@@ -67,35 +89,28 @@ public class FreeFlightEditor : Editor {
 
 	}
 
-	//As you may notice, setting ground controllers are a complicated mess.
-	//The problem lies with adding the component to the game object. Every time
-	//that happens, the monoscript for 'tempgc' mysteriously disappears. I've done
-	//hours of research and have yet to figure out why this happens. 
-	//
-	//We circumvent the problem by using a string 'cname' to keep track of the class
-	//when it disappears. 
-	private void setGroundController(FreeFlight ff, GameObject go) {
-
-		if (cname == null && tempgc)
-			cname = tempgc.name;
-		if (cname != null && cname != "" && !go.GetComponent(cname)) {
-			groundController = (MonoBehaviour) go.AddComponent(cname);
-			if (groundController) {
-				groundController.enabled = false;
-				CharacterController cc = go.GetComponent<CharacterController>();
-				if (cc)
-					cc.enabled = false;
+	/// <summary>
+	/// 	Make sure the gcMasterList shows correct data. For some reason unknown, Monoscripts disappear and 
+	/// 	switch to null at playtime, or when a random inspector event triggers it. The fix is to rebuild
+	/// 	the MonoScript List from the MonoBehaviour List (kept in FreeFlight) whenever we detect this
+	/// 	happening.
+	/// 
+	/// 	This method also needs to make sure there is atleast one item in the gcMasterList,
+	///     even if it's null. This makes things easier
+	/// 	for the developer to understand when viewing the editor
+	/// </summary>
+	/// <param name="ff">Refrence to free flight object</param>
+	private void buildMasterList(FreeFlight ff) {
+		//Rebuild list
+		if (gcMasterList.Count == 0 && ff.groundControllers.Count > 0) {
+			foreach (MonoBehaviour mb in ff.groundControllers) {
+				gcMasterList.Add (MonoScript.FromMonoBehaviour(mb));
 			}
-		}
+		//make sure atleast one item
+		} else if (gcMasterList.Count < 1) {
+			gcMasterList.Add (null);
+		} 
 
-		//if the new ground controller is different, swap it.
-		groundController = (MonoBehaviour) go.GetComponent (cname);
-		if (groundController) {
-			if (ff.groundController && ff.groundController.name != groundController.name) {
-				Destroy (ff.groundController);
-			}
-			ff.groundController = groundController;
-		}
 
 	}
 
