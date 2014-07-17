@@ -6,8 +6,8 @@ public class KeyboardController : BaseFlightController {
 	Vector3 keyInput;
 	float rotationSpeed = 200.0f;
 	
-	public float doubleJumpTimer = 0.7f;
-	private float doubleJump;
+	public float launchTime = 0.2f;
+	private float launchTimeTimer;
 
 
 	void Update() {
@@ -46,16 +46,15 @@ public class KeyboardController : BaseFlightController {
 			}
 		//The jump button re-enables flight-mode
 		} else {
-			if (Input.GetButtonDown("Jump") ) {
-				if (doubleJump > 0.0f)
+			if (Input.GetButton("Jump") ) {
+				if (launchTimeTimer > launchTime)
 					enableFlight = true;
 				else
-					//Reset the timer
-					doubleJump = doubleJumpTimer;
+					launchTimeTimer += Time.deltaTime;
+			} else {
+				launchTimeTimer = 0.0f;
 			}
 		}
-
-		doubleJump -= Time.deltaTime;
 
 	}
 
