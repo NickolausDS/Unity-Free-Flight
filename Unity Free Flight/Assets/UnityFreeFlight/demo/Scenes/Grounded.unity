@@ -85,6 +85,7 @@ GameObject:
   - 54: {fileID: 239765971}
   - 114: {fileID: 239765973}
   - 114: {fileID: 239765970}
+  - 114: {fileID: 239765978}
   - 143: {fileID: 239765976}
   - 114: {fileID: 239765975}
   - 114: {fileID: 239765974}
@@ -104,7 +105,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 239765969}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b1597f3c2f988454da5d4bd5582048fe, type: 3}
+  m_Script: {fileID: 11500000, guid: ed6e5f009fa47436c84879d955b9d0c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   flightEnabled: 0
@@ -112,10 +113,12 @@ MonoBehaviour:
   regularFlaptime: .5
   minimumFlapTime: .200000003
   flapStrength: 600
-  flaringEnabled: 0
-  divingEnabled: 0
-  thrustingEnabled: 0
-  doubleJumpTimer: .699999988
+  downbeatStrength: 150
+  flaringEnabled: 1
+  divingEnabled: 1
+  thrustingEnabled: 1
+  defaultFlareAngle: 30
+  launchTime: .200000003
 --- !u!54 &239765971
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -156,7 +159,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flightController: {fileID: 239765970}
-  groundController: {fileID: 239765974}
+  groundControllers:
+  - {fileID: 239765975}
+  - {fileID: 239765974}
+  - {fileID: 239765977}
   Mode: 1
 --- !u!114 &239765974
 MonoBehaviour:
@@ -246,17 +252,30 @@ MonoBehaviour:
   m_GameObject: {fileID: 239765969}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 73fcfb3ee671c48058130df7d058cae5, type: 3}
+  m_Script: {fileID: 11500000, guid: 68ec2fe99d1108b9d0006a298d76c639, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  axes: 0
+  axes: 1
   sensitivityX: 15
   sensitivityY: 15
   minimumX: -360
   maximumX: 360
   minimumY: -60
   maximumY: 60
-  pm: {fileID: 1227643086}
+--- !u!114 &239765978
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 239765969}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2f5ec41a74c047e3929effb06f96322, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraTransform: {fileID: 493986383}
+  flightController: {fileID: 239765970}
+  cameraSpeed: 3
 --- !u!1001 &427484740
 Prefab:
   m_ObjectHideFlags: 0
