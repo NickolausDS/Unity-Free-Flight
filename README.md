@@ -55,6 +55,14 @@ Version 0.2.x will focus on extending flight controls to include flapping, flari
 	* Added more intuitive default support to Free Flight dev package
 	* Added smooth transition for landings
 	* Fixed "fall through world" bug
+* Version 0.2.2
+	* Added Flight Mechanics!
+		* created a system by which developers can manipulate flight physics
+		* Flaring flight mechanic added
+		* Diving flight mechanic added
+		* (Note: Above two mechanics are not fully developed yet)
+	* Improved the flapping system
+	* Ground controller now allows developers to add more than one script
 
 ####Version 0.3.x
 
