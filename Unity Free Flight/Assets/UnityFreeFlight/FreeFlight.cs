@@ -153,6 +153,7 @@ public class FreeFlight : MonoBehaviour {
 	private bool enableFlight() {
 		if (FlightController) {
 			rigidbody.isKinematic = false;
+			rigidbody.freezeRotation = false;
 			flightController.flightEnabled = true;
 			return true;
 		}
