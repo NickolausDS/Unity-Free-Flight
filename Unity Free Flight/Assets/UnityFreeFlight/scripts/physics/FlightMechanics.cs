@@ -17,6 +17,8 @@ public class FlightMechanics : FlightPhysics {
 	protected bool isFlapping = false;
 	private bool wingsHaveFlappedInDownPosition = false;
 	protected float currentFlapTime = 0.0f;
+
+	protected Quaternion flareRotationSnapshot;
 		
 	public void execute(BaseFlightController controller) {
 
@@ -25,8 +27,17 @@ public class FlightMechanics : FlightPhysics {
 
 		base.doStandardPhysics ();
 
-		if (controller.DoFlare) {
-			wingFlare(controller.FlareAngle, 3.0f);
+		if (controller.StartFlare) {
+//			Debug.Log ("Starting Flare");
+			flareRotationSnapshot = rigidbody.rotation;
+			wingFlare(controller.FlareAngle, controller.flareSpeed);
+		} else if (controller.IsFlaring && !controller.ReleaseFlare) {
+//			Debug.Log ("Is Flaring");
+			wingFlare (controller.FlareAngle, controller.flareSpeed);
+		} else if (controller.IsFlaring && controller.ReleaseFlare) {
+//			Debug.Log ("Releasing Flare");
+			if (wingFlareRelease(controller.flareSpeed))
+				controller.terminateFlare();
 		} else {
 			wingFold (controller.LeftWingExposure, controller.RightWingExposure);
 		}
@@ -95,13 +106,22 @@ public class FlightMechanics : FlightPhysics {
 		setWingPosition (1.0f, 1.0f);
 
 		//Expose the true pitch, by rotating the Y value to zero
-		Quaternion rotation = Quaternion.LookRotation (new Vector3 (0, -rigidbody.rotation.eulerAngles.y, 0));
+		Quaternion rotation = Quaternion.LookRotation (new Vector3 (0.01f, -rigidbody.rotation.eulerAngles.y, 0));
 		rotation = rigidbody.rotation * rotation;
 
 		//Rotate to flare angle
 		if (rotation.eulerAngles.x > flareAngle) {
 			Quaternion desiredRotation = rigidbody.rotation * Quaternion.LookRotation(new Vector3(0, flareAngle, 0));
 			rigidbody.rotation = Quaternion.Lerp (rigidbody.rotation, desiredRotation, flareSpeed * Time.deltaTime);
+		}
+	}
+
+	public bool wingFlareRelease (float flareSpeed) {
+		rigidbody.rotation = Quaternion.Lerp (rigidbody.rotation, flareRotationSnapshot, flareSpeed * Time.deltaTime);
+		if (Quaternion.Angle (rigidbody.rotation, flareRotationSnapshot) < 5.0f) {
+			return true;
+		} else {
+			return false;
 		}
 	}
 

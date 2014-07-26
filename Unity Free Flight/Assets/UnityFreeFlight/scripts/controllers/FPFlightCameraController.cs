@@ -37,7 +37,7 @@ public class FPFlightCameraController : MonoBehaviour {
 
 		if (flightController.flightEnabled) {
 
-			if(flightController.DoFlare) {
+			if(flightController.IsFlaring) {
 				cameraTransform.rotation = savedRotation;
 				alignedWithGameObject = false;
 				//cameraTransform.rotation *= Quaternion.LookRotation( new Vector3 ( 0, -flightController.FlareAngle, 0) );

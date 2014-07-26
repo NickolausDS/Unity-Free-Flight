@@ -11,7 +11,6 @@ public class MouseController : BaseFlightController {
 
 
 	void Update() {
-
 		//Don't allow any user flight controls when we're grounded. This lets
 		//Ground controls take over so we don't interfere. 
 		if (flightEnabled) {
@@ -26,14 +25,11 @@ public class MouseController : BaseFlightController {
 			} else if (Input.GetButton ("Jump")) {
 				flapWings ();
 			}
-			if (divingEnabled) {
-				dive (Input.GetButton ("FoldLeftWing"), Input.GetButton("FoldRightWing"));
-			}
-			if (flaringEnabled && Input.GetButton ("WingFlare")) {
-				doFlare = true;
-			} else {
-				doFlare = false;
-			}
+
+			dive (Input.GetButton ("FoldLeftWing"), Input.GetButton("FoldRightWing"));
+
+			flare (_invertedSetting * -Input.GetAxis ("Vertical") * rotationSpeed * Time.deltaTime, !Input.GetButton ("WingFlare"));
+
 		//The jump button re-enables flight-mode
 		} else {
 			if (Input.GetButton("Jump") ) {
@@ -45,7 +41,6 @@ public class MouseController : BaseFlightController {
 				launchTimeTimer = 0.0f;
 			}
 		}
-
 
 	}
 

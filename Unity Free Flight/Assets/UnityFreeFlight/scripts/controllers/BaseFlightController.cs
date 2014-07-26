@@ -30,6 +30,11 @@ public class BaseFlightController : MonoBehaviour {
 	public float downbeatStrength = 150.0f;
 
 	public bool flaringEnabled = false;
+
+	//The default pitch (x) we rotate to when we do a flare
+	public float defaultFlareAngle = 30.0f;
+	public float flareSpeed = 3.0f;
+
 	public bool divingEnabled = false;
 	public bool thrustingEnabled = false;
 
@@ -82,14 +87,29 @@ public class BaseFlightController : MonoBehaviour {
 
 	public bool RegularFlap { get { bool ret = regularFlap; regularFlap = false; return ret; } }
 	public bool QuickFlap { get { bool ret = quickFlap; quickFlap = false; return ret; } }
-
-	protected bool doFlare = false;
-	//The default pitch (x) we rotate to when we do a flare
-	public float defaultFlareAngle = 30.0f;
+	
 	//The current flare angle. This may change based on user input
 	protected float flareAngle = 30.0f;
+	protected bool startFlare = false;
+	protected bool isFlaring = false;
+	protected bool releaseFlare = false;
 	public float FlareAngle { get { return flareAngle; } }
-	public bool DoFlare { get { return doFlare; } }
+	/// <summary>
+	/// 	Returns true if user presses flare button.
+	/// </summary>
+	/// <value><c>true</c> if do flare; otherwise, <c>false</c>.</value>
+	public bool StartFlare { get { bool ret = startFlare; startFlare = false; return ret; } }
+	/// <summary>
+	/// 	Returns true while we are still flaring, including both the 'doflare'
+	/// 	state and the 'releaseFlare' state.
+	/// </summary>
+	/// <value><c>true</c> if this instance is flaring; otherwise, <c>false</c>.</value>
+	public bool IsFlaring { get { return isFlaring; } }
+	/// <summary>
+	/// 	Returns true if the user released the flare button
+	/// </summary>
+	/// <value><c>true</c> if release flare; otherwise, <c>false</c>.</value>
+	public bool ReleaseFlare { get { return releaseFlare; } }
 
 
 	//We do the warning here, since Update() is really the only method that needs to be overridden.
@@ -154,10 +174,23 @@ public class BaseFlightController : MonoBehaviour {
 	//A flare is a position that birds, AND aircraft will take upon landing. It's characterized by
 	//maximizing wing area with a very high angle of attack (pitch). It's typical for birds to 
 	//enter such a high angle of attack that they stall their wings in the process.
-	public void flare() {
+	public void flare(float deltaAngle, bool release) {
 		if (flaringEnabled) {
-			Debug.LogWarning("Flarring not implemented yet!");
+			if (!release && !isFlaring && !startFlare) {
+				startFlare = true;
+				isFlaring = true;
+			} else if (release && isFlaring) {
+				releaseFlare = true;
+			} else if (isFlaring) {
+				flareAngle += deltaAngle;
+			}
 		}
+	}
+
+	public void terminateFlare() {
+		startFlare = false;
+		isFlaring = false;
+		releaseFlare = false;
 	}
 
 	//A dive includes folding either one or both of the wings, increasing speed and decent rate.

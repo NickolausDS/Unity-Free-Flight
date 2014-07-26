@@ -25,14 +25,11 @@ public class KeyboardController : BaseFlightController {
 			} else if (Input.GetButton ("Jump")) {
 				flapWings ();
 			}
-			if (divingEnabled) {
-				dive (Input.GetButton ("FoldLeftWing"), Input.GetButton("FoldRightWing"));
-			}
-			if (flaringEnabled && Input.GetButton ("WingFlare")) {
-				doFlare = true;
-			} else {
-				doFlare = false;
-			}
+
+			dive (Input.GetButton ("FoldLeftWing"), Input.GetButton("FoldRightWing"));
+
+			flare (_invertedSetting * -Input.GetAxis ("Vertical") * rotationSpeed * Time.deltaTime, !Input.GetButton ("WingFlare"));
+
 		//The jump button re-enables flight-mode
 		} else {
 			if (Input.GetButton("Jump") ) {
