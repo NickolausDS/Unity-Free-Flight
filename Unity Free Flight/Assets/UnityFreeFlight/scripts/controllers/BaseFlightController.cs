@@ -161,10 +161,24 @@ public class BaseFlightController : MonoBehaviour {
 	}
 
 	//A dive includes folding either one or both of the wings, increasing speed and decent rate.
-	public void dive(float leftWingPercentFold, float rightWingPercentFold) {
-		if (divingEnabled) {
-			Debug.LogWarning("Diving not implemented yet!");
+	public void dive(float leftWingExposureAmount, float rightWingExposureAmount) {
+		_leftWingExposure = leftWingExposureAmount;
+		_rightWingExposure = rightWingExposureAmount;
+	}
+
+	public void dive(bool left, bool right) {
+		if (left) {
+			_leftWingExposure = 0.0f;
+		} else {
+			_leftWingExposure = 1.0f;
 		}
+
+		if (right) {
+			_rightWingExposure = 0.0f;
+		} else {
+			_rightWingExposure = 1.0f;
+		}
+
 	}
 
 	//Add raw thrust to the flight object

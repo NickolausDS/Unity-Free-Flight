@@ -11,7 +11,6 @@ public class KeyboardController : BaseFlightController {
 
 
 	void Update() {
-
 		//Don't allow any user flight controls when we're grounded. This lets
 		//Ground controls take over so we don't interfere. 
 		if (flightEnabled) {
@@ -27,17 +26,7 @@ public class KeyboardController : BaseFlightController {
 				flapWings ();
 			}
 			if (divingEnabled) {
-				if (Input.GetButton("FoldLeftWing")) {
-					_leftWingExposure = 0.0f;
-				} else {
-					_leftWingExposure = 1.0f;
-				}
-
-				if (Input.GetButton("FoldRightWing")) {
-					_rightWingExposure = 0.0f;
-				} else {
-					_rightWingExposure = 1.0f;
-				}
+				dive (Input.GetButton ("FoldLeftWing"), Input.GetButton("FoldRightWing"));
 			}
 			if (flaringEnabled && Input.GetButton ("WingFlare")) {
 				doFlare = true;
