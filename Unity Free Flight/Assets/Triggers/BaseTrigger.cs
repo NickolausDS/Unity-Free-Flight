@@ -25,9 +25,9 @@ public abstract class BaseTrigger : MonoBehaviour {
 
 
 	public BaseTrigger chainToTrigger;
-	public float delaySecsToCondition = 2.0f;
-	public float delaySecsToAction = .75f;
-	public float delaySecsAfterAction = 2.0f; 
+	public float delaySecsToCondition = 0.0f;
+	public float delaySecsToAction = 2.0f;
+	public float delaySecsAfterAction = 0.0f; 
 
 	private bool preConditionDelayDone = false;
 	private float preConditionTime;
@@ -80,9 +80,21 @@ public abstract class BaseTrigger : MonoBehaviour {
 		if (actionFired && (Time.time > actionSatisfiedTime + delaySecsAfterAction) ) {
 			if (chainToTrigger)
 				chainToTrigger.enabled = true;
+			reset ();
 			this.enabled = false;
 		}
 	
+	}
+
+	/// <summary>
+	/// Reset the Trigger so it can be used again. Note, that Start() needs to be
+	/// called seperate from this method, which is done automatically if this script
+	/// is started with: enabled=true
+	/// </summary>
+	public void reset () {
+		preConditionDelayDone = false;
+		conditionSatisfied = false;
+		actionFired = false;
 	}
 
 	/// <summary>
