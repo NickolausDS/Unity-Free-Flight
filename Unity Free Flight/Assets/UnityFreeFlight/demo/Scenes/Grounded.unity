@@ -88,8 +88,8 @@ GameObject:
   - 114: {fileID: 239765978}
   - 143: {fileID: 239765976}
   - 114: {fileID: 239765975}
-  - 114: {fileID: 239765974}
   - 114: {fileID: 239765977}
+  - 114: {fileID: 239765974}
   m_Layer: 0
   m_Name: FlightDummy
   m_TagString: Player
@@ -115,9 +115,10 @@ MonoBehaviour:
   flapStrength: 600
   downbeatStrength: 150
   flaringEnabled: 1
+  defaultFlareAngle: 30
+  flareSpeed: 3
   divingEnabled: 1
   thrustingEnabled: 1
-  defaultFlareAngle: 30
   launchTime: .200000003
 --- !u!54 &239765971
 Rigidbody:
@@ -161,7 +162,6 @@ MonoBehaviour:
   flightController: {fileID: 239765970}
   groundControllers:
   - {fileID: 239765975}
-  - {fileID: 239765974}
   - {fileID: 239765977}
   Mode: 1
 --- !u!114 &239765974
@@ -170,11 +170,21 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 239765969}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 60bca8f58a0b8478e946e6e86658cb29, type: 3}
+  m_Script: {fileID: 11500000, guid: 0b167d00b3108411a8a963cba5ddde1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cameraTransform: {fileID: 493986383}
+  distance: .100000001
+  height: 0
+  angularSmoothLag: .300000012
+  angularMaxSpeed: 15
+  heightSmoothLag: .300000012
+  snapSmoothLag: .200000003
+  snapMaxSpeed: 720
+  clampHeadPositionScreenSpace: .75
+  lockCameraTimeout: .200000003
 --- !u!114 &239765975
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -252,16 +262,28 @@ MonoBehaviour:
   m_GameObject: {fileID: 239765969}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 68ec2fe99d1108b9d0006a298d76c639, type: 3}
+  m_Script: {fileID: 11500000, guid: 1d5ac211a643e447ca78c2d794a16381, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  axes: 1
-  sensitivityX: 15
-  sensitivityY: 15
-  minimumX: -360
-  maximumX: 360
-  minimumY: -60
-  maximumY: 60
+  idleAnimation: {fileID: 0}
+  walkAnimation: {fileID: 0}
+  runAnimation: {fileID: 0}
+  jumpPoseAnimation: {fileID: 0}
+  walkMaxAnimationSpeed: .75
+  trotMaxAnimationSpeed: 1
+  runMaxAnimationSpeed: 1
+  jumpAnimationSpeed: 1.14999998
+  landAnimationSpeed: 1
+  walkSpeed: 2
+  trotSpeed: 4
+  runSpeed: 6
+  inAirControlAcceleration: 3
+  jumpHeight: 3
+  gravity: 20
+  speedSmoothing: 10
+  rotateSpeed: 500
+  trotAfterSeconds: 3
+  canJump: 1
 --- !u!114 &239765978
 MonoBehaviour:
   m_ObjectHideFlags: 0
