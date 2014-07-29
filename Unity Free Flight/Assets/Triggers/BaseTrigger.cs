@@ -33,10 +33,10 @@ public abstract class BaseTrigger : MonoBehaviour {
 	private float preConditionTime;
 
 
-	public bool conditionSatisfied = false;
-	public float conditionSatisfiedTime;
+	private bool conditionSatisfied = false;
+	private float conditionSatisfiedTime;
 
-	public bool actionFired = false;
+	private bool actionFired = false;
 	private float actionSatisfiedTime;
 
 	// Use this for initialization
