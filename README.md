@@ -62,7 +62,12 @@ Version 0.2.x will focus on extending flight controls to include flapping, flari
 		* Diving flight mechanic added
 		* (Note: Above two mechanics are not fully developed yet)
 	* Improved the flapping system
-	* Ground controller now allows developers to add more than one script
+	* Now support more complex, multi-script ground controllers
+* Version 0.2.3
+	* Added new controls
+	* Added a tutorial for learning all of the controls
+	* Made the world more beautiful
+	* Improved the flaring mechanic 
 
 ####Version 0.3.x
 
