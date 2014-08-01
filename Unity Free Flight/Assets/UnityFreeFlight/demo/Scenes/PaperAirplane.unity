@@ -19,7 +19,7 @@ RenderSettings:
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
   m_AmbientLight: {r: .200000003, g: .200000003, b: .200000003, a: 1}
-  m_SkyboxMaterial: {fileID: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: a2126534b3a11b34e977105bd9e3cc03, type: 2}
   m_HaloStrength: .5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -143,10 +143,13 @@ MonoBehaviour:
   regularFlaptime: .699999988
   minimumFlapTime: .200000003
   flapStrength: 400
+  downbeatStrength: 150
   flaringEnabled: 0
+  defaultFlareAngle: 30
+  flareSpeed: 3
   divingEnabled: 0
   thrustingEnabled: 0
-  doubleJumpTimer: .699999988
+  launchTime: .200000003
 --- !u!54 &239765971
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -189,7 +192,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flightController: {fileID: 239765970}
-  groundController: {fileID: 0}
+  groundControllers: []
   Mode: 2
 --- !u!136 &239765974
 CapsuleCollider:
