@@ -13,7 +13,7 @@ Unity\ Free\ Flight/Temp/
 #Unity\ Free\ Flight/Library/
 Unity\ Free\ Flight/Build/
 Unity Free Flight/Library/ScriptAssemblies/
-
+*ShaderCache*
 
 # ===================================== #
 # Visual Studio / MonoDevelop generated #
@@ -39,4 +39,4 @@ Unity\ Free\ Flight/*.booproj
 .Trashes
 ehthumbs.db
 Thumbs.db
-
+*.log

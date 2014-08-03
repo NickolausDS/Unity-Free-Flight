@@ -148,6 +148,7 @@ Transform:
   - {fileID: 1608774936}
   - {fileID: 493986383}
   m_Father: {fileID: 0}
+  m_RootOrder: 0
 --- !u!114 &239765973
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -405,8 +406,11 @@ Camera:
     m_Bits: 4294967295
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
+  m_TargetDisplay: 0
   m_HDR: 0
   m_OcclusionCulling: 1
+  m_StereoConvergence: 10
+  m_StereoSeparation: .0219999999
 --- !u!4 &493986383
 Transform:
   m_ObjectHideFlags: 0
@@ -418,6 +422,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 239765972}
+  m_RootOrder: 1
 --- !u!1 &519686297
 GameObject:
   m_ObjectHideFlags: 0
@@ -481,6 +486,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1578741288}
+  m_RootOrder: 1
 --- !u!1 &590310185
 GameObject:
   m_ObjectHideFlags: 0
@@ -530,9 +536,8 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
-  m_SortingLayer: 0
-  m_SortingOrder: 0
   m_SortingLayerID: 0
+  m_SortingOrder: 0
 --- !u!33 &590310188
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -552,6 +557,7 @@ Transform:
   m_LocalScale: {x: 256, y: 1, z: 256}
   m_Children: []
   m_Father: {fileID: 1578741288}
+  m_RootOrder: 0
 --- !u!1 &831984392
 GameObject:
   m_ObjectHideFlags: 0
@@ -591,6 +597,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1227643085}
+  m_RootOrder: 0
 --- !u!114 &831984394
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -915,6 +922,7 @@ Transform:
   m_Children:
   - {fileID: 831984393}
   m_Father: {fileID: 0}
+  m_RootOrder: 1
 --- !u!114 &1227643086
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1027,6 +1035,7 @@ Transform:
   - {fileID: 590310189}
   - {fileID: 519686299}
   m_Father: {fileID: 0}
+  m_RootOrder: 2
 --- !u!1 &1608774935
 GameObject:
   m_ObjectHideFlags: 0
@@ -1057,6 +1066,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 239765972}
+  m_RootOrder: 0
 --- !u!23 &1608774937
 Renderer:
   m_ObjectHideFlags: 0
@@ -1075,9 +1085,8 @@ Renderer:
   m_UseLightProbes: 0
   m_LightProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
-  m_SortingLayer: 0
-  m_SortingOrder: 0
   m_SortingLayerID: 0
+  m_SortingOrder: 0
 --- !u!136 &1608774938
 CapsuleCollider:
   m_ObjectHideFlags: 0
