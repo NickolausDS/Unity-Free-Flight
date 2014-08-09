@@ -93,9 +93,11 @@ public class FreeFlight : MonoBehaviour {
 	/// </summary>
 	void FixedUpdate() {
 		//This is where we detect and change flightmodes. 
-		if (FlightController.EnableFlight)
+		if (FlightController.EnableNoneMode)
+			Mode = Modes.None;
+		else if (FlightController.EnableFlightMode)
 			Mode = Modes.Flight;
-		else if (FlightController.EnableGround)
+		else if (FlightController.EnableGroundMode)
 			Mode = Modes.Ground;
 
 		//Update mode if it has changed

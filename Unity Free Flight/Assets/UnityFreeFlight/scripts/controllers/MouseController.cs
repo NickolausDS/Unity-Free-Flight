@@ -34,7 +34,7 @@ public class MouseController : BaseFlightController {
 		} else {
 			if (Input.GetButton("Jump") ) {
 				if (launchTimeTimer > launchTime)
-					enableFlight = true;
+					enableFlightMode = true;
 				else
 					launchTimeTimer += Time.deltaTime;
 			} else {

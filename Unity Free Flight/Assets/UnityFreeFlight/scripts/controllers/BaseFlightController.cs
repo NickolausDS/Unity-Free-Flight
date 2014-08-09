@@ -46,14 +46,10 @@ public class BaseFlightController : MonoBehaviour {
 	[Range(0.0f, 1.0f)]
 	protected float _rightWingExposure = 1.0f;
 	protected int _invertedSetting = -1;
-	//These are checked by Free Flight every fixed update and control
-	//whether we should activate either mode.
-	protected bool enableGround = false;
-	protected bool enableFlight = false;
-
 	//Even though Inverted as a property here is invisible to the inspector, 
-	//using the property in this way makes it convienient to access via a menu,
-	//in order to *toggle* the setting on and off.
+	//using the property in this way makes it convienient to access externally,
+	//in order to *toggle* the setting on and off. Expressing _invertedSetting internally
+	//an integer makes it very easy to apply to input. 
 	public bool Inverted {
 		get {
 			if (_invertedSetting == 1) 
@@ -72,19 +68,24 @@ public class BaseFlightController : MonoBehaviour {
 	public Quaternion UserInput { get { return _userInput; } }
 	public float LeftWingExposure { get { return _leftWingExposure; } }
 	public float RightWingExposure { get { return _rightWingExposure; } }
-	//Returns it's value, then sets itself back to false
-	public bool EnableGround { get { bool ret = enableGround; enableGround = false; return ret; } }
-	public bool EnableFlight { get { bool ret = enableFlight; enableFlight = false; return ret; } }
+
+	//These are checked by Free Flight before executing flight physics, and cause it
+	//to change states. They are true only when the state needs to change, and revert
+	//back to false after they are checked. 
+	protected bool enableGroundMode = false;
+	protected bool enableFlightMode = false;
+	protected bool enableNoneMode = false;
+	public bool EnableGroundMode { get { bool ret = enableGroundMode; enableGroundMode = false; return ret; } }
+	public bool EnableFlightMode { get { bool ret = enableFlightMode; enableFlightMode = false; return ret; } }
+	public bool EnableNoneMode { get { bool ret = enableNoneMode; enableNoneMode = false; return ret; } }
 
 	//Private vars, meant only for the Base Flight Controller.
 	private bool _hasWarnedUser = false;
-	//Private flapping vars
-//	private bool flapping;
-//	private bool wingsHaveFlappedInDownPosition;
-//	private float currentFlaptime;
+	
+	//These track states for two separate kinds of flaps the player can do. The states are executed by
+	//Flight Mechanics
 	private bool regularFlap = false;
 	private bool quickFlap = false;
-
 	public bool RegularFlap { get { bool ret = regularFlap; regularFlap = false; return ret; } }
 	public bool QuickFlap { get { bool ret = quickFlap; quickFlap = false; return ret; } }
 	
@@ -111,6 +112,11 @@ public class BaseFlightController : MonoBehaviour {
 	/// <value><c>true</c> if release flare; otherwise, <c>false</c>.</value>
 	public bool ReleaseFlare { get { return releaseFlare; } }
 
+	//Max time "standUp" will take to execute.
+	public float maxStandUpTime = 2.0f;
+	//Speed which "standUp" will correct rotation. 
+	public float standUpSpeed = 2.0f;
+
 
 	//We do the warning here, since Update() is really the only method that needs to be overridden.
 	//The child class should put all user controls in this method (and not fixedUpdate(), since we're
@@ -123,29 +129,42 @@ public class BaseFlightController : MonoBehaviour {
 		}
 	}
 
-	//Default behavior used to transition from flight to ground. You're welcome to 
-	//override this in a controller to change the default behaviour.
+	/// <summary>
+	/// Straightenes the flight object on landing, by rotating the roll and pitch
+	/// to zero over time. Public vars "standUpSpeed" and "maxStandUpTime" can 
+	/// be used to tweak behaviour.
+	/// </summary>
+	/// <returns>The up.</returns>
 	protected IEnumerator standUp() {
-		Quaternion rot;
-		if (transform.rotation.eulerAngles.x != 0.0f && transform.rotation.eulerAngles.z != 0.0f)
-			rot = Quaternion.LookRotation (new Vector3(transform.rotation.eulerAngles.x, 0.0f, transform.rotation.eulerAngles.z));
-		else
-			rot = Quaternion.identity;
-		float maxTime = 1.0f;
-		transform.Translate (0.0f, 1.0f, 0.0f);
-		
-		while (!flightEnabled && maxTime > 0.0f && (Mathf.Abs (transform.rotation.eulerAngles.x) > 1.0f || Mathf.Abs (transform.rotation.eulerAngles.z) > 1.0f)) {
-			transform.rotation = Quaternion.Lerp (transform.rotation, rot, 2.0f * Time.deltaTime);
-			maxTime -= Time.deltaTime;
+
+		//Make sure no physics are executed while this happens. 
+		enableNoneMode = true;
+		//Dis-allow physics, which prevents 'falling over' before the object can stand
+		rigidbody.isKinematic = true;
+		//Find the direction the flight object should stand, without any pitch and roll. 
+		Quaternion desiredRotation = Quaternion.identity;
+		desiredRotation.eulerAngles = new Vector3 (0.0f, transform.rotation.eulerAngles.y, 0.0f);
+		//Grab the current time. We don't want 'standUp' to take longer than maxStandUpTime
+		float time = Time.time;
+
+		//Break if the player started flying again, or if we've reached the desired rotation (within 5 degrees)
+		while (!flightEnabled && Quaternion.Angle(transform.rotation, desiredRotation) > 5.0f) {
+			//Additionally break if we have gone over time
+			if (time + maxStandUpTime < Time.time)
+				break;
+			//Correct the rotation
+			transform.rotation = Quaternion.Lerp (transform.rotation, desiredRotation, standUpSpeed * Time.deltaTime);
 			yield return null;
 		}
+
+		enableGroundMode = true;
+
 	}
 
 	//Default behaviour when we hit an object (usually the ground) is to switch to a ground controller. 
 	//Override in controller to change this behaviour.
 	protected void OnCollisionEnter(Collision col) {
 		if (flightEnabled) {
-			enableGround = true;
 			flightEnabled = false;
 			StartCoroutine (standUp ());
 		}
