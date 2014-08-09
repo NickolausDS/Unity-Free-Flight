@@ -6,6 +6,10 @@ public class PauseMenu : MonoBehaviour {
 	public bool isPaused = false;
 	public GameObject playerObject = null;
 	private BaseFlightController bc;
+
+	//These automatically handle disabling mouselook on pause, if there is a mouselook script
+	private MonoBehaviour mouseLookScript;
+	private bool mouseLookScriptLastState;
 	
 	private enum Menus { None, Main, Levels, Options }
 	private Menus currentMenu;
@@ -17,6 +21,7 @@ public class PauseMenu : MonoBehaviour {
 		if (playerObject != null) {
 			FreeFlight ff = playerObject.GetComponentInChildren<FreeFlight>();
 			bc = ff.flightController;
+			mouseLookScript = (MonoBehaviour) playerObject.GetComponent("MouseLook");
 		} else {
 			string msg = "The player object is not set for the in-game menu. " +
 				"Please set the 'player object' in the 'pause menu' to whatever object is controlled by the player.";
@@ -39,11 +44,17 @@ public class PauseMenu : MonoBehaviour {
 		Time.timeScale = 0.0f;
 		isPaused = true;
 		currentMenu = Menus.Main;
+		if (mouseLookScript) {
+			mouseLookScriptLastState = mouseLookScript.enabled;
+			mouseLookScript.enabled = false;
+		}
 	}
 
 	void unpause() {
 		Time.timeScale = 1.0f;
 		isPaused = false;
+		if (mouseLookScript)
+			mouseLookScript.enabled = mouseLookScriptLastState;
 	}
 
 	void OnGUI() {
