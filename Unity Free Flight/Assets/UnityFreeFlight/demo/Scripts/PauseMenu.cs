@@ -65,6 +65,7 @@ public class PauseMenu : MonoBehaviour {
 				}
 			}
 			if (GUI.Button (new Rect (25, 230, 200, 50), "Restart")) {
+				unpause ();
 				Application.LoadLevel(Application.loadedLevel);
 			}
 			if (GUI.Button (new Rect (25, 290, 200, 50), "Exit")) {
