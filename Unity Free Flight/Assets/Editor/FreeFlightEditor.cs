@@ -44,7 +44,8 @@ public class FreeFlightEditor : Editor {
 		_showControllers = EditorGUILayout.Foldout (_showControllers, "Controllers");
 		if (_showControllers) {
 			ff.flightController = go.GetComponent<BaseFlightController> ();
-			EditorGUILayout.ObjectField ("Flight Controller", ff.flightController, typeof(BaseFlightController), false);
+			EditorGUILayout.ObjectField ("Flight Controller", MonoScript.FromMonoBehaviour(ff.FlightController), typeof(MonoScript), false);
+
 			ff.Mode = (FreeFlight.Modes) EditorGUILayout.EnumPopup ("Flight Mode", ff.Mode);
 			ff.setMode();
 
