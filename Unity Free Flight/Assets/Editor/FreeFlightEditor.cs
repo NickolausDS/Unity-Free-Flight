@@ -5,14 +5,13 @@ using UnityEditor;
 
 [CustomEditor(typeof(FreeFlight)), CanEditMultipleObjects]
 public class FreeFlightEditor : Editor {
-
-	private bool _shouldCheckAddDefaultCollider = true;
-
+	
 	//vars for foldouts
 	private bool _showPhysicsAttrs = false;
 	private bool _showDimensionAttrs = false;
 	private bool _showControllers = true;
 	private bool _showGroundControllers = true;
+	private bool _showautoConfigure = false;
 
 	private List<MonoScript> gcMasterList = new List<MonoScript>();
 
@@ -79,12 +78,20 @@ public class FreeFlightEditor : Editor {
 				ff.groundControllers = gcs;
 			}
 
-
-
-			_shouldCheckAddDefaultCollider = EditorGUILayout.Toggle ("Check/Add Collider", _shouldCheckAddDefaultCollider);
-			if (_shouldCheckAddDefaultCollider)
-				checkAddDefaultCollider(go);
 		}
+
+		//Auto configure has it's own foldout because we don't want the user to click it 
+		//accidentally. It's possible in the future, this button could add changes the
+		//user doesn't want. If it's hard to click, that mistake shouldn't ever happen. 
+		_showautoConfigure = EditorGUILayout.Foldout (_showautoConfigure, "Auto Configure");
+		if (_showautoConfigure) {
+			if (GUILayout.Button ("Auto Configure"))
+				autoConfigure(go, ff);
+			
+		}
+
+
+
 
 
 	}
@@ -114,7 +121,71 @@ public class FreeFlightEditor : Editor {
 
 	}
 
-	private void checkAddDefaultCollider(GameObject go) {
+
+	/// <summary>
+	/// Automagically configure free flight so it 'just works'. Log a warning if
+	/// there were changes made to the object, otherwise log a debug message saying nothing
+	/// changed. 
+	/// </summary>
+	/// <param name="go">Go.</param>
+	/// <param name="ff">Ff.</param>
+	private void autoConfigure(GameObject go, FreeFlight ff) {
+		string report = "";
+		//Strange behaviour can happen if the object is inactive when we run checks. 
+		bool lastEnabledState = go.activeSelf;
+		go.SetActive(true);
+		
+		if (checkAddDefaultCollider(go))
+			report += "! Colliders: Added default collider so we don't fall through the world.\n";
+
+		if (checkSetGroundControllers(go, ff) ) {
+			report += "! Ground Controllers: Updated ground controller list: ";
+			foreach (MonoScript ms in gcMasterList)
+				if (ms)
+					report += ms.GetClass().ToString() + ", ";
+			report += "\n";
+		}
+
+		if (report != "") 
+			Debug.LogWarning("Object configured: " + go.name + "\n" + report);
+		else
+			Debug.Log ("Object: " + go.name + "\n\tEverything appears to be configured correctly.");
+
+		go.SetActive (lastEnabledState);
+	}
+
+	/// <summary>
+	/// Checks a default set of ground controllers, and makes sure they are properly added to the 
+	/// ground controller list.
+	/// </summary>
+	/// <returns><c>true</c>, if set ground controllers was checked, <c>false</c> otherwise.</returns>
+	/// <param name="go">The game object we're editing</param>
+	/// <param name="ff">The free flight component attached to the game object</param>
+	private bool checkSetGroundControllers(GameObject go, FreeFlight ff) {
+		bool retval = false;
+		//A list of the default ground controllers
+		string[] scriptList = {"MouseLook", "FPSInputController", "CharacterMotor", "ThirdPersonController"};
+
+		MonoBehaviour[] scripts = go.GetComponents<MonoBehaviour> ();
+		//Go through all scripts in game object
+		foreach (MonoBehaviour mb in scripts) {
+			//go through all script-names to check
+			foreach (string scriptName in scriptList) {
+				MonoScript ms = MonoScript.FromMonoBehaviour(mb);
+				string mbName = ms.GetClass().ToString();
+				if (mbName == scriptName && gcMasterList.IndexOf(ms) < 0) {
+					gcMasterList.Add (ms);
+					retval = true;
+				}
+			}
+
+		}
+
+
+		return retval;
+	}
+
+	private bool checkAddDefaultCollider(GameObject go) {
 		Collider[] col = go.GetComponentsInChildren <Collider> ();
 		int numRealColliders = col.Length;
 		foreach (Collider thing in col) {
@@ -123,13 +194,11 @@ public class FreeFlightEditor : Editor {
 				numRealColliders -= 1;
 		}
 		if (numRealColliders < 1) {
-			Debug.Log (string.Format ("Free Flight: No collider detected on {0}; adding a default one. " +
-				"A collider is necessary to determine when we should land, and to keep the object from " +
-				"bumping into objects in-flight. You can stop this check from ever happening by unchecking " +
-				"'Check/Add Collider' in the Free Flight Editor", go.name));
 			CapsuleCollider newCol = go.AddComponent<CapsuleCollider>();
 			newCol.radius = 0.5f;
 			newCol.height = 2.0f;
+			return true;
 		}
+		return false;
 	}
 }
