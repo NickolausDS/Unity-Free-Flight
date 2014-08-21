@@ -68,6 +68,14 @@ Version 0.2.x will focus on extending flight controls to include flapping, flari
 	* Added a tutorial for learning all of the controls
 	* Made the world more beautiful
 	* Improved the flaring mechanic 
+* Version 0.2.4
+	* Restored old controllers
+	* Improved tutorial
+	* Fixed restart freeze bug
+	* Fixed menu bug
+	* Takeoffs/landings are now smoother
+	* Small improvements to the dive mechanic
+	* Other small bug fixes
 
 ####Version 0.3.x
 
