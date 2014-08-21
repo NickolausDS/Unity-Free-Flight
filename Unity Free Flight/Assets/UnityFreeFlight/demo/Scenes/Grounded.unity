@@ -105,7 +105,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 239765969}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed6e5f009fa47436c84879d955b9d0c2, type: 3}
+  m_Script: {fileID: 11500000, guid: b1597f3c2f988454da5d4bd5582048fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   flightEnabled: 0
@@ -119,6 +119,8 @@ MonoBehaviour:
   flareSpeed: 3
   divingEnabled: 1
   thrustingEnabled: 1
+  maxStandUpTime: 2
+  standUpSpeed: 2
   launchTime: .200000003
 --- !u!54 &239765971
 Rigidbody:
@@ -164,6 +166,7 @@ MonoBehaviour:
   groundControllers:
   - {fileID: 239765975}
   - {fileID: 239765977}
+  - {fileID: 239765974}
   Mode: 1
 --- !u!114 &239765974
 MonoBehaviour:
@@ -171,21 +174,18 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 239765969}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0b167d00b3108411a8a963cba5ddde1b, type: 3}
+  m_Script: {fileID: 11500000, guid: 68ec2fe99d1108b9d0006a298d76c639, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cameraTransform: {fileID: 493986383}
-  distance: .100000001
-  height: 0
-  angularSmoothLag: .300000012
-  angularMaxSpeed: 15
-  heightSmoothLag: .300000012
-  snapSmoothLag: .200000003
-  snapMaxSpeed: 720
-  clampHeadPositionScreenSpace: .75
-  lockCameraTimeout: .200000003
+  axes: 0
+  sensitivityX: 15
+  sensitivityY: 15
+  minimumX: -360
+  maximumX: 360
+  minimumY: -60
+  maximumY: 60
 --- !u!114 &239765975
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -263,28 +263,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 239765969}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1d5ac211a643e447ca78c2d794a16381, type: 3}
+  m_Script: {fileID: 11500000, guid: 60bca8f58a0b8478e946e6e86658cb29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  idleAnimation: {fileID: 0}
-  walkAnimation: {fileID: 0}
-  runAnimation: {fileID: 0}
-  jumpPoseAnimation: {fileID: 0}
-  walkMaxAnimationSpeed: .75
-  trotMaxAnimationSpeed: 1
-  runMaxAnimationSpeed: 1
-  jumpAnimationSpeed: 1.14999998
-  landAnimationSpeed: 1
-  walkSpeed: 2
-  trotSpeed: 4
-  runSpeed: 6
-  inAirControlAcceleration: 3
-  jumpHeight: 3
-  gravity: 20
-  speedSmoothing: 10
-  rotateSpeed: 500
-  trotAfterSeconds: 3
-  canJump: 1
 --- !u!114 &239765978
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -566,19 +547,17 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 831984393}
-  - 114: {fileID: 831984394}
-  - 114: {fileID: 831984395}
   - 114: {fileID: 831984396}
   - 114: {fileID: 831984397}
-  - 114: {fileID: 831984400}
+  - 114: {fileID: 831984394}
   - 114: {fileID: 831984399}
   - 114: {fileID: 831984398}
   - 114: {fileID: 831984401}
-  - 114: {fileID: 831984402}
-  - 114: {fileID: 831984404}
+  - 114: {fileID: 831984395}
   - 114: {fileID: 831984403}
   - 114: {fileID: 831984405}
-  - 114: {fileID: 831984406}
+  - 114: {fileID: 831984402}
+  - 114: {fileID: 831984400}
   m_Layer: 0
   m_Name: Tutorial
   m_TagString: Untagged
@@ -604,18 +583,18 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 831984392}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3f1fcfb67b9964a04b27b5ebfa200647, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chainToTrigger: {fileID: 831984395}
-  delaySecsToCondition: 3
-  delaySecsToAction: 4
+  chainToTrigger: {fileID: 831984399}
+  delaySecsToCondition: 0
+  delaySecsToAction: 2
   delaySecsAfterAction: 0
-  textLine1: 
-  textLine2: Welcome to Free Flight!
-  textLine3: 
+  textLine1: '[X] ''W'' to move forward'
+  textLine2: '[X]    A, S for left, right'
+  textLine3: Time to fly!
   textPosition: {x: -300, y: 10, z: 200, w: 60}
   relativeToScreenWidth: 1
   relativeToScreenHeight: 0
@@ -627,26 +606,27 @@ MonoBehaviour:
   m_GameObject: {fileID: 831984392}
   m_Enabled: 0
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f1fcfb67b9964a04b27b5ebfa200647, type: 3}
+  m_Script: {fileID: 11500000, guid: ddc3fb149ea844ff68e45f2ab490ecc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chainToTrigger: {fileID: 831984396}
+  chainToTrigger: {fileID: 831984403}
   delaySecsToCondition: 0
-  delaySecsToAction: 3
+  delaySecsToAction: 2
   delaySecsAfterAction: 0
-  textLine1: 
-  textLine2: This tutorial will get you
-  textLine3: started with the controls.
+  textLine1: '[ ] ''Q'' Barrel Left'
+  textLine2: 
+  textLine3: 
   textPosition: {x: -300, y: 10, z: 200, w: 60}
   relativeToScreenWidth: 1
   relativeToScreenHeight: 0
+  button: FoldLeftWing
 --- !u!114 &831984396
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 831984392}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ddc3fb149ea844ff68e45f2ab490ecc4, type: 3}
   m_Name: 
@@ -655,8 +635,8 @@ MonoBehaviour:
   delaySecsToCondition: 1
   delaySecsToAction: .75
   delaySecsAfterAction: 0
-  textLine1: 
-  textLine2: Use 'W' to move forward.
+  textLine1: '[ ] ''W'' to move forward'
+  textLine2: 
   textLine3: 
   textPosition: {x: -300, y: 10, z: 200, w: 60}
   relativeToScreenWidth: 1
@@ -673,13 +653,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ddc3fb149ea844ff68e45f2ab490ecc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chainToTrigger: {fileID: 831984400}
+  chainToTrigger: {fileID: 831984394}
   delaySecsToCondition: 0
-  delaySecsToAction: 5
+  delaySecsToAction: 2
   delaySecsAfterAction: 0
-  textLine1: Good!
-  textLine2: Use 'W' to move forward.
-  textLine3: Use 'A' and 'D' to turn
+  textLine1: '[X] ''W'' to move forward'
+  textLine2: '[ ]    A, S for left, right'
+  textLine3: 
   textPosition: {x: -300, y: 10, z: 200, w: 60}
   relativeToScreenWidth: 1
   relativeToScreenHeight: 0
@@ -699,9 +679,9 @@ MonoBehaviour:
   delaySecsToCondition: 0
   delaySecsToAction: 4
   delaySecsAfterAction: 0
-  textLine1: Good!
-  textLine2: Continue holding 'spacebar'
-  textLine3: to flap your wings
+  textLine1: '[X] Hold spacebar to start flying'
+  textLine2: '[ ] Continue holding to flap'
+  textLine3: 
   textPosition: {x: -300, y: 10, z: 200, w: 60}
   relativeToScreenWidth: 1
   relativeToScreenHeight: 0
@@ -721,8 +701,8 @@ MonoBehaviour:
   delaySecsToCondition: 0
   delaySecsToAction: 2
   delaySecsAfterAction: 0
-  textLine1: 
-  textLine2: Hold 'spacebar' to fly
+  textLine1: '[ ] Hold spacebar to start flying'
+  textLine2: 
   textLine3: 
   textPosition: {x: -300, y: 10, z: 200, w: 60}
   relativeToScreenWidth: 1
@@ -736,19 +716,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 831984392}
   m_Enabled: 0
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f1fcfb67b9964a04b27b5ebfa200647, type: 3}
+  m_Script: {fileID: 11500000, guid: ddc3fb149ea844ff68e45f2ab490ecc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chainToTrigger: {fileID: 831984399}
+  chainToTrigger: {fileID: 0}
   delaySecsToCondition: 0
   delaySecsToAction: 2
   delaySecsAfterAction: 0
-  textLine1: 
-  textLine2: Now let's fly.
-  textLine3: 
+  textLine1: '[ ] Shift to slow down'
+  textLine2: 'Note: Once you stop, you'
+  textLine3: will begin to fall
   textPosition: {x: -300, y: 10, z: 200, w: 60}
   relativeToScreenWidth: 1
   relativeToScreenHeight: 0
+  button: WingFlare
 --- !u!114 &831984401
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -757,20 +738,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 831984392}
   m_Enabled: 0
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ddc3fb149ea844ff68e45f2ab490ecc4, type: 3}
+  m_Script: {fileID: 11500000, guid: 3f1fcfb67b9964a04b27b5ebfa200647, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chainToTrigger: {fileID: 831984402}
+  chainToTrigger: {fileID: 831984395}
   delaySecsToCondition: 0
-  delaySecsToAction: 4
+  delaySecsToAction: 2
   delaySecsAfterAction: 0
-  textLine1: Movement in flight is the same
-  textLine2: '''A'' and ''D'' to Turn'
-  textLine3: 
+  textLine1: '[X] Hold spacebar to start flying'
+  textLine2: '[X] Continue holding to flap'
+  textLine3: Good!
   textPosition: {x: -300, y: 10, z: 200, w: 60}
   relativeToScreenWidth: 1
   relativeToScreenHeight: 0
-  button: Horizontal
 --- !u!114 &831984402
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -779,20 +759,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 831984392}
   m_Enabled: 0
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ddc3fb149ea844ff68e45f2ab490ecc4, type: 3}
+  m_Script: {fileID: 11500000, guid: 3f1fcfb67b9964a04b27b5ebfa200647, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chainToTrigger: {fileID: 831984404}
+  chainToTrigger: {fileID: 831984400}
   delaySecsToCondition: 0
-  delaySecsToAction: 4
+  delaySecsToAction: 2
   delaySecsAfterAction: 0
-  textLine1: Good!
-  textLine2: '''A'' and ''D'' to Turn'
-  textLine3: '''W'' and ''S'' for pitch control'
+  textLine1: '[X] ''Q'' Barrel Left'
+  textLine2: '[X] ''E'' Barrel Right'
+  textLine3: '[X] Both to dive'
   textPosition: {x: -300, y: 10, z: 200, w: 60}
   relativeToScreenWidth: 1
   relativeToScreenHeight: 0
-  button: Vertical
 --- !u!114 &831984403
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -808,34 +787,13 @@ MonoBehaviour:
   delaySecsToCondition: 0
   delaySecsToAction: 4
   delaySecsAfterAction: 0
-  textLine1: '''Q'' Barrel Left'
-  textLine2: '''E'' Barrel Right'
-  textLine3: '''Q'' and ''E'' Rapid decent'
+  textLine1: '[X] ''Q'' Barrel Left'
+  textLine2: '[ ] ''E'' Barrel Right'
+  textLine3: 
   textPosition: {x: -300, y: 10, z: 200, w: 60}
   relativeToScreenWidth: 1
   relativeToScreenHeight: 0
   button: FoldRightWing
---- !u!114 &831984404
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 831984392}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f1fcfb67b9964a04b27b5ebfa200647, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  chainToTrigger: {fileID: 831984403}
-  delaySecsToCondition: 0
-  delaySecsToAction: 9
-  delaySecsAfterAction: 0
-  textLine1: Now for advanced flight!
-  textLine2: 'You can fold your wings '
-  textLine3: for rapid maneuvers.
-  textPosition: {x: -300, y: 10, z: 200, w: 60}
-  relativeToScreenWidth: 1
-  relativeToScreenHeight: 0
 --- !u!114 &831984405
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -847,38 +805,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ddc3fb149ea844ff68e45f2ab490ecc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chainToTrigger: {fileID: 831984406}
+  chainToTrigger: {fileID: 831984402}
   delaySecsToCondition: 0
   delaySecsToAction: 4
   delaySecsAfterAction: 0
-  textLine1: Flare your wings to
-  textLine2: increase your drag
-  textLine3: '''Shift'' to slow down'
+  textLine1: '[X] ''Q'' Barrel Left'
+  textLine2: '[X] ''E'' Barrel Right'
+  textLine3: '[ ] Both to dive'
   textPosition: {x: -300, y: 10, z: 200, w: 60}
   relativeToScreenWidth: 1
   relativeToScreenHeight: 0
-  button: WingFlare
---- !u!114 &831984406
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 831984392}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f1fcfb67b9964a04b27b5ebfa200647, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  chainToTrigger: {fileID: 0}
-  delaySecsToCondition: 0
-  delaySecsToAction: 4
-  delaySecsAfterAction: 0
-  textLine1: That's it! You can experiment
-  textLine2: with the flight controls to
-  textLine3: discover new maneuvers
-  textPosition: {x: -300, y: 10, z: 200, w: 60}
-  relativeToScreenWidth: 1
-  relativeToScreenHeight: 0
+  button: FoldLeftWing
 --- !u!1 &1227643083
 GameObject:
   m_ObjectHideFlags: 0
