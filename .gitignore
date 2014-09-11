@@ -10,10 +10,14 @@ release/031814
 # Unity generated #
 # =============== #
 Unity\ Free\ Flight/Temp/
-#Unity\ Free\ Flight/Library/
+Unity\ Free\ Flight/Library/
 Unity\ Free\ Flight/Build/
-Unity Free Flight/Library/ScriptAssemblies/
+Unity\ Free\ Flight/Library/ScriptAssemblies/
+Unity\ Free\ Flight/Assets/Standard\ Assets/
+Unity\ Free\ Flight/Assets/Standard\ Assets.meta
 *ShaderCache*
+
+
 
 # ===================================== #
 # Visual Studio / MonoDevelop generated #

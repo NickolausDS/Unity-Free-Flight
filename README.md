@@ -3,6 +3,14 @@ Unity-Free-Flight
 
 A Unity Package to add gliding flight to any Unity Object.
 
+####Warning 
+
+	This only applies if you cloned this project before Sept 11, 2014
+
+The project underwent a massive history maintenance for all commits and tags, to clean out all unnecessary files. The history hasn't functionally changed, but all commit hashes and tags are now different, which will make you unable to issue a pull-request if you still have the old history.
+
+To fix this, please force pull all tags and history, or re-clone the project. If this in any way bungled what you were working on, and you are unsure of how to proceed, send a message [here](http://windwardproductions.org/contact/) and I will personally help you out. 
+
 ###Description
 
 Have you ever wanted to create a game where you can fly over the precipitous mountainsides? Perhaps you want to show the world from a birds-eye perspective. Or, maybe your game has nothing to do with flight, you just want various birds to systematically poop on everything in a realistic fashion. Now you can!
