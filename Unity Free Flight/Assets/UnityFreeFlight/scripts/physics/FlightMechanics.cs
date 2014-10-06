@@ -19,44 +19,19 @@ public class FlightMechanics : FlightPhysics {
 	protected float currentFlapTime = 0.0f;
 
 	protected Quaternion flareRotationSnapshot;
-		
 	public void execute(BaseFlightController controller) {
-
-		//Find out how much our user turned us
-		rigidbody.rotation *= controller.UserInput;
-
-		base.doStandardPhysics ();
-
-		if (controller.StartFlare) {
-//			Debug.Log ("Starting Flare");
-			flareRotationSnapshot = rigidbody.rotation;
-			wingFlare(controller.FlareAngle, controller.flareSpeed);
-		} else if (controller.IsFlaring && !controller.ReleaseFlare) {
-//			Debug.Log ("Is Flaring");
-			wingFlare (controller.FlareAngle, controller.flareSpeed);
-		} else if (controller.IsFlaring && controller.ReleaseFlare) {
-//			Debug.Log ("Releasing Flare");
-			if (wingFlareRelease(controller.flareSpeed))
-				controller.terminateFlare();
-		} else {
-			wingFold (controller.LeftWingExposure, controller.RightWingExposure);
-		}
-
-		flap (
-			controller.minimumFlapTime,
-			controller.regularFlaptime,
-			controller.flapStrength,
-			controller.downbeatStrength,
-			controller.RegularFlap,
-			controller.QuickFlap
-		);
-
-
 
 	}
 
 	public FlightMechanics(Rigidbody rb) : base(rb) {}
 
+
+	public void directionalInput(float bank, float pitch, float sensitivity) {
+		Quaternion _desiredDirectionalInput = Quaternion.identity;
+		_desiredDirectionalInput.eulerAngles = new Vector3(pitch, rigidbody.rotation.eulerAngles.y, bank);
+		
+		rigidbody.MoveRotation(Quaternion.Lerp( rigidbody.rotation, _desiredDirectionalInput, sensitivity * Time.deltaTime));
+	}
 	
 	/// <summary>
 	/// Try to execute a flap. A regular flap can only happen in regular intervals
@@ -75,7 +50,6 @@ public class FlightMechanics : FlightPhysics {
 		currentFlapTime += Time.deltaTime;
 
 		if (regFlap && wingsOpen ()) {
-			//do stuff
 			//We can only flap if we're not currently flapping, or the user triggered
 			//an 'interruptFlap', which just means "We're flapping faster than the regular
 			//flap speed." InterruptFlaps are usually triggered by the user mashing the flap
@@ -101,29 +75,29 @@ public class FlightMechanics : FlightPhysics {
 		}
 	}
 
-	public void wingFlare(float flareAngle, float flareSpeed) {
-		//Set wings fully open
-		setWingPosition (1.0f, 1.0f);
-
-		//Expose the true pitch, by rotating the Y value to zero
-		Quaternion rotation = Quaternion.LookRotation (new Vector3 (0.01f, -rigidbody.rotation.eulerAngles.y, 0));
-		rotation = rigidbody.rotation * rotation;
-
-		//Rotate to flare angle
-		if (rotation.eulerAngles.x > flareAngle) {
-			Quaternion desiredRotation = rigidbody.rotation * Quaternion.LookRotation(new Vector3(0, flareAngle, 0));
-			rigidbody.rotation = Quaternion.Lerp (rigidbody.rotation, desiredRotation, flareSpeed * Time.deltaTime);
-		}
-	}
-
-	public bool wingFlareRelease (float flareSpeed) {
-		rigidbody.rotation = Quaternion.Lerp (rigidbody.rotation, flareRotationSnapshot, flareSpeed * Time.deltaTime);
-		if (Quaternion.Angle (rigidbody.rotation, flareRotationSnapshot) < 5.0f) {
-			return true;
-		} else {
-			return false;
-		}
-	}
+//	public void wingFlare(float flareAngle, float flareSpeed) {
+//		//Set wings fully open
+//		setWingPosition (1.0f, 1.0f);
+//
+//		//Expose the true pitch, by rotating the Y value to zero
+//		Quaternion rotation = Quaternion.LookRotation (new Vector3 (0.01f, -rigidbody.rotation.eulerAngles.y, 0));
+//		rotation = rigidbody.rotation * rotation;
+//
+//		//Rotate to flare angle
+//		if (rotation.eulerAngles.x > flareAngle) {
+//			Quaternion desiredRotation = rigidbody.rotation * Quaternion.LookRotation(new Vector3(0, flareAngle, 0));
+//			rigidbody.rotation = Quaternion.Lerp (rigidbody.rotation, desiredRotation, flareSpeed * Time.deltaTime);
+//		}
+//	}
+//
+//	public bool wingFlareRelease (float flareSpeed) {
+//		rigidbody.rotation = Quaternion.Lerp (rigidbody.rotation, flareRotationSnapshot, flareSpeed * Time.deltaTime);
+//		if (Quaternion.Angle (rigidbody.rotation, flareRotationSnapshot) < 5.0f) {
+//			return true;
+//		} else {
+//			return false;
+//		}
+//	}
 
 	public void wingFold(float left, float right) {
 		setWingPosition (left, right);

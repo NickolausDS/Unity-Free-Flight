@@ -20,7 +20,7 @@ public class FreeFlight : MonoBehaviour {
 
 		
 	void Start() {
-		setMode ();
+		//setMode ();
 		//If the object is in the sky when we start, give it a little push. The physics
 		//get weird if something appears in the sky at zero velocity (works, just looks weird). 
 		if (_mode == Modes.Flight)
@@ -92,21 +92,36 @@ public class FreeFlight : MonoBehaviour {
 	///thinks we're in stall (and executes stall rotations)
 	/// </summary>
 	void FixedUpdate() {
-		//This is where we detect and change flightmodes. 
-		if (FlightController.EnableNoneMode)
-			Mode = Modes.None;
-		else if (FlightController.EnableFlightMode)
-			Mode = Modes.Flight;
-		else if (FlightController.EnableGroundMode)
-			Mode = Modes.Ground;
+//		//This is where we detect and change flightmodes. 
+//		if (FlightController.EnableNoneMode)
+//			Mode = Modes.None;
+//		else if (FlightController.EnableFlightMode)
+//			Mode = Modes.Flight;
+//		else if (FlightController.EnableGroundMode)
+//			Mode = Modes.Ground;
+//
+//		//Update mode if it has changed
+//		setMode ();
+//
+//		//Do flight physics if its enabled
+//		if (_mode == Modes.Flight || _mode == Modes.Hybrid) {
+//			PhysicsObject.execute(FlightController);
+//		}
 
-		//Update mode if it has changed
-		setMode ();
+	//This is a hack.
+	//It's here because we're currently switching to rigidbody ground controllers, and
+	//we want ground controllers to still work before we totally get rid of the
+	//Character Controllers and switch over. This code should be completely gone by the
+	//time we're using rigidbody ground controllers. Kill it with fire. Good luck. 
+	if (FlightController.isFlying) {
+		Mode = Modes.Flight;
+		rigidbody.isKinematic = false;
+	} else {
+		Mode = Modes.Ground;
+		rigidbody.isKinematic = true;
+	}
 
-		//Do flight physics if its enabled
-		if (_mode == Modes.Flight || _mode == Modes.Hybrid) {
-			PhysicsObject.execute(FlightController);
-		}
+	setMode ();
 	}
 
 	private bool disableGround() {
@@ -146,7 +161,7 @@ public class FreeFlight : MonoBehaviour {
 
 	private bool disableFlight() {
 		if (flightController) {
-			flightController.flightEnabled = false;
+			flightController.isFlying = false;
 			return true;
 		}
 		return false;
@@ -156,7 +171,7 @@ public class FreeFlight : MonoBehaviour {
 		if (FlightController) {
 			rigidbody.isKinematic = false;
 			rigidbody.freezeRotation = false;
-			flightController.flightEnabled = true;
+			flightController.isFlying = true;
 			return true;
 		}
 		Debug.LogError ("Failed to switch " + gameObject.name + " to flight controller. " +

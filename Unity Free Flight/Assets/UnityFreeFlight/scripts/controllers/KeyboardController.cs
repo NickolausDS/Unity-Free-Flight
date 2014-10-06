@@ -13,37 +13,53 @@ public class KeyboardController : BaseFlightController {
 	void Update() {
 		//Don't allow any user flight controls when we're grounded. This lets
 		//Ground controls take over so we don't interfere. 
-		if (flightEnabled) {
+		if (isFlying) {
 			//Pitch
-			keyInput.x = _invertedSetting * -Input.GetAxis ("Vertical") * rotationSpeed * Time.deltaTime;
+			//keyInput.x = _invertedSetting * -Input.GetAxis ("Vertical") * rotationSpeed * Time.deltaTime;
 			//Roll
-			keyInput.z = -Input.GetAxis ("Horizontal") * (rotationSpeed * Time.deltaTime);
-			_userInput.eulerAngles = keyInput;
+			//keyInput.z = -Input.GetAxis ("Horizontal") * (rotationSpeed * Time.deltaTime);
+			//_userInput.eulerAngles = keyInput;
+			_inputPitch = _inputInvertedSetting * -Input.GetAxis("Vertical");
+			_inputBank = -Input.GetAxis ("Horizontal");
+			_inputFlaring = Input.GetButton("WingFlare");
 
-			if (Input.GetButtonDown("Jump") ) {
-				flapWings (true);
-			} else if (Input.GetButton ("Jump")) {
-				flapWings ();
+			//If the user presses down the jump button, flap
+			_inputFlap = Input.GetButton("Jump"); 
+
+			if(Input.GetButton ("FoldLeftWing"))
+				_inputLeftWingExposure = 0.0f;
+			else 
+				_inputLeftWingExposure = 1.0f;
+
+			if(Input.GetButton ("FoldRightWing")) 
+				_inputRightWingExposure = 0.0f;
+			else 
+				_inputRightWingExposure = 1.0f;
+
+			if (_inputLeftWingExposure < 1.0f || _inputRightWingExposure < 1.0f)
+				_inputDiving = true;
+			else {
+				_inputDiving = false;
 			}
-
-			dive (Input.GetButton ("FoldLeftWing"), Input.GetButton("FoldRightWing"));
-
-			flare (_invertedSetting * -Input.GetAxis ("Vertical") * rotationSpeed * Time.deltaTime, !Input.GetButton ("WingFlare"));
 
 		//The jump button re-enables flight-mode
 		} else {
-			if (Input.GetButton("Jump") ) {
-				if (launchTimeTimer > launchTime)
-					enableFlightMode = true;
-				else
-					launchTimeTimer += Time.deltaTime;
-			} else {
-				launchTimeTimer = 0.0f;
-			}
+
+			jumpLaunch(Input.GetButton("Jump"));
+
 		}
 
 	}
 
-
+	void jumpLaunch(bool jumpState) {
+		if (jumpState == true) {
+			if (launchTimeTimer > launchTime)
+				isFlying = true;
+			else
+				launchTimeTimer += Time.deltaTime;
+		} else {
+			launchTimeTimer = 0.0f;
+		}
+	}
 
 }

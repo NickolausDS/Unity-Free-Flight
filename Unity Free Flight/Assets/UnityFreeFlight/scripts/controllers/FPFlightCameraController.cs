@@ -35,22 +35,22 @@ public class FPFlightCameraController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		if (flightController.flightEnabled) {
-
-			if(flightController.IsFlaring) {
-				cameraTransform.rotation = savedRotation;
-				alignedWithGameObject = false;
-				//cameraTransform.rotation *= Quaternion.LookRotation( new Vector3 ( 0, -flightController.FlareAngle, 0) );
-			} else {
-				if (!alignedWithGameObject)
-					alignWithGameObject();
-				cameraTransform.rotation = Quaternion.Lerp (cameraTransform.rotation, gameObject.transform.rotation, cameraSpeed * Time.deltaTime );
-				savedRotation = cameraTransform.rotation;
-			}
-		} else {
-			if (!alignedWithGameObject)
-				alignWithGameObject();
-		}
+//		if (flightController.flightEnabled) {
+//
+//			if(flightController.IsFlaring) {
+//				cameraTransform.rotation = savedRotation;
+//				alignedWithGameObject = false;
+//				//cameraTransform.rotation *= Quaternion.LookRotation( new Vector3 ( 0, -flightController.FlareAngle, 0) );
+//			} else {
+//				if (!alignedWithGameObject)
+//					alignWithGameObject();
+//				cameraTransform.rotation = Quaternion.Lerp (cameraTransform.rotation, gameObject.transform.rotation, cameraSpeed * Time.deltaTime );
+//				savedRotation = cameraTransform.rotation;
+//			}
+//		} else {
+//			if (!alignedWithGameObject)
+//				alignWithGameObject();
+//		}
 	
 	}
 
