@@ -35,6 +35,7 @@ public class BaseFlightController : MonoBehaviour {
 	public float directionalSensitivity = 2.0f;
 
 	public bool enabledFlapping = true;
+	public AudioClip flapSound;
 	public float regularFlaptime = 0.5f;
 	public float minimumFlapTime = 0.2f;
 	public float flapStrength = 600.0f;
@@ -46,11 +47,15 @@ public class BaseFlightController : MonoBehaviour {
 	public float flareSpeed = 3.0f;
 
 	public bool enabledDiving = false;
-	
+
+	public AudioClip landingSound;
 	//Max time "standUp" will take to execute.
 	public float maxStandUpTime = 2.0f;
 	//Speed which "standUp" will correct rotation. 
 	public float standUpSpeed = 2.0f;
+
+	public float windNoiseStartSpeed = 20.0f;
+	public float windNoiseMaxSpeed = 200.0f;
 
 	//===========
 	//USER INPUT
@@ -93,6 +98,16 @@ public class BaseFlightController : MonoBehaviour {
 		}
 	}
 
+	//===================
+	//Stateful Variables
+	//===================
+
+	protected bool isFlapping;
+	/// <summary>
+	/// True when flapping, false otherwise.
+	/// </summary>
+	public bool IsFlapping { get { return isFlapping; } }
+
 	//=============
 	//Unity Events
 	//=============
@@ -121,6 +136,8 @@ public class BaseFlightController : MonoBehaviour {
 			applyStandardFlightMechanics();
 		}
 
+		applyWindNoise ();
+
 	}
 
 	//Default behaviour when we hit an object (usually the ground) is to switch to a ground controller. 
@@ -128,6 +145,8 @@ public class BaseFlightController : MonoBehaviour {
 	protected void OnCollisionEnter(Collision col) {
 		if (isFlying) {
 			isFlying = false;
+			if (landingSound)
+				AudioSource.PlayClipAtPoint (landingSound, transform.position);
 			StartCoroutine (standUp ());
 		}
 	}
@@ -145,23 +164,53 @@ public class BaseFlightController : MonoBehaviour {
 		if (_inputFlaring && enabledFlaring) {
 			//Flare is the same as directional input, except with exagerated pitch and custom speed. 
 			flightPhysics.directionalInput(_inputBank * maxTurnBank, _inputPitch * maxPitch - flareAngle, flareSpeed);
-			if(_inputFlap && enabledFlapping)
+			if(_inputFlap && enabledFlapping) {
+				if(!flightPhysics.IsFlapping) {
+					if (flapSound)
+						AudioSource.PlayClipAtPoint (flapSound, rigidbody.position);
+				}
 				flightPhysics.flap (minimumFlapTime, regularFlaptime, flapStrength, downbeatStrength, true, false);
+
+			}
 		} else if(_inputDiving && enabledDiving) {
 			flightPhysics.wingFold(_inputLeftWingExposure, _inputRightWingExposure);
 		} else {
 			//regular flight
 			//find the degree of turning the player wants
 			flightPhysics.directionalInput(_inputBank * maxTurnBank, _inputPitch * maxPitch, directionalSensitivity);
-			if(_inputFlap && enabledFlapping)
+			if(_inputFlap && enabledFlapping) {
+				if(!flightPhysics.IsFlapping) {
+					if (flapSound)
+						AudioSource.PlayClipAtPoint (flapSound, rigidbody.position);
+				}
 				flightPhysics.flap (minimumFlapTime, regularFlaptime, flapStrength, downbeatStrength, true, false);
+
+			}
 		}
 		
 		flightPhysics.doStandardPhysics ();
 			
 	}
 
+	protected void applyWindNoise() {
 
+		if (flightPhysics.Speed > windNoiseStartSpeed) {
+			
+			float volume = Mathf.Clamp (flightPhysics.Speed / (windNoiseStartSpeed + windNoiseMaxSpeed), 0.0f, 1.0f);
+			audio.volume = volume;
+			//We want pitch to pick up at about half the volume
+			audio.pitch = Mathf.Clamp (0.9f + flightPhysics.Speed / 2.0f / (windNoiseStartSpeed + windNoiseMaxSpeed), 0.9f, 1.5f);
+			//Use this to see how values are applied at various speeds.
+			//Debug.Log (string.Format ("Vol {0}, pitch {1}", audio.volume, audio.pitch));
+			if (! audio.isPlaying) 
+				audio.Play ();
+		} else {
+			audio.Stop ();
+		}
+
+	}
+		
+		
 	/// <summary>
 	/// Straightenes the flight object on landing, by rotating the roll and pitch
 	/// to zero over time. Public vars "standUpSpeed" and "maxStandUpTime" can 

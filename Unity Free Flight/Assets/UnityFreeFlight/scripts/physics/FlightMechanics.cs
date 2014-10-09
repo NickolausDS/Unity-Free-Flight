@@ -15,6 +15,7 @@ using System.Collections;
 public class FlightMechanics : FlightPhysics {
 
 	protected bool isFlapping = false;
+	public bool IsFlapping { get { return isFlapping; } }
 	private bool wingsHaveFlappedInDownPosition = false;
 	protected float currentFlapTime = 0.0f;
 
