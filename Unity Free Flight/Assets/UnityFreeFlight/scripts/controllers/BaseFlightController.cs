@@ -35,7 +35,8 @@ public class BaseFlightController : MonoBehaviour {
 	public float directionalSensitivity = 2.0f;
 
 	public bool enabledFlapping = true;
-	public AudioClip flapSound;
+	public AudioClip flapSoundClip;
+	private AudioSource flapSoundSource;
 	public float regularFlaptime = 0.5f;
 	public float minimumFlapTime = 0.2f;
 	public float flapStrength = 600.0f;
@@ -48,12 +49,15 @@ public class BaseFlightController : MonoBehaviour {
 
 	public bool enabledDiving = false;
 
-	public AudioClip landingSound;
+	public AudioClip landingSoundClip;
+	private AudioSource landingSoundSource;
 	//Max time "standUp" will take to execute.
 	public float maxStandUpTime = 2.0f;
 	//Speed which "standUp" will correct rotation. 
 	public float standUpSpeed = 2.0f;
 
+	public AudioClip windNoiseClip;
+	private AudioSource windNoiseSource;
 	public float windNoiseStartSpeed = 20.0f;
 	public float windNoiseMaxSpeed = 200.0f;
 
@@ -129,7 +133,13 @@ public class BaseFlightController : MonoBehaviour {
 		flightPhysics = new FlightMechanics (rigidbody);
 
 	}
-	
+
+	void Start() {
+		setupSound (windNoiseClip, ref windNoiseSource);
+		setupSound (flapSoundClip, ref flapSoundSource);
+		setupSound (landingSoundClip, ref landingSoundSource);
+	}
+
 	/// <summary>
 	/// This is where all player input control code goes, once this class is overridden. 
 	/// </summary>
@@ -158,8 +168,7 @@ public class BaseFlightController : MonoBehaviour {
 	protected void OnCollisionEnter(Collision col) {
 		if (isFlying) {
 			isFlying = false;
-			if (landingSound)
-				AudioSource.PlayClipAtPoint (landingSound, transform.position);
+			playSound (landingSoundSource);
 			StartCoroutine (standUp ());
 		}
 	}
@@ -221,8 +230,7 @@ public class BaseFlightController : MonoBehaviour {
 	protected void flap() {
 		if(enabledFlapping) {
 			if(!flightPhysics.IsFlapping) {
-				if (flapSound)
-					AudioSource.PlayClipAtPoint (flapSound, rigidbody.position);
+				playSound (flapSoundSource);
 			}
 			flightPhysics.flap (minimumFlapTime, regularFlaptime, flapStrength, downbeatStrength, true, false);
 			
@@ -245,18 +253,55 @@ public class BaseFlightController : MonoBehaviour {
 
 	protected void applyWindNoise() {
 
+		if (!windNoiseSource)
+			return;
+
 		if (flightPhysics.Speed > windNoiseStartSpeed) {
 			
 			float volume = Mathf.Clamp (flightPhysics.Speed / (windNoiseStartSpeed + windNoiseMaxSpeed), 0.0f, 1.0f);
-			audio.volume = volume;
+			windNoiseSource.volume = volume;
 			//We want pitch to pick up at about half the volume
-			audio.pitch = Mathf.Clamp (0.9f + flightPhysics.Speed / 2.0f / (windNoiseStartSpeed + windNoiseMaxSpeed), 0.9f, 1.5f);
+			windNoiseSource.pitch = Mathf.Clamp (0.9f + flightPhysics.Speed / 2.0f / (windNoiseStartSpeed + windNoiseMaxSpeed), 0.9f, 1.5f);
 			//Use this to see how values are applied at various speeds.
 			//Debug.Log (string.Format ("Vol {0}, pitch {1}", audio.volume, audio.pitch));
-			if (! audio.isPlaying) 
-				audio.Play ();
+			if (! windNoiseSource.isPlaying) 
+				windNoiseSource.Play ();
 		} else {
-			audio.Stop ();
+			windNoiseSource.Stop ();
+		}
+
+	}
+
+	/// <summary>
+	/// Sets up the audio component for the sound source. Does nothing if the source
+	/// already exists and has a clip. 
+	/// </summary>
+	/// <returns>A reference to the new audio source </returns>
+	/// <param name="source">Source.</param>
+	/// <param name="sound">Sound.</param>
+	protected AudioSource setupSound(AudioClip sound, ref AudioSource source) {
+
+		if (!sound && source)
+			Destroy (source);
+
+		if (!sound && !source)
+			return null;
+		
+		if (sound && !source) {
+			source = gameObject.AddComponent<AudioSource> ();
+			source.loop = false;
+		}
+		
+		if (!source.clip) {
+			source.clip = sound;
+		}
+		
+		return source;
+	}
+
+	protected void playSound(AudioSource source) {
+		if (source) {
+			source.Play ();
 		}
 
 	}
