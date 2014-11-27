@@ -68,8 +68,10 @@ public class BaseFlightController : MonoBehaviour {
 	protected float _inputLeftWingExposure = 1.0f;
 	[Range(0.0f, 1.0f)]
 	protected float _inputRightWingExposure = 1.0f;
-	public float LeftWingExposure { get { return _inputLeftWingExposure; } }
-	public float RightWingExposure { get { return _inputRightWingExposure; } }
+	public float LeftWingInput { get { return _inputLeftWingExposure; } }
+	public float RightWingInput { get { return _inputRightWingExposure; } }	
+	public float LeftWingExposure { get { return flightPhysics.LeftWingExposure; } }
+	public float RightWingExposure { get { return flightPhysics.RightWingExposure; } }
 	protected int _inputInvertedSetting = -1;
 	protected bool _inputFlaring = false;
 	protected bool _inputDiving = false;
@@ -79,6 +81,17 @@ public class BaseFlightController : MonoBehaviour {
 	protected float _inputPitch = 0.0f;
 	[Range(-1.0f, 1.0f)]
 	protected float _inputBank = 0.0f;
+
+	public bool InputFlaring { get { return _inputFlaring; } }
+	public bool InputDiving { get { return _inputDiving; } }
+	public bool InputFlap { get { return _inputFlap; } }
+	public bool InputSprint { get { return _inputSprint; } }
+	public float InputPitch { get { return _inputPitch; } }
+	public float AnglePitch { get { return getPitch(_inputFlaring); } }
+	public float InputBank { get { return _inputBank; } }
+	public float AngleBank { get { return getBank (); } }
+
+
 
 	//Even though Inverted as a property here is invisible to the inspector, 
 	//using the property in this way makes it convienient to access externally,
@@ -160,36 +173,74 @@ public class BaseFlightController : MonoBehaviour {
 		//precedence is as follows: flaring, diving, regular gliding flight. This applies if the
 		//player provides multiple inputs. Some mechanics can be performed at the same time, such 
 		//as flapping while flaring, or turning while diving. 
-		
-		if (_inputFlaring && enabledFlaring) {
-			//Flare is the same as directional input, except with exagerated pitch and custom speed. 
-			flightPhysics.directionalInput(_inputBank * maxTurnBank, _inputPitch * maxPitch - flareAngle, flareSpeed);
-			if(_inputFlap && enabledFlapping) {
-				if(!flightPhysics.IsFlapping) {
-					if (flapSound)
-						AudioSource.PlayClipAtPoint (flapSound, rigidbody.position);
-				}
-				flightPhysics.flap (minimumFlapTime, regularFlaptime, flapStrength, downbeatStrength, true, false);
 
-			}
-		} else if(_inputDiving && enabledDiving) {
-			flightPhysics.wingFold(_inputLeftWingExposure, _inputRightWingExposure);
-		} else {
-			//regular flight
-			//find the degree of turning the player wants
-			flightPhysics.directionalInput(_inputBank * maxTurnBank, _inputPitch * maxPitch, directionalSensitivity);
-			if(_inputFlap && enabledFlapping) {
-				if(!flightPhysics.IsFlapping) {
-					if (flapSound)
-						AudioSource.PlayClipAtPoint (flapSound, rigidbody.position);
-				}
-				flightPhysics.flap (minimumFlapTime, regularFlaptime, flapStrength, downbeatStrength, true, false);
 
-			}
+		//Flaring takes precedence over everything
+		if (_inputFlaring) {
+			flare ();
+			if(_inputFlap)
+				flap ();
+		} 
+
+		//Diving takes precedence under flaring
+		if(_inputDiving && !_inputFlaring) {
+			dive ();
+		} else if (!_inputDiving && !flightPhysics.wingsOpen()) {
+			//Simulates coming out of a dive
+			dive ();
+		}
+
+		//Regular flight takes last precedence
+		if(!_inputDiving && !_inputFlaring) {
+			flightPhysics.directionalInput(getBank (), getPitch (false), directionalSensitivity);
+			//Allow flapping during normal flight
+			if (_inputFlap)
+				flap ();
 		}
 		
 		flightPhysics.doStandardPhysics ();
 			
+	}
+
+	/// <summary>
+	/// Calculates pitch, based on user input and configured pitch parameters.
+	/// </summary>
+	/// <returns>The pitch in degrees.</returns>
+	/// <param name="flare">If set to <c>true</c> calculates pitch of a flare angle.</param>
+	protected float getPitch(bool flare) {
+		if (flare)
+			return _inputPitch * maxPitch - flareAngle;
+		else
+			return _inputPitch * maxPitch;
+	}
+
+	protected float getBank() {
+		return _inputBank * maxTurnBank;
+	}
+
+	protected void flap() {
+		if(enabledFlapping) {
+			if(!flightPhysics.IsFlapping) {
+				if (flapSound)
+					AudioSource.PlayClipAtPoint (flapSound, rigidbody.position);
+			}
+			flightPhysics.flap (minimumFlapTime, regularFlaptime, flapStrength, downbeatStrength, true, false);
+			
+		}
+
+	}
+
+	protected void flare() {
+		if (enabledFlaring) {
+			//Flare is the same as directional input, except with exagerated pitch and custom speed. 
+			flightPhysics.directionalInput(getBank (), getPitch (true), flareSpeed);
+		}
+	}
+
+	protected void dive() {
+		if (enabledDiving)
+			flightPhysics.wingFold(_inputLeftWingExposure, _inputRightWingExposure);
+
 	}
 
 	protected void applyWindNoise() {

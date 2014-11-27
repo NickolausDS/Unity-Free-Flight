@@ -96,6 +96,9 @@ public class FlightObject : UnitConverter {
 		return false;
 	}
 
+	public float LeftWingExposure { get { return leftWingExposure; } }
+	public float RightWingExposure { get { return rightWingExposure; } }
+
 	public float WingSpan {
 		get {return convert (Units.Metric, _unit, Types.Length, _wingSpan) * (leftWingExposure + rightWingExposure) / 2;}
 		set {_wingSpan = convert (_unit, Units.Metric, Types.Length, value);}
