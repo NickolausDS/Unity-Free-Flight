@@ -54,11 +54,12 @@ public class KeyboardController : BaseFlightController {
 	void jumpLaunch(bool jumpState) {
 		if (jumpState == true) {
 			if (launchTimeTimer > launchTime)
-				isFlying = true;
+				_inputTakeoff = true;
 			else
 				launchTimeTimer += Time.deltaTime;
 		} else {
 			launchTimeTimer = 0.0f;
+			_inputTakeoff = false;
 		}
 	}
 

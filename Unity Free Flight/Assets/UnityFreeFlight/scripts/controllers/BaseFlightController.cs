@@ -43,11 +43,19 @@ public class BaseFlightController : MonoBehaviour {
 	public float downbeatStrength = 150.0f;
 
 	public bool enabledFlaring = true;
+	public AudioClip flareSoundClip;
+	private AudioSource flareSoundSource;
 	//The default pitch (x) we rotate to when we do a flare
 	public float flareAngle = 70.0f;
 	public float flareSpeed = 3.0f;
 
 	public bool enabledDiving = false;
+	public AudioClip divingSoundClip;
+	private AudioSource divingSoundSource;
+
+
+	public AudioClip takeoffSoundClip;
+	private AudioSource takeoffSoundSource;
 
 	public AudioClip landingSoundClip;
 	private AudioSource landingSoundSource;
@@ -77,6 +85,7 @@ public class BaseFlightController : MonoBehaviour {
 	public float LeftWingExposure { get { return flightPhysics.LeftWingExposure; } }
 	public float RightWingExposure { get { return flightPhysics.RightWingExposure; } }
 	protected int _inputInvertedSetting = -1;
+	protected bool _inputTakeoff = false;
 	protected bool _inputFlaring = false;
 	protected bool _inputDiving = false;
 	protected bool _inputFlap = false;
@@ -86,6 +95,7 @@ public class BaseFlightController : MonoBehaviour {
 	[Range(-1.0f, 1.0f)]
 	protected float _inputBank = 0.0f;
 
+	public bool InputTakeoff { get { return _inputTakeoff; } }
 	public bool InputFlaring { get { return _inputFlaring; } }
 	public bool InputDiving { get { return _inputDiving; } }
 	public bool InputFlap { get { return _inputFlap; } }
@@ -131,13 +141,16 @@ public class BaseFlightController : MonoBehaviour {
 
 	void Awake() {
 		flightPhysics = new FlightMechanics (rigidbody);
-
+		setupSound (windNoiseClip, ref windNoiseSource);
+		setupSound (flapSoundClip, ref flapSoundSource);
+		setupSound (flareSoundClip, ref flareSoundSource);
+		setupSound (divingSoundClip, ref divingSoundSource);
+		setupSound (takeoffSoundClip, ref takeoffSoundSource);
+		setupSound (landingSoundClip, ref landingSoundSource);
 	}
 
 	void Start() {
-		setupSound (windNoiseClip, ref windNoiseSource);
-		setupSound (flapSoundClip, ref flapSoundSource);
-		setupSound (landingSoundClip, ref landingSoundSource);
+
 	}
 
 	/// <summary>
@@ -154,6 +167,9 @@ public class BaseFlightController : MonoBehaviour {
     /// compute the physics and animation accordingly
 	/// </summary>
 	void FixedUpdate () {
+
+		if (_inputTakeoff && !isFlying)
+			takeoff();
 
 		if (isFlying) {
 			applyStandardFlightMechanics();
@@ -227,6 +243,16 @@ public class BaseFlightController : MonoBehaviour {
 		return _inputBank * maxTurnBank;
 	}
 
+	protected void takeoff(bool flapLaunch = false) {
+		if (!isFlying) {
+			isFlying = true;
+			playSound (takeoffSoundSource);
+			if(flapLaunch) 
+				flap ();
+		}
+	}
+	                
+
 	protected void flap() {
 		if(enabledFlapping) {
 			if(!flightPhysics.IsFlapping) {
@@ -240,15 +266,50 @@ public class BaseFlightController : MonoBehaviour {
 
 	protected void flare() {
 		if (enabledFlaring) {
+			playSound (flareSoundSource);
 			//Flare is the same as directional input, except with exagerated pitch and custom speed. 
 			flightPhysics.directionalInput(getBank (), getPitch (true), flareSpeed);
 		}
 	}
 
 	protected void dive() {
-		if (enabledDiving)
+		if (enabledDiving) {
+			playSound (divingSoundSource);
 			flightPhysics.wingFold(_inputLeftWingExposure, _inputRightWingExposure);
+		}
 
+	}
+
+	/// <summary>
+	/// Straightenes the flight object on landing, by rotating the roll and pitch
+	/// to zero over time. Public vars "standUpSpeed" and "maxStandUpTime" can 
+	/// be used to tweak behaviour.
+	/// </summary>
+	/// <returns>The up.</returns>
+	protected IEnumerator standUp() {
+		
+		//Make sure no physics are executed while this happens. 
+		//enableNoneMode = true;
+		//Dis-allow physics, which prevents 'falling over' before the object can stand
+		rigidbody.isKinematic = true;
+		//Find the direction the flight object should stand, without any pitch and roll. 
+		Quaternion desiredRotation = Quaternion.identity;
+		desiredRotation.eulerAngles = new Vector3 (0.0f, transform.rotation.eulerAngles.y, 0.0f);
+		//Grab the current time. We don't want 'standUp' to take longer than maxStandUpTime
+		float time = Time.time;
+		
+		//Break if the player started flying again, or if we've reached the desired rotation (within 5 degrees)
+		while (!isFlying && Quaternion.Angle(transform.rotation, desiredRotation) > 5.0f) {
+			//Additionally break if we have gone over time
+			if (time + maxStandUpTime < Time.time)
+				break;
+			//Correct the rotation
+			transform.rotation = Quaternion.Lerp (transform.rotation, desiredRotation, standUpSpeed * Time.deltaTime);
+			yield return null;
+		}
+		
+		//enableGroundMode = true;
+		
 	}
 
 	protected void applyWindNoise() {
@@ -303,39 +364,6 @@ public class BaseFlightController : MonoBehaviour {
 		if (source) {
 			source.Play ();
 		}
-
-	}
-		
-		
-	/// <summary>
-	/// Straightenes the flight object on landing, by rotating the roll and pitch
-	/// to zero over time. Public vars "standUpSpeed" and "maxStandUpTime" can 
-	/// be used to tweak behaviour.
-	/// </summary>
-	/// <returns>The up.</returns>
-	protected IEnumerator standUp() {
-
-		//Make sure no physics are executed while this happens. 
-		//enableNoneMode = true;
-		//Dis-allow physics, which prevents 'falling over' before the object can stand
-		rigidbody.isKinematic = true;
-		//Find the direction the flight object should stand, without any pitch and roll. 
-		Quaternion desiredRotation = Quaternion.identity;
-		desiredRotation.eulerAngles = new Vector3 (0.0f, transform.rotation.eulerAngles.y, 0.0f);
-		//Grab the current time. We don't want 'standUp' to take longer than maxStandUpTime
-		float time = Time.time;
-
-		//Break if the player started flying again, or if we've reached the desired rotation (within 5 degrees)
-		while (!isFlying && Quaternion.Angle(transform.rotation, desiredRotation) > 5.0f) {
-			//Additionally break if we have gone over time
-			if (time + maxStandUpTime < Time.time)
-				break;
-			//Correct the rotation
-			transform.rotation = Quaternion.Lerp (transform.rotation, desiredRotation, standUpSpeed * Time.deltaTime);
-			yield return null;
-		}
-
-		//enableGroundMode = true;
 
 	}
 
