@@ -8,12 +8,19 @@ public class StatsView : MonoBehaviour {
 	public GameObject flightObject;
 	private FreeFlight ff;
 	private FlightPhysics fObj;
+	private BaseFlightController controller;
 	public GUISkin guiskin;
 
 	public bool toggleStatsMenu = false;
 	public bool togglePhysicsMenu = false;
 	public bool toggleWorldPhysicsMenu = false;
+	public bool toggleInputsMenu = false;
 	public bool showAbbreviations = true;
+
+	public Rect statsPos = new Rect(310, 10, 200, 110);
+	public Rect physicsPos = new Rect(100,10,200,140);
+	public Rect worldPhysicsPos = new Rect(100, 160, 200, 90);
+	public Rect InputsPos = new Rect(600, 10, 200, 175);
 
 	void OnGUI() {
 
@@ -29,7 +36,7 @@ public class StatsView : MonoBehaviour {
 		
 		
 		if (toggleStatsMenu) {
-			GUI.Box(new Rect(310, 10, 200, 110), 
+			GUI.Box(statsPos, 
 			        string.Format ("Wing Span: {0:###.#}{1}\n" +
 			               "Wing Chord: {2:###.#}{3}\n" +
 			               "Total Wing Area: {4:###.#}{5}\n" +
@@ -46,7 +53,7 @@ public class StatsView : MonoBehaviour {
 
 		//I'm not sure the numbers displayed are accurate. These need to be checked over.
 		if (togglePhysicsMenu) {
-			GUI.Box(new Rect(100,10,200,140), string.Format(
+			GUI.Box(physicsPos, string.Format(
 				"Speed: {0:###.#}{1}\n" +
 				"Altitude: {2:###.#}{3}\n" +
 				"Lift: {4:###.#}{5}\n" +
@@ -65,7 +72,7 @@ public class StatsView : MonoBehaviour {
 				fObj.LiftCoefficient)
 			        );
 			if (toggleWorldPhysicsMenu) {
-				GUI.Box (new Rect(100, 160, 200, 90), string.Format (
+				GUI.Box (worldPhysicsPos, string.Format (
 					"speed Vector: {0}\n" +
 					"Direction {1}\n" +
 					"Gravity: {2}\n",
@@ -80,6 +87,37 @@ public class StatsView : MonoBehaviour {
 			fObj.gravityEnabled = GUILayout.Toggle(fObj.gravityEnabled, "Gravity");
 			toggleWorldPhysicsMenu = GUILayout.Toggle(toggleWorldPhysicsMenu, "World Physics");
 		}
+
+		if (toggleInputsMenu) {
+			GUI.Box (InputsPos, string.Format (
+				"Flapping Enabled: {0}\n" +
+				"Flaring Enabled: {1}\n" +
+				"Diving Enabled: {2}\n\n" +
+
+				"Input Flapping: {3}\n" +
+				"Input Flaring: {4}\n" +
+				"Input Diving: {5}\n\n" +
+
+				"Wing Input (left|right) : ({6:#.#}|{7:#.#})\n" + 
+				"Wing Exposure (left|right) : ({6:#.#}|{7:#.#})\n" + 
+				"Bank (Input|Angle): ({8:#.#}|{9:#.#})\n" + 
+				"Pitch (Input|Angle): ({10:#.#}|{11:#.#})\n",
+
+				controller.enabledFlapping,
+				controller.enabledFlaring,
+				controller.enabledDiving,
+				controller.InputFlap,
+				controller.InputFlaring,
+				controller.InputDiving,
+				controller.LeftWingInput, controller.RightWingInput,
+				controller.LeftWingExposure, controller.RightWingExposure,
+				controller.InputBank, controller.AngleBank,
+				controller.InputPitch, controller.AnglePitch
+
+				));
+
+		}
+		toggleInputsMenu = GUILayout.Toggle (toggleInputsMenu, "Player Inputs");
 		
 	}
 
@@ -102,6 +140,15 @@ public class StatsView : MonoBehaviour {
 			}
 			fObj = ff.PhysicsObject;
 		}
+		if (!controller) {
+			controller = ff.GetComponent<BaseFlightController>();
+			if (!controller) {
+				string msg = "GameObject '"+ flightObject.name + "' doesn't have a controller attached. Unable to show inputs.";
+				Debug.LogWarning (msg);
+				return false;		
+			}
+		}
+
 		return true;
 
 	}

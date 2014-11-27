@@ -84,12 +84,13 @@ GameObject:
   - 4: {fileID: 239765972}
   - 54: {fileID: 239765971}
   - 114: {fileID: 239765973}
-  - 114: {fileID: 239765970}
   - 114: {fileID: 239765978}
   - 143: {fileID: 239765976}
   - 114: {fileID: 239765975}
   - 114: {fileID: 239765977}
   - 114: {fileID: 239765974}
+  - 114: {fileID: 239765979}
+  - 82: {fileID: 239765970}
   m_Layer: 0
   m_Name: FlightDummy
   m_TagString: Player
@@ -97,31 +98,64 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &239765970
-MonoBehaviour:
+--- !u!82 &239765970
+AudioSource:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 239765969}
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b1597f3c2f988454da5d4bd5582048fe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  flightEnabled: 0
-  flappingEnabled: 1
-  regularFlaptime: .5
-  minimumFlapTime: .200000003
-  flapStrength: 600
-  downbeatStrength: 150
-  flaringEnabled: 1
-  defaultFlareAngle: 30
-  flareSpeed: 3
-  divingEnabled: 1
-  thrustingEnabled: 1
-  maxStandUpTime: 2
-  standUpSpeed: 2
-  launchTime: .200000003
+  serializedVersion: 3
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
 --- !u!54 &239765971
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -162,7 +196,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b89ea8d74632d426b92b28a508d1beb8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  flightController: {fileID: 239765970}
+  flightController: {fileID: 239765979}
   groundControllers:
   - {fileID: 239765975}
   - {fileID: 239765977}
@@ -278,8 +312,39 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraTransform: {fileID: 493986383}
-  flightController: {fileID: 239765970}
+  flightController: {fileID: 0}
   cameraSpeed: 3
+--- !u!114 &239765979
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 239765969}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed6e5f009fa47436c84879d955b9d0c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isFlying: 0
+  maxTurnBank: 45
+  maxPitch: 20
+  directionalSensitivity: 2
+  enabledFlapping: 1
+  flapSound: {fileID: 8300000, guid: e743c6aaaf1aa4e2588f83215119bc46, type: 3}
+  regularFlaptime: .5
+  minimumFlapTime: .200000003
+  flapStrength: 600
+  downbeatStrength: 150
+  enabledFlaring: 1
+  flareAngle: 70
+  flareSpeed: 3
+  enabledDiving: 0
+  landingSound: {fileID: 8300000, guid: a906575dd0f5c412e8b72f874b6515e2, type: 3}
+  maxStandUpTime: 2
+  standUpSpeed: 2
+  windNoiseStartSpeed: 20
+  windNoiseMaxSpeed: 200
+  launchTime: .200000003
 --- !u!1001 &427484740
 Prefab:
   m_ObjectHideFlags: 0
@@ -891,7 +956,32 @@ MonoBehaviour:
   toggleStatsMenu: 0
   togglePhysicsMenu: 0
   toggleWorldPhysicsMenu: 0
+  toggleInputsMenu: 0
   showAbbreviations: 1
+  statsPos:
+    serializedVersion: 2
+    x: 310
+    y: 10
+    width: 200
+    height: 110
+  physicsPos:
+    serializedVersion: 2
+    x: 100
+    y: 10
+    width: 200
+    height: 140
+  worldPhysicsPos:
+    serializedVersion: 2
+    x: 100
+    y: 160
+    width: 200
+    height: 90
+  InputsPos:
+    serializedVersion: 2
+    x: 600
+    y: 10
+    width: 200
+    height: 175
 --- !u!114 &1227643088
 MonoBehaviour:
   m_ObjectHideFlags: 0
