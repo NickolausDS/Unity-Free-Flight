@@ -20,7 +20,7 @@ public class StatsView : MonoBehaviour {
 	public Rect statsPos = new Rect(310, 10, 200, 110);
 	public Rect physicsPos = new Rect(100,10,200,140);
 	public Rect worldPhysicsPos = new Rect(100, 160, 200, 90);
-	public Rect InputsPos = new Rect(600, 10, 200, 175);
+	public Rect InputsPos = new Rect(580, 10, 220, 190);
 
 	void OnGUI() {
 
@@ -54,14 +54,14 @@ public class StatsView : MonoBehaviour {
 		//I'm not sure the numbers displayed are accurate. These need to be checked over.
 		if (togglePhysicsMenu) {
 			GUI.Box(physicsPos, string.Format(
-				"Speed: {0:###.#}{1}\n" +
-				"Altitude: {2:###.#}{3}\n" +
-				"Lift: {4:###.#}{5}\n" +
-				"Drag: {6:###.#}{7}\n" +
-				"\tInduced: {8:###.#}{9}\n" +
-				"\tForm: {10:###.#}{11}\n" +
-				"Angle Of Attack: {12:##}{13}\n" +
-				"Lift COF: {14:#.##}", 
+				"Speed: {0:0.0}{1}\n" +
+				"Altitude: {2:0.0}{3}\n" +
+				"Lift: {4:0.0}{5}\n" +
+				"Drag: {6:0.0}{7}\n" +
+				"\tInduced: {8:0.0}{9}\n" +
+				"\tForm: {10:0.0}{11}\n" +
+				"Angle Of Attack: {12:00}{13}\n" +
+				"Lift COF: {14:0.00}", 
 				fObj.Speed, 			fObj.getLongDistanceType(showAbbreviations),
 				fObj.VerticalSpeed, 	fObj.getShortDistanceType (showAbbreviations),
 				fObj.Lift, 				fObj.getForceType (showAbbreviations),
@@ -71,6 +71,7 @@ public class StatsView : MonoBehaviour {
 				fObj.AngleOfAttack, 	"Deg",
 				fObj.LiftCoefficient)
 			        );
+//			Debug.Log ("Drag: " + fObj.Drag);
 			if (toggleWorldPhysicsMenu) {
 				GUI.Box (worldPhysicsPos, string.Format (
 					"speed Vector: {0}\n" +
@@ -98,17 +99,19 @@ public class StatsView : MonoBehaviour {
 				"Input Flaring: {4}\n" +
 				"Input Diving: {5}\n\n" +
 
-				"Wing Input (left|right) : ({6:#.#}|{7:#.#})\n" + 
-				"Wing Exposure (left|right) : ({6:#.#}|{7:#.#})\n" + 
-				"Bank (Input|Angle): ({8:#.#}|{9:#.#})\n" + 
-				"Pitch (Input|Angle): ({10:#.#}|{11:#.#})\n",
+				"Wing Input (left|right) : ({6:0.0}|{7:0.0})\n" + 
+				"Wing Exposure (left|right) : ({8:0.0}|{9:0.0})\n" + 
+				"Bank (Input|Angle): ({10:0}|{11:00.0})\n" +
+				"Pitch (Input|Angle): ({12:0}|{13:00.0})\n",
 
 				controller.enabledFlapping,
 				controller.enabledFlaring,
 				controller.enabledDiving,
+
 				controller.InputFlap,
 				controller.InputFlaring,
 				controller.InputDiving,
+
 				controller.LeftWingInput, controller.RightWingInput,
 				controller.LeftWingExposure, controller.RightWingExposure,
 				controller.InputBank, controller.AngleBank,
@@ -138,7 +141,7 @@ public class StatsView : MonoBehaviour {
 				Debug.LogWarning (msg);
 				return false;
 			}
-			fObj = ff.PhysicsObject;
+			fObj = ff.FlightController.flightPhysics;
 		}
 		if (!controller) {
 			controller = ff.GetComponent<BaseFlightController>();

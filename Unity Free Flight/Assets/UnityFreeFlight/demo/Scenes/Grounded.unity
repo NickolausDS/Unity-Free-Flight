@@ -876,17 +876,17 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 1692911818}
   m_GameObject: {fileID: 1227643083}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5b858e794291e4612b874fae4067eb46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   flightObject: {fileID: 239765969}
   guiskin: {fileID: 11400000, guid: cce4dbea97ede4ac7a42d92e1ea7b79e, type: 2}
-  toggleStatsMenu: 0
-  togglePhysicsMenu: 0
-  toggleWorldPhysicsMenu: 0
-  toggleInputsMenu: 0
+  toggleStatsMenu: 1
+  togglePhysicsMenu: 1
+  toggleWorldPhysicsMenu: 1
+  toggleInputsMenu: 1
   showAbbreviations: 1
   statsPos:
     serializedVersion: 2
@@ -908,10 +908,10 @@ MonoBehaviour:
     height: 90
   InputsPos:
     serializedVersion: 2
-    x: 600
+    x: 580
     y: 10
-    width: 200
-    height: 175
+    width: 220
+    height: 190
 --- !u!114 &1227643088
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1123,6 +1123,26 @@ Prefab:
     - target: {fileID: 11400006, guid: 1f871dc716d00464fa0b836a34e5e22a, type: 2}
       propertyPath: m_Enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400004, guid: 1f871dc716d00464fa0b836a34e5e22a, type: 2}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400004, guid: 1f871dc716d00464fa0b836a34e5e22a, type: 2}
+      propertyPath: toggleStatsMenu
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400004, guid: 1f871dc716d00464fa0b836a34e5e22a, type: 2}
+      propertyPath: togglePhysicsMenu
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400004, guid: 1f871dc716d00464fa0b836a34e5e22a, type: 2}
+      propertyPath: toggleWorldPhysicsMenu
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400004, guid: 1f871dc716d00464fa0b836a34e5e22a, type: 2}
+      propertyPath: toggleInputsMenu
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1f871dc716d00464fa0b836a34e5e22a, type: 2}
