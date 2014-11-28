@@ -245,6 +245,11 @@ public class BaseFlightController : MonoBehaviour {
 
 	protected void takeoff(bool flapLaunch = false) {
 		if (!isFlying) {
+
+			//It sometimes takes a few milliseconds for this to switch over. We don't want to do any phisics in the meantime.
+			//This will no longer be required after character controllers go away. 
+			//if (rigidbody.isKinematic)
+			//	rigidbody.isKinematic = false;
 			isFlying = true;
 			playSound (takeoffSoundSource);
 			if(flapLaunch) 

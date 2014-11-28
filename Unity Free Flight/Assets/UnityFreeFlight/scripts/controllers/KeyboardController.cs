@@ -2,9 +2,6 @@
 using System.Collections;
 
 public class KeyboardController : BaseFlightController {
-
-	Vector3 keyInput;
-	float rotationSpeed = 200.0f;
 	
 	public float launchTime = 0.2f;
 	private float launchTimeTimer;
@@ -14,11 +11,6 @@ public class KeyboardController : BaseFlightController {
 		//Don't allow any user flight controls when we're grounded. This lets
 		//Ground controls take over so we don't interfere. 
 		if (isFlying) {
-			//Pitch
-			//keyInput.x = _invertedSetting * -Input.GetAxis ("Vertical") * rotationSpeed * Time.deltaTime;
-			//Roll
-			//keyInput.z = -Input.GetAxis ("Horizontal") * (rotationSpeed * Time.deltaTime);
-			//_userInput.eulerAngles = keyInput;
 			_inputPitch = _inputInvertedSetting * -Input.GetAxis("Vertical");
 			_inputBank = -Input.GetAxis ("Horizontal");
 			_inputFlaring = Input.GetButton("WingFlare");

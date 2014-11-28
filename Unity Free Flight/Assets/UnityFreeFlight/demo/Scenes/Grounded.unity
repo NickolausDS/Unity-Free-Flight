@@ -84,7 +84,6 @@ GameObject:
   - 4: {fileID: 239765972}
   - 54: {fileID: 239765971}
   - 114: {fileID: 239765973}
-  - 114: {fileID: 239765978}
   - 143: {fileID: 239765976}
   - 114: {fileID: 239765975}
   - 114: {fileID: 239765977}
@@ -241,20 +240,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60bca8f58a0b8478e946e6e86658cb29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &239765978
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 239765969}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a2f5ec41a74c047e3929effb06f96322, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cameraTransform: {fileID: 493986383}
-  flightController: {fileID: 0}
-  cameraSpeed: 3
 --- !u!114 &239765979
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -280,7 +265,7 @@ MonoBehaviour:
   flareSoundClip: {fileID: 0}
   flareAngle: 70
   flareSpeed: 3
-  enabledDiving: 0
+  enabledDiving: 1
   divingSoundClip: {fileID: 0}
   takeoffSoundClip: {fileID: 0}
   landingSoundClip: {fileID: 8300000, guid: a906575dd0f5c412e8b72f874b6515e2, type: 3}
@@ -574,7 +559,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &831984393
 Transform:
   m_ObjectHideFlags: 0
@@ -993,6 +978,7 @@ MonoBehaviour:
   m_LightmapIndex: -1
   m_LightmapSize: 1024
   m_DrawTreesAndFoliage: 1
+  m_CollectDetailPatches: 1
   m_MaterialTemplate: {fileID: 0}
 --- !u!4 &1578741288
 Transform:

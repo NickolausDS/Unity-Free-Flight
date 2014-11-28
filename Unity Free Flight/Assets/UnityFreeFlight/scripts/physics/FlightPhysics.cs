@@ -100,6 +100,10 @@ public class FlightPhysics : FlightObject {
 	/// to have a smooth effect on the physics object (use FixedUpdate). 
 	/// </summary>
 	public void doStandardPhysics() {
+
+		if (rigidbody.isKinematic)
+			return;
+
 		rigidbody.useGravity = gravityEnabled;
 
 		//Apply the user rotation in a banked turn
