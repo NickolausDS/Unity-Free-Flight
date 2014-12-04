@@ -5,6 +5,9 @@
 release/v*
 release/031814
 !version.txt
+*.mp3
+*.wav
+
 
 # =============== #
 # Unity generated #
@@ -16,7 +19,7 @@ Unity\ Free\ Flight/Library/ScriptAssemblies/
 Unity\ Free\ Flight/Assets/Standard\ Assets/
 Unity\ Free\ Flight/Assets/Standard\ Assets.meta
 *ShaderCache*
-
+*.meta
 
 
 # ===================================== #

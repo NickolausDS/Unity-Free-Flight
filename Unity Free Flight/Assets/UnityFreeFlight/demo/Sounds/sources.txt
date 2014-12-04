@@ -1,0 +1,14 @@
+Sources
+
+
+
+Alias--OriginalName--Author--website--License
+Wingbeat1--Battle Axe Swing-SoundBible.com-1901696187--Mike Koenig--SoundBible.com--Attribution 3.0
+wingbeat2--Whoosh--Mark_DiAngelo--SoundBible.com--Attribution 3.0
+wingbeat3--Sword Swing--Mike Koenig--SoundBible.com--Attribution 3.0
+NeckSnap--Neck Snap--Vladimir--SoundBible.com--Public Domain
+Wind1--Wind-SoundBible.com-950807958--Stilgar--SoundBible.com--Public Domain
+pat--Pat--Mat Koenig--SoundBible.com--Attribution 3.0 CC
+water1--Water--Lisa Redfern--SoundBible.com--Public Domain
+birdsinaforest--Birds in a Forest--BlastwaveFX.com--Soundbible.com--Attribution 3.0 CC
+

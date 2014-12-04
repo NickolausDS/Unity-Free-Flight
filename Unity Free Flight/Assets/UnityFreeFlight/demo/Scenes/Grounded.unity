@@ -105,15 +105,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 239765969}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c8195ece0e31a47a1855c025091f224b, type: 3}
+  m_Script: {fileID: 11500000, guid: 1a47b42df2d2549c6a457f45aa178f23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   cam: {fileID: 0}
   target: {fileID: 0}
   followSpeed: .100000001
   rotationSpeed: 1
-  flareLookDuration: 1
-  flareLookAngle: 20
+  flareLookDuration: 2
+  flareLookAngle: 50
 --- !u!54 &239765971
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -273,7 +273,7 @@ MonoBehaviour:
   maxPitch: 20
   directionalSensitivity: 2
   enabledFlapping: 1
-  flapSoundClip: {fileID: 8300000, guid: 3f2071de94ced4f77b4458121a38a4a3, type: 3}
+  flapSoundClip: {fileID: 8300000, guid: 24a927e62b21f47e9a5445931cf7668b, type: 3}
   regularFlaptime: .5
   minimumFlapTime: .200000003
   flapStrength: 600
