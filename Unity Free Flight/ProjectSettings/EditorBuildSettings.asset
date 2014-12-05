@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/UnityFreeFlight/demo/Scenes/Grounded.unity
-  - enabled: 1
-    path: Assets/UnityFreeFlight/demo/Scenes/PaperAirplane.unity
+    path: Assets/FreeFlight/Scenes/Grounded.unity
+  - enabled: 0
+    path: Assets/FreeFlight/Scenes/PaperAirplane.unity

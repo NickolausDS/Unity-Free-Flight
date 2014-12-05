@@ -30,6 +30,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
+  m_RootOrder: 0
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -70,7 +71,32 @@ MonoBehaviour:
   toggleStatsMenu: 0
   togglePhysicsMenu: 0
   toggleWorldPhysicsMenu: 0
+  toggleInputsMenu: 0
   showAbbreviations: 1
+  statsPos:
+    serializedVersion: 2
+    x: 310
+    y: 10
+    width: 200
+    height: 110
+  physicsPos:
+    serializedVersion: 2
+    x: 100
+    y: 10
+    width: 200
+    height: 140
+  worldPhysicsPos:
+    serializedVersion: 2
+    x: 100
+    y: 160
+    width: 200
+    height: 90
+  InputsPos:
+    serializedVersion: 2
+    x: 580
+    y: 10
+    width: 220
+    height: 190
 --- !u!114 &11400006
 MonoBehaviour:
   m_ObjectHideFlags: 1

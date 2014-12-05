@@ -33,9 +33,11 @@ See the CHANGELOG for details about the latest release. It will also tell you wh
 
 ###Upcoming Releases
 
-####Version 0.3.x "Noisy" -- will add support for sounds.
 
 ####Version 0.4.x "Animated" -- Version 0.4.x will add support for animations.
+
+
+####Version 0.5.x "Tuned" -- Version 0.5.x will add more realistic physics and better transitions for launches and landings.
 
 
 ###Future Features 

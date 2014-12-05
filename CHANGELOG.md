@@ -2,6 +2,21 @@
 
 ###Version 0.3.x -- Codename *Noisy*
 
+Version 0.3.x will add sound support to flight objects
+
+* Version 0.3.0
+	* Sound support added for the following
+		* Launching
+		* Landing
+		* Flapping
+		* Flaring
+		* Diving
+		* Ambient wind noise
+	* Added flight camera
+	* New basic flight controls are smoother and easier to use
+	* Fixed various bugs
+	* Removed "Paper Airplane" because its old
+
 ###Version 0.2.x -- Codename *Grounded*
 
 Version 0.2.x will focus on extending flight controls to include flapping, flaring, and wing-fold diving. Ground controllers will also be introduced, to enable walking/running as well as transition to flight.

@@ -13,7 +13,7 @@ public class PauseMenu : MonoBehaviour {
 	
 	private enum Menus { None, Main, Levels, Options }
 	private Menus currentMenu;
-	private string[] availableLevels = {"Grounded","Paper Airplane"};
+	private string[] availableLevels = {"Grounded"};
 
 
 	// Use this for initialization
