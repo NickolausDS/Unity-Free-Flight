@@ -38,10 +38,10 @@ public class FreeFlight : MonoBehaviour {
 	public BaseFlightController FlightController {
 		get {
 			if (flightController == null) {
-				flightController = gameObject.AddComponent<KeyboardController>();
-				Debug.Log ("Free Flight: No Flight Controller detected. Using a " +
-					"defalt 'Keyboard' flight controller. You may set a different " +
-			           "flight controller from FreeFlight/scripts/controllers/");
+				Debug.LogError ("Free Flight: No Flight Controller attached. Please add" +
+				                "a flight controller to enable flight.");
+				this.enabled = false;
+				return null;
 			}
 			return flightController;
 		}

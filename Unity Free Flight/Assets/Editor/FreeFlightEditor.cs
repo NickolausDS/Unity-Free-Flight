@@ -43,8 +43,15 @@ public class FreeFlightEditor : Editor {
 
 		_showControllers = EditorGUILayout.Foldout (_showControllers, "Controllers");
 		if (_showControllers) {
+			//Show the flight controller if there is one attached. 
+			//HACK -- We'll check to see if it's null before showing it in the editor, so we don't throw errors. The reason
+			//This isn't being refactored proper is we will be doing away with controllers in v0.4.0. We'll keep the hack for 
+			//version v0.3.x for compatibibity. 
 			ff.flightController = go.GetComponent<BaseFlightController> ();
-			EditorGUILayout.ObjectField ("Flight Controller", MonoScript.FromMonoBehaviour(ff.FlightController), typeof(MonoScript), false);
+			if (!ff.flightController)
+				EditorGUILayout.ObjectField ("Flight Controller", ff.flightController, typeof(MonoScript), false);
+			else
+				EditorGUILayout.ObjectField ("Flight Controller", MonoScript.FromMonoBehaviour(ff.flightController), typeof(MonoScript), false);
 
 			ff.Mode = (FreeFlight.Modes) EditorGUILayout.EnumPopup ("Flight Mode", ff.Mode);
 			ff.setMode();
