@@ -42,7 +42,7 @@ public class BaseFlightController : MonoBehaviour {
 	public float flapStrength = 600.0f;
 	public float downbeatStrength = 150.0f;
 
-	public bool enabledFlaring = true;
+	public bool enabledFlaring = false;
 	public AudioClip flareSoundClip;
 	private AudioSource flareSoundSource;
 	//The default pitch (x) we rotate to when we do a flare
