@@ -32,10 +32,14 @@ public class FlightCamera : MonoBehaviour {
 		if (!cam)
 			cam = GameObject.FindGameObjectWithTag ("MainCamera");	
 		if (!target)
+			target = GameObject.FindGameObjectWithTag ("Player");
+		//If we can't find the player by tag, assume we're already attached to the flight object.
+		if (!target) {
 			target = gameObject;
+		}
 		fc = target.GetComponent<BaseFlightController> ();
 		if (!fc) {
-			Debug.LogError ("Flight Camera: This script was designed to work with free flight objects, please attach it to one.");
+			Debug.LogError (gameObject + ": Flight Camera: This script was designed to work with free flight objects, please set the 'target' to one.");
 			this.enabled = false;
 		}
 	}
@@ -50,7 +54,7 @@ public class FlightCamera : MonoBehaviour {
 		if (fc.InputFlaring || flareLookTimer > 0f) {
 			flareLook ();
 		} else {
-			iTween.RotateUpdate (cam, transform.rotation.eulerAngles, rotationSpeed);
+			iTween.RotateUpdate (cam, target.transform.rotation.eulerAngles, rotationSpeed);
 		}
 
 	}
