@@ -9,9 +9,9 @@ public class FreeFlightEditor : Editor {
 	//vars for foldouts
 	private bool _showPhysicsAttrs = false;
 	private bool _showDimensionAttrs = false;
-	private bool _showControllers = true;
+	private bool _showControllers = false;
 	private bool _showGroundControllers = true;
-	private bool _showautoConfigure = false;
+	private bool _showautoConfigure = true;
 
 	private List<MonoScript> gcMasterList = new List<MonoScript>();
 
@@ -93,8 +93,8 @@ public class FreeFlightEditor : Editor {
 		//user doesn't want. If it's hard to click, that mistake shouldn't ever happen. 
 		_showautoConfigure = EditorGUILayout.Foldout (_showautoConfigure, "Auto Configure");
 		if (_showautoConfigure) {
-			if (GUILayout.Button ("Auto Configure"))
-				autoConfigure(go, ff);
+			if (GUILayout.Button ("Check Configuration"))
+				checkConfig(go, ff);
 			
 		}
 
@@ -131,33 +131,66 @@ public class FreeFlightEditor : Editor {
 
 
 	/// <summary>
-	/// Automagically configure free flight so it 'just works'. Log a warning if
+	/// Check free flight to see if everything is configured correctly. Log a warning if
 	/// there were changes made to the object, otherwise log a debug message saying nothing
 	/// changed. 
 	/// </summary>
 	/// <param name="go">Go.</param>
 	/// <param name="ff">Ff.</param>
-	private void autoConfigure(GameObject go, FreeFlight ff) {
+	private void checkConfig(GameObject go, FreeFlight ff) {
 		string report = "";
 		//Strange behaviour can happen if the object is inactive when we run checks. 
 		bool lastEnabledState = go.activeSelf;
 		go.SetActive(true);
-		
-		if (checkAddDefaultCollider(go))
-			report += "! Colliders: Added default collider so we don't fall through the world.\n";
 
-		if (checkSetGroundControllers(go, ff) ) {
-			report += "! Ground Controllers: Updated ground controller list: ";
-			foreach (MonoScript ms in gcMasterList)
-				if (ms)
-					report += ms.GetClass().ToString() + ", ";
-			report += "\n";
+
+		if (!ff.flightController) {
+			if (ff.flightController = go.GetComponent<BaseFlightController>())
+				report += "PASS: Flight controller configured to " + ff.flightController + " \n";
+			else
+				report += "WARNING: No flight controller detected. Please add the Keyboard controller from the Free Flight folder.\n";
+		} else {
+			report += "PASS: Flight controller is set to " + ff.flightController +"\n";
 		}
 
-		if (report != "") 
-			Debug.LogWarning("Object configured: " + go.name + "\n" + report);
+
+		if (checkAddDefaultCollider(go))
+			report += "WARNING: Colliders: Added default collider so we don't fall through the world.\n";
 		else
-			Debug.Log ("Object: " + go.name + "\n\tEverything appears to be configured correctly.");
+			report += "PASS: Object has colliders.\n";
+
+		if (go.GetComponent<CharacterController>() || 
+		    go.GetComponentInChildren<CharacterController>() ||
+		    go.GetComponentInParent<CharacterController>()) {
+
+			if (checkSetGroundControllers(go, ff) ) {
+				report += "NOTICE: Updated Ground Controller list: ";
+				foreach (MonoScript ms in gcMasterList)
+					if (ms)
+						report += ms.GetClass().ToString() + ", ";
+				report += "\n";
+			}
+
+			if (checkNumberOfCollidersNotOne(go)) {
+				report += "WARNING: More than one collider detected, Fall through world may be possible.\n";
+			} else {
+
+				if (checkColliderAndCCSizeFailMatch(go)) {
+					report += "WARNING: Collider and Character controller size or shape don't match. Fall through world" +
+						"bug is possible!\n";
+				} else {
+					report += "PASS: Collider and Character Controller match in sizes or Charater controller not " +
+						"present. Fall through world bug not possible\n";
+				}
+			}
+		} else {
+			report += "WARNING: No Character Controller detected. Your character may not be able to move on the ground. Add " +
+				"character controller scripts in order to have ground locomotion (The standard asset Character Controllers will work).\n";
+		}
+		if (report.Contains ("WARNING")) 
+			Debug.LogWarning("CHECK FAILED: " + go.name + "\nReport Below:\n" + report);
+		else
+			Debug.Log ("Object: " + go.name + "\nEverything appears to be configured correctly. Details below:\n" + report);
 
 		go.SetActive (lastEnabledState);
 	}
@@ -208,5 +241,45 @@ public class FreeFlightEditor : Editor {
 			return true;
 		}
 		return false;
+	}
+
+	private bool checkNumberOfCollidersNotOne(GameObject go) {
+		Collider[] col = go.GetComponentsInChildren <Collider> ();
+		int numRealColliders = col.Length;
+		foreach (Collider thing in col) {
+			//Character controllers don't count as colliders
+			if (thing.GetType() == typeof(CharacterController))
+				numRealColliders -= 1;
+		}
+		if (numRealColliders == 1) {
+			return false;
+		}
+		return true;
+	}
+
+	private bool checkColliderAndCCSizeFailMatch(GameObject go) {
+		Collider[] cols = go.GetComponentsInChildren <Collider> ();
+		CharacterController cc;
+		Collider col;
+
+		if (cols.Length != 2)
+			return true;
+
+		if (cols[0].GetType () == typeof(CharacterController)) {
+			cc = (CharacterController)cols[0];
+			col = cols[1];
+		} else if (cols[1].GetType () == typeof(CharacterController)) {
+			cc = (CharacterController) cols[1];
+			col = cols[0];
+		} else {
+			return true;
+		}
+		//If the CC match the Colider type, size, and shape, we're good. 
+		if (col.GetType () == typeof(CapsuleCollider)) {
+			CapsuleCollider cap = (CapsuleCollider) col;
+			if (cap.height == cc.height && cap.radius == cc.radius)
+				return false;
+		}
+		return true;
 	}
 }
