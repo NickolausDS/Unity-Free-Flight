@@ -12,7 +12,12 @@ public class FlightCamera : MonoBehaviour {
 
 	public GameObject cam;
 	public GameObject target;
-	public float followSpeed = 0.1f;
+	public bool thirdPersonMode = false;
+
+	public Vector3 firstPersonPosition = new Vector3(0f,0f,.5f);
+	public Vector3 thirdPersonPosition = new Vector3(0f,0.1f,-3f);
+
+	public float thirdPersonLag = 2f;
 	public float rotationSpeed = 1.0f;
 
 	public float flareLookDuration = 2.0f;
@@ -30,14 +35,17 @@ public class FlightCamera : MonoBehaviour {
 			target = gameObject;
 		fc = target.GetComponent<BaseFlightController> ();
 		if (!fc) {
-			Debug.LogError ("This script was designed to work with free flight objects, please attach it to one.");
+			Debug.LogError ("Flight Camera: This script was designed to work with free flight objects, please attach it to one.");
 			this.enabled = false;
 		}
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		iTween.MoveUpdate (cam, target.transform.position, followSpeed);
+		if (thirdPersonMode)
+			iTween.MoveUpdate (cam, target.transform.TransformPoint (thirdPersonPosition), thirdPersonLag);
+		else
+			iTween.MoveUpdate (cam, target.transform.TransformPoint (firstPersonPosition), .1f);
 
 		if (fc.InputFlaring || flareLookTimer > 0f) {
 			flareLook ();
@@ -77,6 +85,23 @@ public class FlightCamera : MonoBehaviour {
 
 
 	}
+
+	/// <summary>
+	/// Find out if there are objects between the camera and the player object.
+	/// </summary>
+	/// <returns>The with objects.</returns>
+//	float collidingWithObjects () {
+//		RaycastHit hit;
+//		int mask = 1 << LayerMask.NameToLayer ("Player");
+//		mask = ~mask;
+//
+//
+//		if (Physics.Raycast (cam.transform.position, cam.transform.forward, out hit, followDistance, mask)) {
+//			return hit.distance;
+//		}
+//		return followDistance;
+//
+//	}
 
 	
 }

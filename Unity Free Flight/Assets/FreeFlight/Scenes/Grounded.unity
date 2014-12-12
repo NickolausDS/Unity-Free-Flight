@@ -90,7 +90,7 @@ GameObject:
   - 114: {fileID: 239765974}
   - 114: {fileID: 239765979}
   - 114: {fileID: 239765970}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: FlightObject
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -111,7 +111,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cam: {fileID: 0}
   target: {fileID: 0}
-  followSpeed: .100000001
+  thirdPersonMode: 0
+  firstPersonPosition: {x: 0, y: 0, z: .5}
+  thirdPersonPosition: {x: 0, y: .100000001, z: -3}
+  thirdPersonLag: 2
   rotationSpeed: 1
   flareLookDuration: 2
   flareLookAngle: 50
@@ -1062,6 +1065,22 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 3b289fc795a5746b4967c1e3630bf188, type: 2}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 100002, guid: 3b289fc795a5746b4967c1e3630bf188, type: 2}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 3b289fc795a5746b4967c1e3630bf188, type: 2}
+      propertyPath: followSpeed
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 3b289fc795a5746b4967c1e3630bf188, type: 2}
+      propertyPath: thirdPersonLagTime
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 3b289fc795a5746b4967c1e3630bf188, type: 2}
   m_RootGameObject: {fileID: 239765969}
@@ -1079,7 +1098,7 @@ GameObject:
   - 136: {fileID: 1608774938}
   - 23: {fileID: 1608774937}
   - 65: {fileID: 1608774940}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
