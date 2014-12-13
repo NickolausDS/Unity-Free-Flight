@@ -4,6 +4,15 @@
 
 Version 0.3.x will add sound support to flight objects
 
+* Version 0.3.1
+	* Bug fixes! 
+		* Fixed editor bug for removing free flight components
+		* Fixed first time import errors
+		* Fixed camera artifacts showing up
+		* Fixed camera rotation bug when not attached to free flight objects
+	* Better error checking for developers
+	* Added third person mode for flight camera
+	* Added single step build process for creating releases
 * Version 0.3.0
 	* Sound support added for the following
 		* Launching
