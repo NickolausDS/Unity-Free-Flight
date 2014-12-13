@@ -15,6 +15,20 @@ BUILD_WINDOWS="-buildWindows64Player $BUILD_PATH.exe"
 BUILD_LINUX="-buildLinux64Player $BUILD_PATH.x86_64"
 BUILD_WEB="-buildWebPlayerStreamed $BUILD_PATH"
 
+#Prefix to Free Flight assets
+PFF="Assets/FreeFlight"
+#Assets with a space in their file name need to be backslashed
+SA=Assets/FreeFlight/Standard\ Assets
+SACC=Assets/FreeFlight/Standard\ Assets/Character\ Controllers
+
+
+BASIC_ASSETS=("$PFF/Scripts/FreeFlight" "Assets/Editor/FreeFlightEditor.cs" "Assets/Plugins/Pixelplacement")
+
+DEMO_ASSETS=${BASIC_ASSETS[@]}
+DEMO_ASSETS+=("$PFF/Models" "$PFF/Materials" "$PFF/Prefabs" "$PFF/Scenes" "$PFF/Sounds/Flight")
+DEMO_ASSETS+=("$PFF/Sounds/sources.txt" )
+
+
 touch $LOG_FILE
 tail -n 0 -f "$LOG_FILE" & 
 tail_pid=$!
@@ -30,6 +44,12 @@ $PACKAGER "linux" &&
 
 $COMMAND $OPTIONS $BUILD_WEB &&
 $PACKAGER "web" &&
+
+$COMMAND $OPTIONS -exportPackage ${BASIC_ASSETS[@]} "$SACC" "${BUILD_PATH}.unitypackage" &&
+$PACKAGER "unitypackage" &&
+
+$COMMAND $OPTIONS -exportPackage ${DEMO_ASSETS[@]} "$SA" "${BUILD_PATH}Demo.unitypackage" &&
+$PACKAGER "unitydemopackage" 
 
 if [ "$?" -eq "0" ]
 then

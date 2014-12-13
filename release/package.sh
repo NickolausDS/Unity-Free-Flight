@@ -12,6 +12,7 @@ MAC_DEP=(${NAME}.app)
 WINDOWS_DEP=(${NAME}.exe ${NAME}_Data)
 WEB_DEP=(${NAME})
 UNITYPACKAGE_DEP=(${NAME}.unitypackage)
+UNITYDEMOPACKAGE_DEP=(${NAME}Demo.unitypackage)
 
 
 function sanity() {
@@ -158,9 +159,24 @@ function package_unitypackage() {
 
 }
 
+function package_unitydemopackage() {
+	if has_dep ${UNITYDEMOPACKAGE_DEP[@]} &> /dev/null
+	then
+		rm "$PACKAGEDEST/${PACKAGENAME}Demo.unitypackage" 2> /dev/null
+		echo "Moving Unity Package..." &&
+		mv -v "${NAME}Demo.unitypackage" "$PACKAGEDEST/${PACKAGENAME}Demo.unitypackage" &&
+		return 0
+		return -1
+	fi
+	echo "Build not detected, skipping Unity Package..."
+	return 1
+
+}
+
 function cleanup_all() {
 	printf "\nFinishing cleanup...\n"
-	rm -rf ${MAC_DEP[@]} ${LINUX_DEP[@]} ${WINDOWS_DEP[@]} ${WEB_DEP[@]} ${UNITYPACKAGE_DEP[@]}
+	rm -rf ${MAC_DEP[@]} ${LINUX_DEP[@]} ${WINDOWS_DEP[@]} ${WEB_DEP[@]} ${UNITYPACKAGE_DEP[@]} ${UNITYDEMOPACKAGE_DEP[@]}
+
 }
 
 function user_interface() {
@@ -176,6 +192,7 @@ function user_interface() {
 	printf "\tWindows: `has_dep ${WINDOWS_DEP[@]}`\n"
 	printf "\tWeb:     `has_dep ${WEB_DEP[@]}`\n"
 	printf "\tUnity:   `has_dep ${UNITYPACKAGE_DEP[@]}`\n"
+	printf "\tUnity Demo:   `has_dep ${UNITYDEMOPACKAGE_DEP[@]}`\n"
 	printf "`sanity`"
 	printf "\n\n`check_packages_exist`\n\n"
 	printf "Continue? (y/n) "
@@ -194,6 +211,8 @@ function user_interface() {
 		WEB_RET=$?
 		package_unitypackage
 		UNITYPACKAGE_RET=$?
+		package_unitydemopackage
+		UNITYDEMOPACKAGE_RET=$?
 
 		printf "\n\n"
 		printf "Linux:   `print_status $LIN_RET`\n"
@@ -201,6 +220,7 @@ function user_interface() {
 		printf "Mac:     `print_status $MAC_RET`\n"
 		printf "Web:     `print_status $WEB_RET`\n"
 		printf "Unity:   `print_status $UNITYPACKAGE_RET`\n"
+		printf "Unity Demo:   `print_status $UNITYDEMOPACKAGE_RET`\n"
 
 		fail="0"
 		for each in $LIN_RET $WIN_RET $MAC_RET $WEB_RET $UNITYPACKAGE_RET
@@ -245,6 +265,10 @@ web)
 	;;
 unitypackage)
 	package_unitypackage && cleanup_all
+	exit $?
+	;;
+unitydemopackage)
+	package_unitydemopackage && cleanup_all
 	exit $?
 	;;
 "") user_interface
