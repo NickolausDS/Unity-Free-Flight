@@ -53,12 +53,18 @@ public class BaseFlightController : MonoBehaviour {
 	public AudioClip divingSoundClip;
 	private AudioSource divingSoundSource;
 
+	public bool crashingEnabled = false;
+	public float crashSpeed = 40f;
 
 	public AudioClip takeoffSoundClip;
 	private AudioSource takeoffSoundSource;
 
 	public AudioClip landingSoundClip;
 	private AudioSource landingSoundSource;
+
+	public AudioClip crashSoundClip;
+	private AudioSource crashSoundSource;
+
 	//Max time "standUp" will take to execute.
 	public float maxStandUpTime = 2.0f;
 	//Speed which "standUp" will correct rotation. 
@@ -150,6 +156,7 @@ public class BaseFlightController : MonoBehaviour {
 		setupSound (divingSoundClip, ref divingSoundSource);
 		setupSound (takeoffSoundClip, ref takeoffSoundSource);
 		setupSound (landingSoundClip, ref landingSoundSource);
+		setupSound (crashSoundClip, ref crashSoundSource);
 		anim = GetComponentInChildren<Animator> ();
 		ffhash = new FreeFlightAnimationHashIDs ();
 	}
@@ -189,9 +196,14 @@ public class BaseFlightController : MonoBehaviour {
 	protected void OnCollisionEnter(Collision col) {
 		if (isFlying) {
 			isFlying = false;
-			playSound (landingSoundSource);
 			anim.SetBool(ffhash.flyingBool, false);
-			StartCoroutine (standUp ());
+			if (crashingEnabled && flightPhysics.Speed >= crashSpeed) {
+				anim.SetTrigger(ffhash.dyingTrigger);
+				playSound (crashSoundSource);
+			} else {
+				playSound (landingSoundSource);
+				StartCoroutine (standUp ());
+			}
 		}
 	}
 
