@@ -69,6 +69,9 @@ public class BaseFlightController : MonoBehaviour {
 	public float windNoiseStartSpeed = 20.0f;
 	public float windNoiseMaxSpeed = 200.0f;
 
+	public FreeFlightAnimationHashIDs ffhash;
+	public Animator anim;
+
 	//===========
 	//USER INPUT
 	//===========
@@ -147,6 +150,8 @@ public class BaseFlightController : MonoBehaviour {
 		setupSound (divingSoundClip, ref divingSoundSource);
 		setupSound (takeoffSoundClip, ref takeoffSoundSource);
 		setupSound (landingSoundClip, ref landingSoundSource);
+		anim = GetComponentInChildren<Animator> ();
+		ffhash = new FreeFlightAnimationHashIDs ();
 	}
 
 	void Start() {
@@ -185,6 +190,7 @@ public class BaseFlightController : MonoBehaviour {
 		if (isFlying) {
 			isFlying = false;
 			playSound (landingSoundSource);
+			anim.SetBool(ffhash.flyingBool, false);
 			StartCoroutine (standUp ());
 		}
 	}
@@ -251,22 +257,23 @@ public class BaseFlightController : MonoBehaviour {
 			//if (rigidbody.isKinematic)
 			//	rigidbody.isKinematic = false;
 			isFlying = true;
+			anim.SetBool(ffhash.flyingBool, true);
 			playSound (takeoffSoundSource);
 			if(flapLaunch) 
 				flap ();
 		}
 	}
-	                
 
 	protected void flap() {
-		if(enabledFlapping) {
-			if(!flightPhysics.IsFlapping) {
-				playSound (flapSoundSource);
-			}
-			flightPhysics.flap (minimumFlapTime, regularFlaptime, flapStrength, downbeatStrength, true, false);
-			
+		if(!enabledFlapping) {
+			return;
 		}
-
+		AnimatorStateInfo curstate = anim.GetCurrentAnimatorStateInfo (0);
+		if (curstate.nameHash != ffhash.flappingState) {
+			playSound (flapSoundSource);
+			rigidbody.AddForce (rigidbody.rotation * Vector3.up * flapStrength);
+			anim.SetTrigger (ffhash.flappingTrigger);
+		}
 	}
 
 	protected void flare() {

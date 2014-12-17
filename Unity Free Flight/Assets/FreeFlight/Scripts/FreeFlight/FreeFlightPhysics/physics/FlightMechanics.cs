@@ -19,7 +19,6 @@ public class FlightMechanics : FlightPhysics {
 	private bool wingsHaveFlappedInDownPosition = false;
 	protected float currentFlapTime = 0.0f;
 
-	protected Quaternion flareRotationSnapshot;
 	public void execute(BaseFlightController controller) {
 
 	}
