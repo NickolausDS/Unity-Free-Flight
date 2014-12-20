@@ -14,7 +14,6 @@ GameObject:
   - 114: {fileID: 11400006}
   - 114: {fileID: 11400008}
   - 114: {fileID: 11400004}
-  - 114: {fileID: 11400010}
   - 114: {fileID: 11400000}
   m_Layer: 0
   m_Name: FlightObject
@@ -134,7 +133,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cam: {fileID: 0}
   target: {fileID: 0}
-  followSpeed: .100000001
+  thirdPersonMode: 0
+  firstPersonPosition: {x: 0, y: 0, z: .5}
+  thirdPersonPosition: {x: 0, y: .100000001, z: -3}
+  thirdPersonLag: 2
   rotationSpeed: 1
   flareLookDuration: 2
   flareLookAngle: 50
@@ -149,12 +151,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b89ea8d74632d426b92b28a508d1beb8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  flightController: {fileID: 11400010}
-  groundControllers:
-  - {fileID: 11400006}
-  - {fileID: 11400008}
-  - {fileID: 11400004}
-  Mode: 1
+  applyFlightPhysicsOnGround: 0
+  enabledGliding: 0
+  maxTurnBank: 45
+  maxPitch: 20
+  directionalSensitivity: 2
+  enabledFlapping: 1
+  flapSoundClip: {fileID: 0}
+  flapStrength: 60
+  enabledFlaring: 0
+  flareSoundClip: {fileID: 0}
+  flareAngle: 70
+  flareSpeed: 3
+  enabledDiving: 0
+  divingSoundClip: {fileID: 0}
+  enabledTakeoff: 1
+  takeoffSoundClip: {fileID: 0}
+  enabledLanding: 1
+  landingSoundClip: {fileID: 0}
+  maxStandUpTime: 2
+  standUpSpeed: 2
+  enabledCrashing: 0
+  crashSpeed: 40
+  crashSoundClip: {fileID: 0}
+  enabledWindNoise: 1
+  windNoiseClip: {fileID: 0}
+  windNoiseStartSpeed: 20
+  windNoiseMaxSpeed: 200
+  anim: {fileID: 0}
+  launchTime: .200000003
+  enabledJumping: 0
 --- !u!114 &11400004
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -239,41 +265,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60bca8f58a0b8478e946e6e86658cb29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &11400010
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed6e5f009fa47436c84879d955b9d0c2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isFlying: 0
-  maxTurnBank: 45
-  maxPitch: 20
-  directionalSensitivity: 2
-  enabledFlapping: 1
-  flapSoundClip: {fileID: 8300000, guid: 24a927e62b21f47e9a5445931cf7668b, type: 3}
-  regularFlaptime: .5
-  minimumFlapTime: .200000003
-  flapStrength: 600
-  downbeatStrength: 150
-  enabledFlaring: 1
-  flareSoundClip: {fileID: 0}
-  flareAngle: 70
-  flareSpeed: 3
-  enabledDiving: 1
-  divingSoundClip: {fileID: 0}
-  takeoffSoundClip: {fileID: 0}
-  landingSoundClip: {fileID: 8300000, guid: a906575dd0f5c412e8b72f874b6515e2, type: 3}
-  maxStandUpTime: 2
-  standUpSpeed: 2
-  windNoiseClip: {fileID: 8300000, guid: b9532bedd6555433aae7d02f546bfab7, type: 3}
-  windNoiseStartSpeed: 20
-  windNoiseMaxSpeed: 200
-  launchTime: .200000003
 --- !u!136 &13600000
 CapsuleCollider:
   m_ObjectHideFlags: 1

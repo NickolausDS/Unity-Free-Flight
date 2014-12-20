@@ -19,6 +19,32 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &100002
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 400002}
+  - 114: {fileID: 11400012}
+  - 114: {fileID: 11400014}
+  - 114: {fileID: 11400008}
+  - 114: {fileID: 11400018}
+  - 114: {fileID: 11400016}
+  - 114: {fileID: 11400022}
+  - 114: {fileID: 11400010}
+  - 114: {fileID: 11400026}
+  - 114: {fileID: 11400028}
+  - 114: {fileID: 11400024}
+  - 114: {fileID: 11400020}
+  m_Layer: 0
+  m_Name: Tutorial
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
 --- !u!4 &400000
 Transform:
   m_ObjectHideFlags: 1
@@ -28,8 +54,21 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -200.557465, y: 426.131409, z: 166.666077}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 400002}
   m_Father: {fileID: 0}
+  m_RootOrder: 0
+--- !u!4 &400002
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100002}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -213.814026, y: -224.853668, z: 56.2432556}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 400000}
   m_RootOrder: 0
 --- !u!114 &11400000
 MonoBehaviour:
@@ -68,10 +107,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   flightObject: {fileID: 0}
   guiskin: {fileID: 11400000, guid: cce4dbea97ede4ac7a42d92e1ea7b79e, type: 2}
-  toggleStatsMenu: 0
-  togglePhysicsMenu: 0
-  toggleWorldPhysicsMenu: 0
-  toggleInputsMenu: 0
+  toggleStatsMenu: 1
+  togglePhysicsMenu: 1
+  toggleWorldPhysicsMenu: 1
+  toggleInputsMenu: 1
   showAbbreviations: 1
   statsPos:
     serializedVersion: 2
@@ -103,11 +142,250 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3f8314026edd640a691f9db779d534d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &11400008
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100002}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f1fcfb67b9964a04b27b5ebfa200647, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chainToTrigger: {fileID: 11400018}
+  delaySecsToCondition: 0
+  delaySecsToAction: 2
+  delaySecsAfterAction: 0
+  textLine1: '[X] ''W'' to move forward'
+  textLine2: '[X]    A, S for left, right'
+  textLine3: Time to fly!
+  textPosition: {x: -300, y: 10, z: 200, w: 60}
+  relativeToScreenWidth: 1
+  relativeToScreenHeight: 0
+--- !u!114 &11400010
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100002}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddc3fb149ea844ff68e45f2ab490ecc4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chainToTrigger: {fileID: 11400026}
+  delaySecsToCondition: 0
+  delaySecsToAction: 2
+  delaySecsAfterAction: 0
+  textLine1: '[ ] ''Q'' Barrel Left'
+  textLine2: 
+  textLine3: 
+  textPosition: {x: -300, y: 10, z: 200, w: 60}
+  relativeToScreenWidth: 1
+  relativeToScreenHeight: 0
+  button: FoldLeftWing
+--- !u!114 &11400012
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100002}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddc3fb149ea844ff68e45f2ab490ecc4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chainToTrigger: {fileID: 11400014}
+  delaySecsToCondition: 1
+  delaySecsToAction: .75
+  delaySecsAfterAction: 0
+  textLine1: '[ ] ''W'' to move forward'
+  textLine2: 
+  textLine3: 
+  textPosition: {x: -300, y: 10, z: 200, w: 60}
+  relativeToScreenWidth: 1
+  relativeToScreenHeight: 0
+  button: Vertical
+--- !u!114 &11400014
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100002}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddc3fb149ea844ff68e45f2ab490ecc4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chainToTrigger: {fileID: 11400008}
+  delaySecsToCondition: 0
+  delaySecsToAction: 2
+  delaySecsAfterAction: 0
+  textLine1: '[X] ''W'' to move forward'
+  textLine2: '[ ]    A, S for left, right'
+  textLine3: 
+  textPosition: {x: -300, y: 10, z: 200, w: 60}
+  relativeToScreenWidth: 1
+  relativeToScreenHeight: 0
+  button: Horizontal
+--- !u!114 &11400016
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100002}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddc3fb149ea844ff68e45f2ab490ecc4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chainToTrigger: {fileID: 11400022}
+  delaySecsToCondition: 0
+  delaySecsToAction: 4
+  delaySecsAfterAction: 0
+  textLine1: '[X] Hold spacebar to start flying'
+  textLine2: '[ ] Continue holding to flap'
+  textLine3: 
+  textPosition: {x: -300, y: 10, z: 200, w: 60}
+  relativeToScreenWidth: 1
+  relativeToScreenHeight: 0
+  button: Jump
+--- !u!114 &11400018
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100002}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddc3fb149ea844ff68e45f2ab490ecc4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chainToTrigger: {fileID: 11400016}
+  delaySecsToCondition: 0
+  delaySecsToAction: 2
+  delaySecsAfterAction: 0
+  textLine1: '[ ] Hold spacebar to start flying'
+  textLine2: 
+  textLine3: 
+  textPosition: {x: -300, y: 10, z: 200, w: 60}
+  relativeToScreenWidth: 1
+  relativeToScreenHeight: 0
+  button: Jump
+--- !u!114 &11400020
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100002}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddc3fb149ea844ff68e45f2ab490ecc4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chainToTrigger: {fileID: 0}
+  delaySecsToCondition: 0
+  delaySecsToAction: 2
+  delaySecsAfterAction: 0
+  textLine1: '[ ] Shift to slow down'
+  textLine2: 'Note: Once you stop, you'
+  textLine3: will begin to fall
+  textPosition: {x: -300, y: 10, z: 200, w: 60}
+  relativeToScreenWidth: 1
+  relativeToScreenHeight: 0
+  button: WingFlare
+--- !u!114 &11400022
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100002}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f1fcfb67b9964a04b27b5ebfa200647, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chainToTrigger: {fileID: 11400010}
+  delaySecsToCondition: 0
+  delaySecsToAction: 2
+  delaySecsAfterAction: 0
+  textLine1: '[X] Hold spacebar to start flying'
+  textLine2: '[X] Continue holding to flap'
+  textLine3: Good!
+  textPosition: {x: -300, y: 10, z: 200, w: 60}
+  relativeToScreenWidth: 1
+  relativeToScreenHeight: 0
+--- !u!114 &11400024
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100002}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f1fcfb67b9964a04b27b5ebfa200647, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chainToTrigger: {fileID: 11400020}
+  delaySecsToCondition: 0
+  delaySecsToAction: 2
+  delaySecsAfterAction: 0
+  textLine1: '[X] ''Q'' Barrel Left'
+  textLine2: '[X] ''E'' Barrel Right'
+  textLine3: '[X] Both to dive'
+  textPosition: {x: -300, y: 10, z: 200, w: 60}
+  relativeToScreenWidth: 1
+  relativeToScreenHeight: 0
+--- !u!114 &11400026
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100002}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddc3fb149ea844ff68e45f2ab490ecc4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chainToTrigger: {fileID: 11400028}
+  delaySecsToCondition: 0
+  delaySecsToAction: 4
+  delaySecsAfterAction: 0
+  textLine1: '[X] ''Q'' Barrel Left'
+  textLine2: '[ ] ''E'' Barrel Right'
+  textLine3: 
+  textPosition: {x: -300, y: 10, z: 200, w: 60}
+  relativeToScreenWidth: 1
+  relativeToScreenHeight: 0
+  button: FoldRightWing
+--- !u!114 &11400028
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 100002}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddc3fb149ea844ff68e45f2ab490ecc4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chainToTrigger: {fileID: 11400024}
+  delaySecsToCondition: 0
+  delaySecsToAction: 4
+  delaySecsAfterAction: 0
+  textLine1: '[X] ''Q'' Barrel Left'
+  textLine2: '[X] ''E'' Barrel Right'
+  textLine3: '[ ] Both to dive'
+  textPosition: {x: -300, y: 10, z: 200, w: 60}
+  relativeToScreenWidth: 1
+  relativeToScreenHeight: 0
+  button: FoldLeftWing
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

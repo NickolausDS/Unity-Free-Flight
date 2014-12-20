@@ -12,18 +12,18 @@ using System.Collections;
 ///call methods from here through Fixed Update()
 /// </summary>
 /// 
-public class FlightMechanics : FlightPhysics {
+public class CreatureFlightPhysics : FlightPhysics {
 
 	protected bool isFlapping = false;
 	public bool IsFlapping { get { return isFlapping; } }
 	private bool wingsHaveFlappedInDownPosition = false;
 	protected float currentFlapTime = 0.0f;
 
-	public void execute(BaseFlightController controller) {
+	public void execute(CreatureFlightPhysics controller) {
 
 	}
 
-	public FlightMechanics(Rigidbody rb) : base(rb) {}
+	public CreatureFlightPhysics (Rigidbody rb) : base(rb) {}
 
 
 	public void directionalInput(float bank, float pitch, float sensitivity) {

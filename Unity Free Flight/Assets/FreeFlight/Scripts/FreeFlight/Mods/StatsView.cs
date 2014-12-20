@@ -8,7 +8,7 @@ public class StatsView : MonoBehaviour {
 	public GameObject flightObject;
 	private FreeFlight ff;
 	private FlightPhysics fObj;
-	private BaseFlightController controller;
+	private FreeFlight controller;
 	public GUISkin guiskin;
 
 	public bool toggleStatsMenu = false;
@@ -141,10 +141,10 @@ public class StatsView : MonoBehaviour {
 				Debug.LogWarning (msg);
 				return false;
 			}
-			fObj = ff.FlightController.flightPhysics;
+			fObj = ff.FlightPhysics;
 		}
 		if (!controller) {
-			controller = ff.GetComponent<BaseFlightController>();
+			controller = ff.GetComponent<FreeFlight>();
 			if (!controller) {
 				string msg = "GameObject '"+ flightObject.name + "' doesn't have a controller attached. Unable to show inputs.";
 				Debug.LogWarning (msg);

@@ -4,24 +4,19 @@ using System.Collections;
 public class PauseMenu : MonoBehaviour {
 
 	public bool isPaused = false;
-	public GameObject playerObject = null;
-	private BaseFlightController bc;
+	public GameObject playerObject;
+	private FreeFlight ff;
 
-	//These automatically handle disabling mouselook on pause, if there is a mouselook script
-	private MonoBehaviour mouseLookScript;
-	private bool mouseLookScriptLastState;
-	
 	private enum Menus { None, Main, Levels, Options }
 	private Menus currentMenu;
 	private string[] availableLevels = {"Grounded"};
 
-
 	// Use this for initialization
 	void Start () {
+		if (!playerObject)
+			playerObject = GameObject.FindGameObjectWithTag("Player");
 		if (playerObject != null) {
-			FreeFlight ff = playerObject.GetComponentInChildren<FreeFlight>();
-			bc = ff.flightController;
-			mouseLookScript = (MonoBehaviour) playerObject.GetComponent("MouseLook");
+			ff = playerObject.GetComponentInChildren<FreeFlight>();
 		} else {
 			string msg = "The player object is not set for the in-game menu. " +
 				"Please set the 'player object' in the 'pause menu' to whatever object is controlled by the player.";
@@ -44,17 +39,11 @@ public class PauseMenu : MonoBehaviour {
 		Time.timeScale = 0.0f;
 		isPaused = true;
 		currentMenu = Menus.Main;
-		if (mouseLookScript) {
-			mouseLookScriptLastState = mouseLookScript.enabled;
-			mouseLookScript.enabled = false;
-		}
 	}
 
 	void unpause() {
 		Time.timeScale = 1.0f;
 		isPaused = false;
-		if (mouseLookScript)
-			mouseLookScript.enabled = mouseLookScriptLastState;
 	}
 
 	void OnGUI() {
@@ -106,21 +95,20 @@ public class PauseMenu : MonoBehaviour {
 			if (GUI.Button (new Rect (150, 240, 200, 50), "Done")) {
 				currentMenu = Menus.Main;
 			}
-			bc.Inverted = GUI.Toggle (new Rect (25, 20, 200, 20), bc.Inverted, "Inverted Controls");
+			ff.Inverted = GUI.Toggle (new Rect (25, 20, 200, 20), ff.Inverted, "Inverted Controls");
 			StatsView sv = gameObject.GetComponent<StatsView>();
 			if (sv) {
 				sv.enabled = GUI.Toggle (new Rect (25, 40, 200, 20), sv.enabled, "Show Physics Statistics");
 				sv.showAbbreviations = GUI.Toggle(new Rect (25, 60, 200, 20), sv.showAbbreviations, "Show Unit Abbreviations");
-				FreeFlight ff = sv.flightObject.GetComponent<FreeFlight>();
-				if (ff) {
+				if (ff.FlightPhysics != null) {
 					//Admittedly, this is a bit hacky. We convert the Unit enum to an integer, 
 					//asign the selection to a string array that *matches* the enums by index, 
 					//then convert the integer back to a Unit enum. Hacky, but works. Maybe it
 					//would be better to add string-settable unit types to the unit converter.
-					int unitSelection = (int) ff.PhysicsObject.Unit;
+					int unitSelection = (int) ff.FlightPhysics.Unit;
 					string[] choices = new string[] {"Metric", "Imperial"};
 					unitSelection = GUI.SelectionGrid(new Rect(25, 80, 150, 30), unitSelection, choices, 2);
-					ff.PhysicsObject.Unit = (UnitConverter.Units) unitSelection;
+					ff.FlightPhysics.Unit = (UnitConverter.Units) unitSelection;
 
 				}
 			}
