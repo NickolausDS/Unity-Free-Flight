@@ -414,22 +414,22 @@ public class FreeFlight : MonoBehaviour {
 		
 		
 		//Flaring takes precedence over everything
-		if (_inputFlaring) {
+		if (enabledFlaring && _inputFlaring) {
 			flare ();
 			if(_inputFlap)
 				flap ();
 		} 
 		
 		//Diving takes precedence under flaring
-		if(_inputDiving && !_inputFlaring) {
+		if(enabledDiving && _inputDiving && !_inputFlaring) {
 			dive ();
 		} else if (!_inputDiving && !flightPhysics.wingsOpen()) {
 			//Simulates coming out of a dive
 			dive ();
 		}
 		
-		//Regular flight takes last precedence
-		if(!_inputDiving && !_inputFlaring) {
+		//Regular flight takes last precedence. Do regular flight if not flaring or diving.
+		if ( !((enabledDiving && _inputDiving) || (enabledFlaring && _inputFlaring)) ) {
 			flightPhysics.directionalInput(getBank (), getPitch (false), directionalSensitivity);
 			//Allow flapping during normal flight
 			if (_inputFlap)
