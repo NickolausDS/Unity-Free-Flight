@@ -123,8 +123,13 @@ public class FlightPhysics : FlightObject {
 				liftCoefficient = getLiftCoefficient(angleOfAttack);
 				// apply lift force
 				liftForce = getLift(rigidbody.velocity.magnitude, 0, currentWingArea, liftCoefficient) * Time.deltaTime;
-				directionalLift = Quaternion.LookRotation(rigidbody.velocity) * Vector3.up;
-				rigidbody.AddForce(directionalLift * liftForce);
+				if (!float.IsNaN(liftForce)) {
+					directionalLift = Quaternion.LookRotation(rigidbody.velocity) * Vector3.up;
+					rigidbody.AddForce(directionalLift * liftForce);
+				} else {
+					//Non critical warning. These should be removed after the Tuned update v0.5.0
+					Debug.LogWarning ("Lift force generated NAN error!");
+				}
 
 				//newRotation = getStallRotation (newRotation, newVelocity.magnitude);
 
@@ -134,9 +139,13 @@ public class FlightPhysics : FlightObject {
 				dragCoefficient = getDragCoefficient (angleOfAttack);
 				// get drag rotation
 				dragForce = getDrag(rigidbody.velocity.magnitude,0, currentWingArea, dragCoefficient, liftForce, AspectRatio) * Time.deltaTime;
-				directionalDrag = Quaternion.LookRotation(rigidbody.velocity) * Vector3.back;
-				// Debug.Log(string.Format ("Drag Direction: {0}, Drag Newtons/Hour: {1}", directionalDrag, dragForce * 3600.0f));
-				rigidbody.AddForce (directionalDrag * dragForce);
+				if (!float.IsNaN(dragForce)) {
+					directionalDrag = Quaternion.LookRotation(rigidbody.velocity) * Vector3.back;
+					// Debug.Log(string.Format ("Drag Direction: {0}, Drag Newtons/Hour: {1}", directionalDrag, dragForce * 3600.0f));
+					rigidbody.AddForce (directionalDrag * dragForce);
+				} else {
+					Debug.LogWarning ("Drag force generated NAN error!");
+				}
 			}
 			
 		}
