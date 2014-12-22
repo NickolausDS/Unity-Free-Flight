@@ -392,20 +392,13 @@ public class FreeFlight : MonoBehaviour {
 		
 		
 		if (enabledDiving) {
-			if(Input.GetButton ("FoldLeftWing"))
+			_inputDiving = Input.GetButton ("Dive");
+			if (_inputDiving) {
 				_inputLeftWingExposure = 0.0f;
-			else 
-				_inputLeftWingExposure = 1.0f;
-			
-			if(Input.GetButton ("FoldRightWing")) 
 				_inputRightWingExposure = 0.0f;
-			else 
+			} else {
 				_inputRightWingExposure = 1.0f;
-			
-			if (_inputLeftWingExposure < 1.0f || _inputRightWingExposure < 1.0f)
-				_inputDiving = true;
-			else {
-				_inputDiving = false;
+				_inputRightWingExposure = 1.0f;
 			}
 		}
 	}
@@ -445,6 +438,9 @@ public class FreeFlight : MonoBehaviour {
 
 		if (!_inputFlaring)
 			anim.SetBool (ffhash.flaringBool, false);
+		if (!_inputDiving) {
+			anim.SetBool (ffhash.divingBool, false);
+		}
 		
 		flightPhysics.doStandardPhysics ();
 		
@@ -490,6 +486,7 @@ public class FreeFlight : MonoBehaviour {
 	protected void dive() {
 		if (enabledDiving) {
 			playSound (divingSoundSource);
+			anim.SetBool (ffhash.divingBool, true);
 			flightPhysics.wingFold(_inputLeftWingExposure, _inputRightWingExposure);
 		}
 		

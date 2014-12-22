@@ -15,6 +15,7 @@ public class FreeFlightAnimationHashIDs {
 	public int flappingState;
 	public int flaringState;
 	public int flaringBool;
+	public int divingBool;
 	public int dyingTrigger;
 	public int walkingBool;
 	
@@ -28,6 +29,7 @@ public class FreeFlightAnimationHashIDs {
 		flappingState = Animator.StringToHash ("Base Layer.Flapping");
 		flaringState = Animator.StringToHash ("Base Layer.Flaring");
 		flaringBool = Animator.StringToHash ("Flaring");
+		divingBool = Animator.StringToHash ("Diving");
 		dyingTrigger = Animator.StringToHash ("Dying");
 		walkingBool = Animator.StringToHash ("Walking");
 
