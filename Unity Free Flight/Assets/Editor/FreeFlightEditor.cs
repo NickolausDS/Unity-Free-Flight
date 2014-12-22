@@ -45,6 +45,8 @@ public class FreeFlightEditor : Editor {
 		}
 		if (ff.enabledFlapping = EditorGUILayout.Toggle ("Enabled Flapping", ff.enabledFlapping)) {
 			ff.flapSoundClip = (AudioClip) EditorGUILayout.ObjectField ("Flap Sound", ff.flapSoundClip, typeof(AudioClip), false);
+			ff.flapStrength = EditorGUILayout.FloatField ("Flap Strength", ff.flapStrength); 
+
 		}		
 		if (ff.enabledFlaring = EditorGUILayout.Toggle ("Enabled Flaring", ff.enabledFlaring)) {
 			ff.flareAngle = (float) EditorGUILayout.FloatField ("Flare Angle", ff.flareAngle);
