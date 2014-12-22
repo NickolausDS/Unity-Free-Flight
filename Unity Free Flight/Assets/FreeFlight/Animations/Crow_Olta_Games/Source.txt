@@ -1,0 +1,5 @@
+Publisher: Olta Games
+Artist: Tamer Karataş
+Unity Store Asset Page: https://www.assetstore.unity3d.com/en/#!/content/18218
+
+All Animations in this folder work with the model above. 

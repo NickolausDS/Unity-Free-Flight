@@ -330,6 +330,7 @@ public class FreeFlight : MonoBehaviour {
 	private void land() {
 		if (isFlying()) {
 			State = FlightState.Ground;
+			anim.SetBool (ffhash.flaringBool, false);
 			anim.SetBool(ffhash.flyingBool, false);
 			if (enabledCrashing && flightPhysics.Speed >= crashSpeed) {
 				anim.SetTrigger(ffhash.dyingTrigger);
@@ -441,6 +442,9 @@ public class FreeFlight : MonoBehaviour {
 			if (_inputFlap)
 				flap ();
 		}
+
+		if (!_inputFlaring)
+			anim.SetBool (ffhash.flaringBool, false);
 		
 		flightPhysics.doStandardPhysics ();
 		
@@ -477,6 +481,7 @@ public class FreeFlight : MonoBehaviour {
 	protected void flare() {
 		if (enabledFlaring) {
 			playSound (flareSoundSource);
+			anim.SetBool (ffhash.flaringBool, true);
 			//Flare is the same as directional input, except with exagerated pitch and custom speed. 
 			flightPhysics.directionalInput(getBank (), getPitch (true), flareSpeed);
 		}
