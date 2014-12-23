@@ -41,8 +41,29 @@ public class FreeFlight : MonoBehaviour {
 		}
 		set { flightPhysics = value;}
 	}
-	private FreeFlightAnimationHashIDs ffhash;
-	private Animator anim;
+	private FreeFlightAnimationHashIDs _ffhash;
+	private FreeFlightAnimationHashIDs ffhash {
+		get { 
+			if (_ffhash == null) 
+				_ffhash = new FreeFlightAnimationHashIDs (); 
+			return _ffhash; 
+		} 
+		set { _ffhash = value; } }
+
+	private Animator _anim;
+
+	//Lazy instantiation allows for real time compilation 
+	private Animator anim { 
+		get { 
+			if (_anim == null)
+				_anim = GetComponentInChildren <Animator> ();
+			if (_anim == null) {
+				Debug.LogWarning ("Please attach a Flight Animator to the model for " + gameObject.name);
+				this.enabled = false;
+			}
+			return _anim;
+		} 
+		set { _anim = value; } }
 
 	
 	//=============
@@ -186,7 +207,6 @@ public class FreeFlight : MonoBehaviour {
 	//=============
 	
 	void Awake() {
-		flightPhysics = new CreatureFlightPhysics (rigidbody);
 		setupSound (windNoiseClip, ref windNoiseSource);
 		setupSound (flapSoundClip, ref flapSoundSource);
 		setupSound (flareSoundClip, ref flareSoundSource);
@@ -196,8 +216,6 @@ public class FreeFlight : MonoBehaviour {
 		setupSound (crashSoundClip, ref crashSoundSource);
 		setupSound (walkingNoiseClip, ref walkingNoiseSource);
 		setupSound (jumpingNoiseClip, ref jumpingNoiseSource);
-		anim = GetComponentInChildren<Animator> ();
-		ffhash = new FreeFlightAnimationHashIDs ();
 		rigidbody.freezeRotation = true;
 		rigidbody.isKinematic = false;
 	}
