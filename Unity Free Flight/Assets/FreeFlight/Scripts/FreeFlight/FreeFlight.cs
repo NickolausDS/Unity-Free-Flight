@@ -24,22 +24,22 @@ public class FreeFlight : MonoBehaviour {
 	 * Flight -- Get flight inputs from the player and apply them.
 	 */ 
 	public enum FlightState {None, Ground, Flight};
-	private FlightState state = FlightState.Ground;
-	public FlightState State {
-		get { return state; }
-		set { state = value; }
+	private FlightState _state = FlightState.Ground;
+	public FlightState state {
+		get { return _state; }
+		set { _state = value; }
 	}
 	public bool applyFlightPhysicsOnGround = false;
 
-	private CreatureFlightPhysics flightPhysics;
-	public CreatureFlightPhysics FlightPhysics {
+	private CreatureFlightPhysics _flightPhysics;
+	public CreatureFlightPhysics flightPhysics {
 		get {
-			if (flightPhysics == null) {
-				flightPhysics = new CreatureFlightPhysics(rigidbody);
+			if (_flightPhysics == null) {
+				_flightPhysics = new CreatureFlightPhysics(rigidbody);
 			}
-			return flightPhysics;
+			return _flightPhysics;
 		}
-		set { flightPhysics = value;}
+		set { _flightPhysics = value;}
 	}
 	private FreeFlightAnimationHashIDs _ffhash;
 	private FreeFlightAnimationHashIDs ffhash {
@@ -339,7 +339,7 @@ public class FreeFlight : MonoBehaviour {
 
 	protected void takeoff(bool flapLaunch = false) {
 		if (!isFlying()) {
-			State = FlightState.Flight;
+			state = FlightState.Flight;
 			anim.SetBool(ffhash.flyingBool, true);
 			rigidbody.freezeRotation = true;
 			rigidbody.isKinematic = false;
@@ -351,7 +351,7 @@ public class FreeFlight : MonoBehaviour {
 
 	private void land() {
 		if (isFlying()) {
-			State = FlightState.Ground;
+			state = FlightState.Ground;
 			rigidbody.freezeRotation = true;
 			rigidbody.isKinematic = false;
 			anim.SetBool (ffhash.flaringBool, false);

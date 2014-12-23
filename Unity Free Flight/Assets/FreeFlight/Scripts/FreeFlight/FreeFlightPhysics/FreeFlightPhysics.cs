@@ -8,7 +8,7 @@ using System.Collections;
 /// 	only applies these forces based on the current state of the wing,
 /// 	but never changes the actual wing itself (so no flapping). 
 /// </summary>
-public class FlightPhysics : FlightObject {
+public class FreeFlightPhysics : FlightObject {
 
 	public bool liftEnabled = true;
 	public bool dragEnabled = true;
@@ -34,7 +34,7 @@ public class FlightPhysics : FlightObject {
 
 	protected Rigidbody rigidbody;
 
-	public FlightPhysics(Rigidbody rb) {
+	public FreeFlightPhysics(Rigidbody rb) {
 		rigidbody = rb;
 	}
 

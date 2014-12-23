@@ -16,7 +16,7 @@ public class FreeFlightEditor : Editor {
 
 	public override void OnInspectorGUI() {
 		FreeFlight ff = (FreeFlight) target;
-		FlightPhysics fp = ff.FlightPhysics;
+		FreeFlightPhysics fp = ff.flightPhysics;
 
 
 		if (_showFlightControls = EditorGUILayout.Foldout (_showFlightControls, "Flight Controls")) {
@@ -97,15 +97,15 @@ public class FreeFlightEditor : Editor {
 	
 	}
 
-	void editorPhysics(FreeFlight ff, FlightPhysics fp) {
-		ff.State = (FreeFlight.FlightState) EditorGUILayout.EnumPopup("Flight State", ff.State);
+	void editorPhysics(FreeFlight ff, FreeFlightPhysics fp) {
+		ff.state = (FreeFlight.FlightState) EditorGUILayout.EnumPopup("Flight State", ff.state);
 		ff.applyFlightPhysicsOnGround = EditorGUILayout.Toggle ("Flight Physics on Ground", ff.applyFlightPhysicsOnGround);
 		fp.liftEnabled = EditorGUILayout.Toggle ("Lift", fp.liftEnabled);
 		fp.dragEnabled = EditorGUILayout.Toggle ("Drag", fp.dragEnabled);
 		fp.gravityEnabled = EditorGUILayout.Toggle ("Gravity", fp.gravityEnabled);
 	}
 
-	void editorWingProperties(FlightPhysics fp) {
+	void editorWingProperties(FreeFlightPhysics fp) {
 		fp.Unit = (UnitConverter.Units) EditorGUILayout.EnumPopup (fp.Unit);
 		fp.Preset = (FlightObject.Presets)EditorGUILayout.EnumPopup (fp.Preset);
 		fp.WingSpan = EditorGUILayout.FloatField ("Wing Span (" + fp.getLengthType() + ")", fp.WingSpan);

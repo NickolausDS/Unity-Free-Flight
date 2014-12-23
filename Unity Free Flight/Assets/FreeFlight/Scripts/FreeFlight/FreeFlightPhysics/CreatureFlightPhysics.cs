@@ -12,7 +12,7 @@ using System.Collections;
 ///call methods from here through Fixed Update()
 /// </summary>
 /// 
-public class CreatureFlightPhysics : FlightPhysics {
+public class CreatureFlightPhysics : FreeFlightPhysics {
 
 	protected bool isFlapping = false;
 	public bool IsFlapping { get { return isFlapping; } }
