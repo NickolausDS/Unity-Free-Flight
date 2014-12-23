@@ -160,10 +160,10 @@ public class FreeFlight : MonoBehaviour {
 	public AudioClip walkingNoiseClip;
 	private AudioSource walkingNoiseSource;
 	//meters/second
-	public float maxGroundForwardSpeed = 4;
+	public float maxGroundForwardSpeed = 40;
 	//degrees/second
 	public float groundDrag = 5;
-	public float maxGroundTurningDegreesSecond = 20;
+	public float maxGroundTurningDegreesSecond = 40;
 	//meters
 	public bool enabledJumping = false;
 	public float jumpHeight = .5f;
@@ -198,6 +198,8 @@ public class FreeFlight : MonoBehaviour {
 		setupSound (jumpingNoiseClip, ref jumpingNoiseSource);
 		anim = GetComponentInChildren<Animator> ();
 		ffhash = new FreeFlightAnimationHashIDs ();
+		rigidbody.freezeRotation = true;
+		rigidbody.isKinematic = false;
 	}
 	
 	void Start() {
@@ -321,6 +323,8 @@ public class FreeFlight : MonoBehaviour {
 		if (!isFlying()) {
 			State = FlightState.Flight;
 			anim.SetBool(ffhash.flyingBool, true);
+			rigidbody.freezeRotation = true;
+			rigidbody.isKinematic = false;
 			playSound (takeoffSoundSource);
 			if(flapLaunch) 
 				flap ();
@@ -330,6 +334,8 @@ public class FreeFlight : MonoBehaviour {
 	private void land() {
 		if (isFlying()) {
 			State = FlightState.Ground;
+			rigidbody.freezeRotation = true;
+			rigidbody.isKinematic = false;
 			anim.SetBool (ffhash.flaringBool, false);
 			anim.SetBool(ffhash.flyingBool, false);
 			if (enabledCrashing && flightPhysics.Speed >= crashSpeed) {
