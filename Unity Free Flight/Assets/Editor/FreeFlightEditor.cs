@@ -3,14 +3,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 
-[CustomEditor(typeof(FreeFlight)), CanEditMultipleObjects]
+[CustomEditor(typeof(FreeFlight)), CanEditMultipleObjects][SerializeField]
 public class FreeFlightEditor : Editor {
 	
 	//vars for foldouts
-	private bool _showFlightControls = false;
+	[SerializeField]
+	public bool _showFlightControls = true;
+	[SerializeField]
 	private bool _showGroundControls = false;
+	[SerializeField]
 	private bool _showTakeoffLanding = false;
+	[SerializeField]
 	private bool _showPhysics = false;
+	[SerializeField]
 	private bool _showProperties = false;
 
 
@@ -117,5 +122,41 @@ public class FreeFlightEditor : Editor {
 		if (GUILayout.Button ("Align Dimensions From Area & AR") ) 	{fp.setWingDimensions ();}
 	}
 
+	void OnFocus() {
+		loadEditorPrefs ();
+	}
+
+	void OnLostFocus() {
+		saveEditorPrefs ();
+	}
+
+	void OnDestroy() {
+		saveEditorPrefs ();
+	}
+
+	void OnEnable () {
+		loadEditorPrefs ();
+	}
+
+	void OnDisable () {
+		saveEditorPrefs ();
+	}
+
+
+	void saveEditorPrefs() {
+		EditorPrefs.SetBool ("ShowFlightControls", _showFlightControls);
+		EditorPrefs.SetBool ("ShowGroundControls", _showGroundControls);
+		EditorPrefs.SetBool ("ShowTakeoffLanding", _showTakeoffLanding);
+		EditorPrefs.SetBool ("ShowPhysics", _showPhysics);
+		EditorPrefs.SetBool ("ShowProperties", _showProperties);
+	}
+
+	void loadEditorPrefs() {
+		_showFlightControls = EditorPrefs.GetBool ("ShowFlightControls", _showFlightControls);
+		_showGroundControls = EditorPrefs.GetBool ("ShowGroundControls", _showGroundControls);
+		_showTakeoffLanding = EditorPrefs.GetBool ("ShowTakeoffLanding", _showTakeoffLanding);
+		_showPhysics = EditorPrefs.GetBool ("ShowPhysics", _showPhysics);
+		_showProperties = EditorPrefs.GetBool ("ShowProperties", _showProperties);
+	}
 
 }
