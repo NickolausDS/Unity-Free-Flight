@@ -25,7 +25,7 @@ public class FlightCamera : MonoBehaviour {
 	private float flareLookTimer = 0.0f;
 
 
-	private BaseFlightController fc;
+	private FreeFlight ff;
 
 	// Use this for initialization
 	void Awake () {
@@ -37,8 +37,8 @@ public class FlightCamera : MonoBehaviour {
 		if (!target) {
 			target = gameObject;
 		}
-		fc = target.GetComponent<BaseFlightController> ();
-		if (!fc) {
+		ff = target.GetComponent<FreeFlight> ();
+		if (!ff) {
 			Debug.LogError (gameObject + ": Flight Camera: This script was designed to work with free flight objects, please set the 'target' to one.");
 			this.enabled = false;
 		}
@@ -51,8 +51,15 @@ public class FlightCamera : MonoBehaviour {
 		else
 			iTween.MoveUpdate (cam, target.transform.TransformPoint (firstPersonPosition), .1f);
 
-		if (fc.InputFlaring || flareLookTimer > 0f) {
-			flareLook ();
+		if (ff.InputFlaring || flareLookTimer > 0f) {
+			if (thirdPersonMode) {
+				Quaternion dir = Quaternion.AngleAxis (flareLookAngle, Vector3.right);
+				dir = target.transform.rotation * dir;
+				iTween.RotateUpdate (cam, dir.eulerAngles, rotationSpeed * 5.0f);
+			} else {
+				flareLook ();
+
+			}
 		} else {
 			iTween.RotateUpdate (cam, target.transform.rotation.eulerAngles, rotationSpeed);
 		}
@@ -69,7 +76,9 @@ public class FlightCamera : MonoBehaviour {
 	/// variables above. 
 	/// </summary>
 	void flareLook () {
-		if (fc.InputFlaring)
+
+		//Set or decrease the timer for doing a flare look
+		if (ff.InputFlaring)
 			flareLookTimer = flareLookDuration;
 		else
 			flareLookTimer -= Time.deltaTime;
