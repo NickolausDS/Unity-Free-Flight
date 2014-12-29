@@ -7,15 +7,10 @@ using UnityEditor;
 public class FreeFlightEditor : Editor {
 	
 	//vars for foldouts
-	[SerializeField]
-	public bool _showFlightControls = true;
-	[SerializeField]
+	private bool _showFlightControls = true;
 	private bool _showGroundControls = false;
-	[SerializeField]
 	private bool _showTakeoffLanding = false;
-	[SerializeField]
 	private bool _showPhysics = false;
-	[SerializeField]
 	private bool _showProperties = false;
 
 
@@ -63,8 +58,8 @@ public class FreeFlightEditor : Editor {
 		}
 		if (ff.enabledWindNoise = EditorGUILayout.Toggle ("Enabled Wind Noise", ff.enabledWindNoise)) {
 			ff.windNoiseClip = (AudioClip) EditorGUILayout.ObjectField ("Wind Sound", ff.windNoiseClip, typeof(AudioClip), false);
-			ff.windNoiseStartSpeed = (float) EditorGUILayout.FloatField ("Min Speed Start", ff.flareAngle);
-			ff.windNoiseMaxSpeed = (float) EditorGUILayout.FloatField ("Max Speed Stop", ff.flareAngle);
+			ff.windNoiseStartSpeed = (float) EditorGUILayout.FloatField ("Min Speed Start", ff.windNoiseStartSpeed);
+			ff.windNoiseMaxSpeed = (float) EditorGUILayout.FloatField ("Max Speed Stop", ff.windNoiseMaxSpeed);
 
 		}
 	}
