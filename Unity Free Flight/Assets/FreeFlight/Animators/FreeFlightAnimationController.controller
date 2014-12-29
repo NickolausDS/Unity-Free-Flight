@@ -301,10 +301,6 @@ Transition:
   m_TransitionOffset: 0
   m_Conditions:
   - m_ConditionMode: 2
-    m_ConditionEvent: Diving
-    m_EventTreshold: 0
-    m_ExitTime: .516129017
-  - m_ConditionMode: 2
     m_ConditionEvent: Flying
     m_EventTreshold: 0
     m_ExitTime: .516129017
