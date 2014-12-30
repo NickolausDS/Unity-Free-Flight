@@ -34,6 +34,11 @@ public class FreeFlightEditor : Editor {
 		if (_showProperties = EditorGUILayout.Foldout (_showProperties, "Wing Properties")) {
 			editorWingProperties(fp);
 		}
+
+		//save the free flight object if the user has made changes
+		if (GUI.changed) {
+			EditorUtility.SetDirty (ff);
+		}
 	}
 
 	void editorFlightControls(FreeFlight ff) {
