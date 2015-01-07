@@ -352,6 +352,8 @@ public class FreeFlight : MonoBehaviour {
 	private void land() {
 		if (isFlying()) {
 			state = FlightState.Ground;
+			_inputFlaring = false;
+			_inputFlap = false;
 			rigidbody.freezeRotation = true;
 			rigidbody.isKinematic = false;
 			anim.SetBool (ffhash.flaringBool, false);
