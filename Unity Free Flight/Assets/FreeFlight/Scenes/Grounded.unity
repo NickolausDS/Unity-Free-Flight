@@ -948,15 +948,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a47b42df2d2549c6a457f45aa178f23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cam: {fileID: 0}
-  target: {fileID: 0}
+  cam: {fileID: 493986378}
+  target: {fileID: 663241149}
   thirdPersonMode: 1
   firstPersonPosition: {x: 0, y: 0, z: .5}
-  thirdPersonPosition: {x: 0, y: .100000001, z: -3}
-  thirdPersonLag: 2
-  rotationSpeed: 1
-  flareLookDuration: 2
-  flareLookAngle: 50
+  thirdPersonPosition: {x: 0, y: .100000001, z: -2.5}
+  thirdPersonLag: 1.79999995
+  rotationLag: 1
+  flareCamHeight: 2
+  flareCamDist: -3
+  flareCamAngle: 0
+  flareDuration: 1
+  flareLag: .300000012
 --- !u!1 &519681974
 GameObject:
   m_ObjectHideFlags: 0
