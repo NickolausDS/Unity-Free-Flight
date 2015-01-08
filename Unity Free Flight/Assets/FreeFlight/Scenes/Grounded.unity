@@ -951,8 +951,8 @@ MonoBehaviour:
   cam: {fileID: 493986378}
   target: {fileID: 663241149}
   thirdPersonMode: 1
-  firstPersonPosition: {x: 0, y: 0, z: .5}
-  thirdPersonPosition: {x: 0, y: .100000001, z: -2.5}
+  firstPersonPosition: {x: 0, y: 0, z: 1.29999995}
+  thirdPersonPosition: {x: 0, y: .100000001, z: -3.5}
   thirdPersonLag: 1.79999995
   rotationLag: 1
   flareCamHeight: 2
@@ -3354,6 +3354,14 @@ Prefab:
     - target: {fileID: 400102, guid: 3d2525a78f2024bec962b3cf13a4b531, type: 2}
       propertyPath: m_RootOrder
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 3d2525a78f2024bec962b3cf13a4b531, type: 2}
+      propertyPath: enabledCrashing
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400000, guid: 3d2525a78f2024bec962b3cf13a4b531, type: 2}
+      propertyPath: enabledJumping
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 3d2525a78f2024bec962b3cf13a4b531, type: 2}
