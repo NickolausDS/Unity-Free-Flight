@@ -3,14 +3,6 @@ Unity-Free-Flight
 
 A Unity Package to provide bird-like flight to Unity Game Objects.
 
-####Warning 
-
-	This only applies if you cloned this project before Sept 11, 2014
-
-The project underwent a massive history maintenance for all commits and tags, to clean out all unnecessary files. The history hasn't functionally changed, but all commit hashes and tags are now different, which will make you unable to issue a pull-request if you still have the old history.
-
-To fix this, please force pull all tags and history, or re-clone the project. If this in any way bungled what you were working on, and you are unsure of how to proceed, send a message [here](http://windwardproductions.org/contact/) and I will personally help you out. 
-
 ###Description
 
 Have you ever wanted to fly from a [birds perspective](https://www.youtube.com/watch?v=G3QrhdfLCO8 "Youtube of GoPro mounted on an Eagle in flight")? To soar through a canyon, stalking your prey from above, waiting for the right time to fold wings, dive, and strike! Maybe you need a fast travel system for your RPG, and you want to give your players more than just a pre-scripted flight path, to explore your expansive world from above. 
@@ -32,10 +24,6 @@ You've played the demo? Now you have a grand idea for a cool new game? The [Gett
 See the CHANGELOG for details about the latest release. It will also tell you where we are in development. Free Flight is still a young project, many core features still haven't been added. Check back from time to time, we may have added something new! Better yet, send us feedback! 
 
 ###Upcoming Releases
-
-
-####Version 0.4.x "Animated" -- Version 0.4.x will add support for animations.
-
 
 ####Version 0.5.x "Tuned" -- Version 0.5.x will add more realistic physics and better transitions for launches and landings.
 
