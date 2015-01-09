@@ -19,14 +19,13 @@ BUILD_WEB="-buildWebPlayerStreamed $BUILD_PATH"
 PFF="Assets/FreeFlight"
 #Assets with a space in their file name need to be backslashed
 SA=Assets/FreeFlight/Standard\ Assets
-SACC=Assets/FreeFlight/Standard\ Assets/Character\ Controllers
 
-
+#Everything core to running Free Flight
 BASIC_ASSETS=("$PFF/Scripts/FreeFlight" "Assets/Editor/FreeFlightEditor.cs" "Assets/Plugins/Pixelplacement")
 
 DEMO_ASSETS=${BASIC_ASSETS[@]}
-DEMO_ASSETS+=("$PFF/Models" "$PFF/Materials" "$PFF/Prefabs" "$PFF/Scenes" "$PFF/Sounds/Flight")
-DEMO_ASSETS+=("$PFF/Sounds/sources.txt" )
+DEMO_ASSETS+=("$PFF/Models" "$PFF/Prefabs" "$PFF/Scenes" "$PFF/Sounds/Flight")
+DEMO_ASSETS+=("$PFF/Sounds/sources.txt" "$PFF/Scripts" "$PFF/Animations" "$PFF/Animators")
 
 
 touch $LOG_FILE
@@ -45,7 +44,7 @@ $PACKAGER "linux" &&
 $COMMAND $OPTIONS $BUILD_WEB &&
 $PACKAGER "web" &&
 
-$COMMAND $OPTIONS -exportPackage ${BASIC_ASSETS[@]} "$SACC" "${BUILD_PATH}.unitypackage" &&
+$COMMAND $OPTIONS -exportPackage ${BASIC_ASSETS[@]} "${BUILD_PATH}.unitypackage" &&
 $PACKAGER "unitypackage" &&
 
 $COMMAND $OPTIONS -exportPackage ${DEMO_ASSETS[@]} "$SA" "${BUILD_PATH}Demo.unitypackage" &&
