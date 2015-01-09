@@ -63,7 +63,11 @@ public class FlightCamera : MonoBehaviour {
 			flareLook ();
 		} else {
 			if (thirdPersonMode)
+				#if UNITY_STANDALONE_WIN
+				iTween.MoveUpdate (cam, target.transform.TransformPoint (thirdPersonPosition), .1f);
+				#else
 				iTween.MoveUpdate (cam, target.transform.TransformPoint (thirdPersonPosition), thirdPersonLag);
+				#endif
 			else
 				iTween.MoveUpdate (cam, target.transform.TransformPoint (firstPersonPosition), .1f);
 
