@@ -134,10 +134,13 @@ function package_windows() {
 function package_web() {
 	if has_dep ${WEB_DEP[@]} &> /dev/null
 	then
-		WEBNAME="${NAME}Web${VERSION}"
-		rm -rf "$PACKAGEDEST/$WEBNAME" 2> /dev/null
-		echo "Moving Web Files..." &&
-		mv -vf "$NAME" "$PACKAGEDEST/$WEBNAME" &&
+		WEBNAME="${NAME}${VERSION}.unity3d"
+		echo "Removing old web files..."
+		rm -rfv "$PACKAGEDEST/$WEBNAME" 2> /dev/null
+		echo "Moving new web files to destination..." &&
+		mv -vf "${NAME}/${NAME}.unity3d" "$PACKAGEDEST/$WEBNAME" &&
+		echo "Cleaning up after web build..." &&
+		rm -rfv "${WEB_DEP[@]}" &&
 		return 0
 		return -1
 	fi
@@ -175,7 +178,7 @@ function package_unitydemopackage() {
 
 function cleanup_all() {
 	printf "\nFinishing cleanup...\n"
-	rm -rf ${MAC_DEP[@]} ${LINUX_DEP[@]} ${WINDOWS_DEP[@]} ${WEB_DEP[@]} ${UNITYPACKAGE_DEP[@]} ${UNITYDEMOPACKAGE_DEP[@]}
+	rm -rfv ${MAC_DEP[@]} ${LINUX_DEP[@]} ${WINDOWS_DEP[@]} ${WEB_DEP[@]} ${UNITYPACKAGE_DEP[@]} ${UNITYDEMOPACKAGE_DEP[@]}
 
 }
 
