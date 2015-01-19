@@ -13,7 +13,9 @@
 //==================
 
 using UnityEngine;
+using UnityEngine.Internal;
 using System.Collections;
+using System;
 
 [RequireComponent (typeof(Rigidbody))]
 public class FreeFlight : MonoBehaviour {
@@ -58,8 +60,15 @@ public class FreeFlight : MonoBehaviour {
 			if (_anim == null)
 				_anim = GetComponentInChildren <Animator> ();
 			if (_anim == null) {
-				Debug.LogWarning ("Please attach a Flight Animator to the model for " + gameObject.name);
+				//Fail if there is no animator. We want to fail instead of 
+				//simply adding an Animator because we don't know where the 
+				//model is for this object, and that decision is best left to
+				//the user. 
 				this.enabled = false;
+				throw new AnimatorNotPresentException(string.Format (
+					"Please add an Animator component to the model for " + 
+					"{0}. The BasicFreeFlight Animation Controller will work" +
+					" even if your model doesn't have animations. ", gameObject.name));
 			}
 			return _anim;
 		} 
@@ -585,4 +594,20 @@ public class FreeFlight : MonoBehaviour {
 		
 	}
 
+}
+
+public class AnimatorNotPresentException : UnityException {
+	public AnimatorNotPresentException()
+	{
+	}
+	
+	public AnimatorNotPresentException(string message)
+		: base(message)
+	{
+	}
+	
+	public AnimatorNotPresentException(string message, Exception inner)
+		: base(message, inner)
+	{
+	}
 }
