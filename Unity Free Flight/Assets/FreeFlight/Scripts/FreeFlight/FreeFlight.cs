@@ -312,7 +312,12 @@ public class FreeFlight : MonoBehaviour {
 		} else {
 			anim.SetBool (ffhash.walkingBool, false);
 		}
-		rigidbody.rotation *= Quaternion.AngleAxis (maxGroundTurningDegreesSecond * _inputGroundTurning * Time.deltaTime, Vector3.up);
+
+		float turningSpeed = maxGroundTurningDegreesSecond * _inputGroundTurning * Time.deltaTime;
+		rigidbody.rotation *= Quaternion.AngleAxis (turningSpeed, Vector3.up);
+
+		anim.SetFloat (ffhash.speedFloat, rigidbody.velocity.magnitude);
+		anim.SetFloat (ffhash.angularSpeedFloat, turningSpeed);
 	}
 
 	//==================
@@ -469,7 +474,10 @@ public class FreeFlight : MonoBehaviour {
 		}
 		
 		flightPhysics.doStandardPhysics ();
-		
+
+		anim.SetFloat (ffhash.speedFloat, rigidbody.velocity.magnitude);
+		anim.SetFloat (ffhash.angularSpeedFloat, getBank ());
+
 	}
 	
 	/// <summary>
