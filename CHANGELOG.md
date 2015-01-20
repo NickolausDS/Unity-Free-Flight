@@ -1,5 +1,17 @@
 ##ChangeLog
 
+###Version 0.4.x -- Codename *Animated*
+
+Version 0.4.x will focus on adding animation to flight objects
+
+* Version 0.4.1
+	* Added main menu
+	* Added new Main Menu scene with a focus on the Unity webplayer
+* Version 0.4.0
+	* Animation support added! 
+	* New default rigidbody locomotion system for ground controllers
+	* Buggy Character Controller system removed entirely
+
 ###Version 0.3.x -- Codename *Noisy*
 
 Version 0.3.x will add sound support to flight objects
