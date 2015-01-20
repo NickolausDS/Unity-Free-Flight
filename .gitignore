@@ -8,7 +8,8 @@ release/031814
 *.mp3
 *.wav
 
-Unity\ Free\ Flight/Assets/FreeFlight/Standard\ Assets/
+Unity\ Free\ Flight/Assets/Crow/
+Unity\ Free\ Flight/Assets/FreeFlightDemo/Standard\ Assets/
 Unity\ Free\ Flight/Assets/Plugins/
 
 # =============== #
