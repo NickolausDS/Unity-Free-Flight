@@ -334,23 +334,28 @@ public class FreeFlight : MonoBehaviour {
 	//==================
 
 	/// <summary>
-	/// Sets _inputTakeoff to true if triggerSet stays true for X delay, set by 
-	/// launch timer. The triggerSet is usually a button held down, like the jump
-	/// button, but it can be anything. 
+	/// Calls takeoff() after "triggerSet" has been true for "launchTime". 
+	/// This method needs to be called in Update or FixedUpdate to work properly. 
 	/// </summary>
 	/// <param name="triggerSet">If set to <c>true</c> for duration of launchTimer, triggers takeoff.</param>
 	private void timedLaunch(bool triggerSet) {
 		if (triggerSet == true) {
-			if (launchTimer > launchTime)
+			if (launchTimer > launchTime) {
 				takeoff(true);
-			else
+				launchTimer = 0.0f;
+			} else {
 				launchTimer += Time.deltaTime;
+			}
 		} else {
 			launchTimer = 0.0f;
 		}
 	}
 
-
+	/// <summary>
+	/// Set the state to flying and enable flight physics. Optionally, flapLaunch
+	/// can be set to true to apply a "flap" to help get the object off the ground. 
+	/// </summary>
+	/// <param name="flapLaunch">If set to <c>true</c> flap launch.</param>
 	protected void takeoff(bool flapLaunch = false) {
 		if (!isFlying()) {
 			state = FlightState.Flight;
