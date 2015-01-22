@@ -87,6 +87,9 @@ public class FreeFlightEditor : Editor {
 		if (ff.enabledTakeoff = EditorGUILayout.Toggle ("Enabled Takeoff", ff.enabledTakeoff)) {
 			ff.takeoffSoundClip = (AudioClip) EditorGUILayout.ObjectField ("Takeoff Sound", ff.takeoffSoundClip, typeof(AudioClip), false);
 		}
+		if (ff.enabledLaunchIfAirborn = EditorGUILayout.Toggle ("Auto-Takeoff If Airborn", ff.enabledLaunchIfAirborn)) {
+			ff.minHeightToLaunchIfAirborn = EditorGUILayout.FloatField ("Min Height", ff.minHeightToLaunchIfAirborn);
+		}
 		if (ff.enabledLanding = EditorGUILayout.Toggle ("Enabled Landing", ff.enabledLanding)) {
 			ff.landingSoundClip = (AudioClip) EditorGUILayout.ObjectField ("Landing Sound", ff.landingSoundClip, typeof(AudioClip), false);
 			ff.standUpSpeed = (float) EditorGUILayout.FloatField ("Stand Up Speed", ff.standUpSpeed);

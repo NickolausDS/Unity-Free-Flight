@@ -108,6 +108,9 @@ public class FreeFlight : MonoBehaviour {
 	public AudioClip takeoffSoundClip;
 	private AudioSource takeoffSoundSource;
 
+	public bool enabledLaunchIfAirborn = true;
+	public float minHeightToLaunchIfAirborn = 2f;
+
 	public bool enabledLanding = true;
 	public AudioClip landingSoundClip;
 	private AudioSource landingSoundSource;
@@ -262,7 +265,7 @@ public class FreeFlight : MonoBehaviour {
 
 		if (enabledWindNoise)
 			applyWindNoise ();
-		
+
 	}
 	
 	//Default behaviour when we hit an object (usually the ground) is to switch to a ground controller. 
@@ -304,6 +307,8 @@ public class FreeFlight : MonoBehaviour {
 			timedLaunch (_inputTakeoff);
 
 
+		if (enabledLaunchIfAirborn)
+			launchIfAirborn (minHeightToLaunchIfAirborn);
 	}
 
 	private void jump() {
@@ -332,6 +337,17 @@ public class FreeFlight : MonoBehaviour {
 	//==================
 	//Functionality -- Takeoff/Landing
 	//==================
+
+
+	/// <summary>
+	/// Launchs if airborn.
+	/// </summary>
+	/// <param name="minHeight">Minimum height.</param>
+	private void launchIfAirborn(float minHeight) {
+		if (!Physics.Raycast (transform.position, Vector3.down, minHeight)) {
+			takeoff (false);
+		}
+	}
 
 	/// <summary>
 	/// Calls takeoff() after "triggerSet" has been true for "launchTime". 
