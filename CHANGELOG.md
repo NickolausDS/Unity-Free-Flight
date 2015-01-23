@@ -4,6 +4,9 @@
 
 Version 0.4.x will focus on adding animation to flight objects
 
+* Version 0.4.2
+	* Fixed bugs
+	* Added auto-launch feature when falling
 * Version 0.4.1
 	* Added main menu
 	* Added new Main Menu scene with a focus on the Unity webplayer
