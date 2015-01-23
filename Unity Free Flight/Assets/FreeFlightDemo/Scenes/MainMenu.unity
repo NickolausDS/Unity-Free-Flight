@@ -297,6 +297,10 @@ Prefab:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
       objectReference: {fileID: 0}
+    - target: {fileID: 11400004, guid: f2d2b3571487a41b1b5545d34ada7f6a, type: 2}
+      propertyPath: m_Texture
+      value: 
+      objectReference: {fileID: 2800000, guid: abd16c5f1fe3741e18a50917bb4a0786, type: 3}
     m_RemovedComponents:
     - {fileID: 11400026, guid: f2d2b3571487a41b1b5545d34ada7f6a, type: 2}
     - {fileID: 9500000, guid: f2d2b3571487a41b1b5545d34ada7f6a, type: 2}
@@ -618,7 +622,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Texture: {fileID: 2800000, guid: 4cf41d1b7ca6d40eea9e19f7683bde80, type: 3}
+  m_Texture: {fileID: 2800000, guid: abd16c5f1fe3741e18a50917bb4a0786, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
