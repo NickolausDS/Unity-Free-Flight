@@ -7,6 +7,7 @@
 /// </summary>
 using UnityEngine;
 using System.Collections;
+using UnityFreeFlight;
 
 [AddComponentMenu ("Scripts/Camera-Control/Flight Camera")]
 public class FlightCamera : MonoBehaviour {
@@ -59,7 +60,7 @@ public class FlightCamera : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (ff.InputFlaring || flareLookTimer > 0f) {
+		if (ff.modeManager.flightMode.flightInputs.inputFlaring || flareLookTimer > 0f) {
 			flareLook ();
 		} else {
 			if (thirdPersonMode)
@@ -86,7 +87,7 @@ public class FlightCamera : MonoBehaviour {
 	/// variables above. 
 	/// </summary>
 	void flareLook () {
-		if (!ff.isFlying()) {
+		if (!ff.modeManager.isFlying()) {
 			flareLookTimer = -1;
 			return;
 		}
@@ -98,7 +99,7 @@ public class FlightCamera : MonoBehaviour {
 		float desiredpitch = Mathf.Abs (flareCamAngle + currentPitch);
 
 		//Set or decrease the timer for doing a flare look
-		if (ff.InputFlaring)
+		if (ff.modeManager.flightMode.flightInputs.inputFlaring)
 			flareLookTimer = flareDuration;
 		else
 			flareLookTimer -= Time.deltaTime;
