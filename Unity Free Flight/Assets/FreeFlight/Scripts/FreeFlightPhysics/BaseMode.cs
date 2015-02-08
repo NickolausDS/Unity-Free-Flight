@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityFreeFlight;
@@ -23,12 +24,17 @@ namespace UnityFreeFlight {
 		protected Animator animator;
 		protected Rigidbody rigidbody;
 
-		public BaseMode (GameObject go) {
+		/// <summary>
+		/// Since Unity's serialized scripts can't use complex constructors, we need to do
+		/// initialization here instead. Init() sould be called after both the default constructor
+		/// is called and deserialization takes place. It should be called *before* any methods
+		/// are used, because most methods will depend on cached references set by init().
+		/// </summary>
+		/// <param name="go">Go.</param>
+		public virtual void init (GameObject go) {
 			gameObject = go;
 			rigidbody = gameObject.GetComponent<Rigidbody> ();
 			animator = gameObject.GetComponentInChildren<Animator> ();
-
-
 		}
 		/// <summary>
 		/// Needs access to physics

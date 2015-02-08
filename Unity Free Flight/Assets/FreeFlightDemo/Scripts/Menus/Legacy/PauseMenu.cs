@@ -5,7 +5,7 @@ public class PauseMenu : MonoBehaviour {
 
 	public bool isPaused = false;
 	public GameObject playerObject;
-	private FreeFlight ff;
+//	private FreeFlight ff;
 
 	private enum Menus { None, Main, Levels, Options }
 	private Menus currentMenu;
@@ -15,13 +15,13 @@ public class PauseMenu : MonoBehaviour {
 	void Start () {
 		if (!playerObject)
 			playerObject = GameObject.FindGameObjectWithTag("Player");
-		if (playerObject != null) {
-			ff = playerObject.GetComponentInChildren<FreeFlight>();
-		} else {
-			string msg = "The player object is not set for the in-game menu. " +
-				"Please set the 'player object' in the 'pause menu' to whatever object is controlled by the player.";
-			throw new UnityException (msg);
-		}
+//		if (playerObject != null) {
+//			ff = playerObject.GetComponentInChildren<FreeFlight>();
+//		} else {
+//			string msg = "The player object is not set for the in-game menu. " +
+//				"Please set the 'player object' in the 'pause menu' to whatever object is controlled by the player.";
+//			throw new UnityException (msg);
+//		}
 	}
 	
 	// Update is called once per frame
@@ -95,23 +95,7 @@ public class PauseMenu : MonoBehaviour {
 			if (GUI.Button (new Rect (150, 240, 200, 50), "Done")) {
 				currentMenu = Menus.Main;
 			}
-			ff.Inverted = GUI.Toggle (new Rect (25, 20, 200, 20), ff.Inverted, "Inverted Controls");
-			StatsView sv = gameObject.GetComponent<StatsView>();
-			if (sv) {
-				sv.enabled = GUI.Toggle (new Rect (25, 40, 200, 20), sv.enabled, "Show Physics Statistics");
-				sv.showAbbreviations = GUI.Toggle(new Rect (25, 60, 200, 20), sv.showAbbreviations, "Show Unit Abbreviations");
-				if (ff.flightPhysics != null) {
-					//Admittedly, this is a bit hacky. We convert the Unit enum to an integer, 
-					//asign the selection to a string array that *matches* the enums by index, 
-					//then convert the integer back to a Unit enum. Hacky, but works. Maybe it
-					//would be better to add string-settable unit types to the unit converter.
-					int unitSelection = (int) ff.flightPhysics.Unit;
-					string[] choices = new string[] {"Metric", "Imperial"};
-					unitSelection = GUI.SelectionGrid(new Rect(25, 80, 150, 30), unitSelection, choices, 2);
-					ff.flightPhysics.Unit = (UnitConverter.Units) unitSelection;
-
-				}
-			}
+//			ff.Inverted = GUI.Toggle (new Rect (25, 20, 200, 20), ff.Inverted, "Inverted Controls");
 			GUI.EndGroup();
 
 		}

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 using UnityFreeFlight;
 
@@ -7,15 +8,18 @@ namespace UnityFreeFlight {
 	/// <summary>
 	/// Apply ground movements when enabled by the mode manager. 
 	/// </summary>
+	[Serializable]
 	public class GroundMode : BaseMode {
 
 		public GroundInputs inputs;
 		public FreeFlightAnimationHashIDs hashIDs; 
-		
-		
-		public GroundMode (GameObject go) : base(go) {
+
+		public override void init (GameObject go)
+		{
+			base.init (go);
 			inputs = new GroundInputs ();
 			hashIDs = new FreeFlightAnimationHashIDs ();
+
 		}
 
 
@@ -68,7 +72,7 @@ namespace UnityFreeFlight {
 
 		protected override void applyPhysics ()
 		{
-			throw new System.NotImplementedException ("No special physics available for ground.");
+			throw new System.NotImplementedException ("Physics: No special physics available for ground.");
 		}
 
 		public override void startMode () {}

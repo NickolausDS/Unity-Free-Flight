@@ -9,17 +9,21 @@ using UnityFreeFlight;
 /// Free Flight -- a Unity Component that adds flight to any unity object. 
 /// </summary>
 [RequireComponent (typeof(Rigidbody))]
-[RequireComponent (typeof(Animator))]
 public class FreeFlight : MonoBehaviour {
 
-	ModeManager _modeManager; 
+	[SerializeField]
+	private ModeManager _modeManager; 
 	public ModeManager modeManager {
 		get { 
 			if (_modeManager == null)
-				_modeManager = new ModeManager(gameObject);
+				_modeManager = new ModeManager();
 			return _modeManager; 
 		}
 		set { _modeManager = value;}
+	}
+
+	public void OnEnable () {
+		modeManager.init (gameObject);
 	}
  
 	//=============

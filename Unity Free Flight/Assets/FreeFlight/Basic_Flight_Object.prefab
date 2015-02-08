@@ -126,45 +126,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 100002}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b89ea8d74632d426b92b28a508d1beb8, type: 3}
+  m_Script: {fileID: 11500000, guid: fefe4066b30e94b11ba261565d83c27a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  applyFlightPhysicsOnGround: 0
-  enabledGliding: 1
-  maxTurnBank: 45
-  maxPitch: 20
-  directionalSensitivity: 2
-  enabledFlapping: 1
-  flapSoundClip: {fileID: 0}
-  flapStrength: 150
-  enabledFlaring: 0
-  flareSoundClip: {fileID: 0}
-  flareAngle: 70
-  flareSpeed: 3
-  enabledDiving: 0
-  divingSoundClip: {fileID: 0}
-  enabledTakeoff: 1
-  takeoffSoundClip: {fileID: 0}
-  enabledLanding: 1
-  landingSoundClip: {fileID: 0}
-  maxStandUpTime: 2
-  standUpSpeed: 2
-  enabledCrashing: 0
-  crashSpeed: 40
-  crashSoundClip: {fileID: 0}
-  enabledWindNoise: 1
-  windNoiseClip: {fileID: 0}
-  windNoiseStartSpeed: 20
-  windNoiseMaxSpeed: 200
-  launchTime: .200000003
-  enabledGround: 1
-  walkingNoiseClip: {fileID: 0}
-  maxGroundForwardSpeed: 40
-  groundDrag: 5
-  maxGroundTurningDegreesSecond: 40
-  enabledJumping: 0
-  jumpHeight: .5
-  jumpingNoiseClip: {fileID: 0}
 --- !u!136 &13600000
 CapsuleCollider:
   m_ObjectHideFlags: 1

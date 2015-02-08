@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 using UnityFreeFlight;
 
@@ -13,39 +14,54 @@ namespace UnityFreeFlight {
 	/// input groups, and which set of code is applied to each set of inputs. 
 	/// on those inputs. 
 	/// </summary>
+	[Serializable]
 	public class ModeManager {
 
-		public BaseMode[] managers; 
+		private BaseMode[] _managers; 
+		public BaseMode[] managers {
+			get { 
+				//Setup dynamic managers This needs to match the enum "movement Modes"
+				if (_managers == null) {
+					_managers = new BaseMode[3]; 
+					_managers [0] = null;
+					_managers [1] = groundMode;
+					_managers [2] = flightMode;
+				}
+				return _managers;
+			}
+			set {_managers = value;}
+		}
 		public FlightMode flightMode;
 		public GroundMode groundMode;
 
-		public ModeManager (GameObject go) {
-			_activeMode = MovementModes.Flight;
-			flightMode = new FlightMode (go);
-			groundMode = new GroundMode (go);
-
-			//Setup dynamic managers This needs to match the enum "movement Modes"
-			managers = new BaseMode[3]; 
-			managers [0] = null;
-			managers [1] = groundMode;
-			managers [2] = flightMode;
-		}
-
-		private MovementModes _activeMode;
+		[SerializeField]
+		private MovementModes _activeMode = MovementModes.Ground;
 		public MovementModes activeMode {
 			get { return _activeMode; }
 			set { 
 				if (_activeMode != value) {
-					currentMode.finishMode ();
+					if (_activeMode != MovementModes.None)
+						currentMode.finishMode ();
 					_activeMode = value;
-					currentMode.startMode ();
+					if (_activeMode != MovementModes.None)
+						currentMode.startMode ();
 				}
 			}
 		}
 
+		public void init (GameObject go) {
+			if (flightMode == null)
+				flightMode = new FlightMode ();
+			flightMode.init (go);
+			if (groundMode == null)
+				groundMode = new GroundMode ();
+			groundMode.init (go);
+
+		}
+
 		public BaseMode currentMode {
 			get { return managers[ (int) activeMode ]; }
-			}
+		}
 
 		public void getInputs() {
 			if (activeMode != MovementModes.None)

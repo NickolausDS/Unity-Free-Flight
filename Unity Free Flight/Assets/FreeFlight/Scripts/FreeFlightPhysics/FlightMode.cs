@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 
 namespace UnityFreeFlight {
@@ -6,13 +7,24 @@ namespace UnityFreeFlight {
 	/// <summary>
 	/// Apply flight mechanics on a game object when enabled by the Mode Manager
 	/// </summary>
+	[Serializable]
 	public class FlightMode : BaseMode {
 	
-		public FlightInputs flightInputs;
+		public FlightInputs _flightInputs;
+		public FlightInputs flightInputs { 
+			get {
+				if (_flightInputs == null)
+					_flightInputs = new UnityFreeFlight.FlightInputs ();
+				return _flightInputs;
+			}
+			set { _flightInputs = value;}
+		}
+
 		public FreeFlightAnimationHashIDs hashIDs; 
 
 
-		public FlightMode (GameObject go) : base(go) {
+		public override void init (GameObject go) {
+			base.init (go);
 			flightInputs = new FlightInputs ();
 			hashIDs = new FreeFlightAnimationHashIDs ();
 		}

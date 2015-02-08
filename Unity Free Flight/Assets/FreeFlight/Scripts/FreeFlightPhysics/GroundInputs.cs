@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 using UnityFreeFlight;
 
@@ -8,6 +9,7 @@ namespace UnityFreeFlight {
 	/// <summary>
 	/// Ground Mode inputs
 	/// </summary>
+	[Serializable]
 	public class GroundInputs : Inputs {
 	
 		[Range(-1.0f, 1.0f)]
