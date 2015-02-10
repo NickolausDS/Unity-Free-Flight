@@ -33,6 +33,9 @@ namespace UnityFreeFlight {
 		}
 		public FlightMode flightMode;
 		public GroundMode groundMode;
+		[SerializeField]
+		public SoundManager soundManager;
+
 
 		[SerializeField]
 		private MovementModes _activeMode = MovementModes.Ground;
@@ -50,13 +53,17 @@ namespace UnityFreeFlight {
 		}
 
 		public void init (GameObject go) {
+			if (soundManager == null)
+				soundManager = new SoundManager();
+			soundManager.init (go);
+
 			if (flightMode == null)
 				flightMode = new FlightMode ();
-			flightMode.init (go);
+			flightMode.init (go, soundManager);
+
 			if (groundMode == null)
 				groundMode = new GroundMode ();
-			groundMode.init (go);
-
+			groundMode.init (go, soundManager);
 		}
 
 		public BaseMode currentMode {

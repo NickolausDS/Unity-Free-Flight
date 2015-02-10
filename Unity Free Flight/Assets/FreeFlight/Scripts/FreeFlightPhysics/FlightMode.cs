@@ -23,11 +23,12 @@ namespace UnityFreeFlight {
 		public FreeFlightAnimationHashIDs hashIDs; 
 
 
-		public override void init (GameObject go) {
-			base.init (go);
+		public override void init (GameObject go, SoundManager sm) {
+			base.init (go, sm);
 			flightInputs = new FlightInputs ();
 			hashIDs = new FreeFlightAnimationHashIDs ();
 		}
+
 
 
 		private CreatureFlightPhysics _flightPhysics;
@@ -46,10 +47,17 @@ namespace UnityFreeFlight {
 		public float maxTurnBank = 45.0f;
 		public float maxPitch = 20.0f;
 		public float directionalSensitivity = 2.0f;
-		
+
+		public bool enabledWindNoise = true;
+		public AudioClip windNoiseClip;
+		//private AudioSource windNoiseSource;
+		public float windNoiseStartSpeed = 20.0f;
+		public float windNoiseMaxSpeed = 200.0f;
+
+
 		public bool enabledFlapping = true;
 		public AudioClip flapSoundClip;
-		private AudioSource flapSoundSource;
+		//private AudioSource flapSoundSource;
 	//	public float regularFlaptime = 0.5f;
 	//	public float minimumFlapTime = 0.2f;
 		public float flapStrength = 60.0f;
@@ -57,18 +65,18 @@ namespace UnityFreeFlight {
 		
 		public bool enabledFlaring = false;
 		public AudioClip flareSoundClip;
-		private AudioSource flareSoundSource;
+		//private AudioSource flareSoundSource;
 		//The default pitch (x) we rotate to when we do a flare
 		public float flareAngle = 70.0f;
 		public float flareSpeed = 3.0f;
 		
 		public bool enabledDiving = false;
 		public AudioClip divingSoundClip;
-		private AudioSource divingSoundSource;
+		//private AudioSource divingSoundSource;
 	
 		public bool enabledLanding = true;
 		public AudioClip landingSoundClip;
-		private AudioSource landingSoundSource;
+		//private AudioSource landingSoundSource;
 		//Max time "standUp" will take to execute.
 		public float maxStandUpTime = 2.0f;
 		//Speed which "standUp" will correct rotation. 
@@ -77,15 +85,12 @@ namespace UnityFreeFlight {
 		public bool enabledCrashing = false;
 		public float crashSpeed = 40f;
 		public AudioClip crashSoundClip;
-		private AudioSource crashSoundSource;
-	
-		public bool enabledWindNoise = true;
-		public AudioClip windNoiseClip;
-		private AudioSource windNoiseSource;
-		public float windNoiseStartSpeed = 20.0f;
-		public float windNoiseMaxSpeed = 200.0f;
+		//private AudioSource crashSoundSource;
 
 		public override void startMode () {
+			soundManager.setupSound (flapSoundClip);
+			soundManager.setupSound (windNoiseClip);
+
 			animator.SetBool(hashIDs.flyingBool, true);
 			rigidbody.freezeRotation = true;
 			rigidbody.isKinematic = false;
@@ -157,6 +162,8 @@ namespace UnityFreeFlight {
 			animator.SetFloat (hashIDs.speedFloat, rigidbody.velocity.magnitude);
 			animator.SetFloat (hashIDs.angularSpeedFloat, getBank ());
 	
+			applyWindNoise ();
+
 		}
 
 		protected override void applyPhysics ()
@@ -187,7 +194,7 @@ namespace UnityFreeFlight {
 			}
 			AnimatorStateInfo curstate = animator.GetCurrentAnimatorStateInfo (0);
 			if (curstate.nameHash != hashIDs.flappingState) {
-				//playSound (flapSoundSource);
+				soundManager.playSound (flapSoundClip);
 				rigidbody.AddForce (rigidbody.rotation * Vector3.up * flapStrength);
 				animator.SetTrigger (hashIDs.flappingTrigger);
 			}
@@ -237,6 +244,31 @@ namespace UnityFreeFlight {
 			yield return null;
 		}
 
+		protected void applyWindNoise() {
+			
+			if (!windNoiseClip)
+				return;
+
+			AudioSource windNoiseSource = soundManager.getSource (windNoiseClip);
+			if (!windNoiseSource) {
+				Debug.LogError ("Wind source noise has clip but not source!");
+				return;
+			}
+
+			if (flightPhysics.Speed > windNoiseStartSpeed) {
+				float volume = Mathf.Clamp (flightPhysics.Speed / (windNoiseStartSpeed + windNoiseMaxSpeed), 0.0f, 1.0f);
+				windNoiseSource.volume = volume;
+				//We want pitch to pick up at about half the volume
+				windNoiseSource.pitch = Mathf.Clamp (0.9f + flightPhysics.Speed / 2.0f / (windNoiseStartSpeed + windNoiseMaxSpeed), 0.9f, 1.5f);
+				//Use this to see how values are applied at various speeds.
+				//Debug.Log (string.Format ("Vol {0}, pitch {1}", audio.volume, audio.pitch));
+				if (! windNoiseSource.isPlaying) 
+					windNoiseSource.Play ();
+			} else {
+				windNoiseSource.Stop ();
+			}
+			
+		}
 
 	}
 }

@@ -16,6 +16,7 @@ namespace UnityFreeFlight {
 	/// standing, walking, running, jumping for the second group, and turning, accelerating, 
 	/// and braking for the third group. 
 	/// </summary>
+	[Serializable]
 	public abstract class BaseMode {
 
 		public bool alwaysApplyPhysics;
@@ -23,6 +24,8 @@ namespace UnityFreeFlight {
 		protected GameObject gameObject;
 		protected Animator animator;
 		protected Rigidbody rigidbody;
+		[SerializeField]
+		protected SoundManager soundManager;
 
 		/// <summary>
 		/// Since Unity's serialized scripts can't use complex constructors, we need to do
@@ -31,11 +34,13 @@ namespace UnityFreeFlight {
 		/// are used, because most methods will depend on cached references set by init().
 		/// </summary>
 		/// <param name="go">Go.</param>
-		public virtual void init (GameObject go) {
+		public virtual void init (GameObject go, SoundManager sm) {
 			gameObject = go;
+			soundManager = sm;
 			rigidbody = gameObject.GetComponent<Rigidbody> ();
 			animator = gameObject.GetComponentInChildren<Animator> ();
 		}
+
 		/// <summary>
 		/// Needs access to physics
 		/// Will have a list of Mechanics classes, like flapping

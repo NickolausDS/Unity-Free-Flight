@@ -21,28 +21,14 @@ public class FreeFlight : MonoBehaviour {
 		}
 		set { _modeManager = value;}
 	}
-
-	public void OnEnable () {
-		modeManager.init (gameObject);
-	}
  
 	//=============
 	//Unity Events
 	//=============
-	
-//	void Awake() {
-//		setupSound (windNoiseClip, ref windNoiseSource);
-//		setupSound (flapSoundClip, ref flapSoundSource);
-//		setupSound (flareSoundClip, ref flareSoundSource);
-//		setupSound (divingSoundClip, ref divingSoundSource);
-//		setupSound (takeoffSoundClip, ref takeoffSoundSource);
-//		setupSound (landingSoundClip, ref landingSoundSource);
-//		setupSound (crashSoundClip, ref crashSoundSource);
-//		setupSound (walkingNoiseClip, ref walkingNoiseSource);
-//		setupSound (jumpingNoiseClip, ref jumpingNoiseSource);
-//		rigidbody.freezeRotation = true;
-//		rigidbody.isKinematic = false;
-//	}
+
+	public void OnEnable () {
+		modeManager.init (gameObject);
+	}
 
 	void SwitchModes(MovementModes newmode) {
 		modeManager.switchModes (newmode);
@@ -69,64 +55,5 @@ public class FreeFlight : MonoBehaviour {
 		modeManager.switchModes (MovementModes.Ground);
 	}
 
-
-	//==================
-	//Functionality -- Audio
-	//==================
-
-//	protected void applyWindNoise() {
-//		
-//		if (!windNoiseSource)
-//			return;
-//		
-//		if (flightPhysics.Speed > windNoiseStartSpeed) {
-//			
-//			float volume = Mathf.Clamp (flightPhysics.Speed / (windNoiseStartSpeed + windNoiseMaxSpeed), 0.0f, 1.0f);
-//			windNoiseSource.volume = volume;
-//			//We want pitch to pick up at about half the volume
-//			windNoiseSource.pitch = Mathf.Clamp (0.9f + flightPhysics.Speed / 2.0f / (windNoiseStartSpeed + windNoiseMaxSpeed), 0.9f, 1.5f);
-//			//Use this to see how values are applied at various speeds.
-//			//Debug.Log (string.Format ("Vol {0}, pitch {1}", audio.volume, audio.pitch));
-//			if (! windNoiseSource.isPlaying) 
-//				windNoiseSource.Play ();
-//		} else {
-//			windNoiseSource.Stop ();
-//		}
-//		
-//	}
-	
-	/// <summary>
-	/// Sets up the audio component for the sound source. Does nothing if the source
-	/// already exists and has a clip. 
-	/// </summary>
-	/// <returns>A reference to the new audio source </returns>
-	/// <param name="source">Source.</param>
-	/// <param name="sound">Sound.</param>
-//	protected AudioSource setupSound(AudioClip sound, ref AudioSource source) {
-//		
-//		if (!sound && source)
-//			Destroy (source);
-//		
-//		if (!sound && !source)
-//			return null;
-//		
-//		if (sound && !source) {
-//			source = gameObject.AddComponent<AudioSource> ();
-//			source.loop = false;
-//		}
-//		
-//		if (!source.clip) {
-//			source.clip = sound;
-//		}
-//		
-//		return source;
-//	}
-//	
-//	protected void playSound(AudioSource source) {
-//		if (source) {
-//			source.Play ();
-//		}
-//		
-//	}
 
 }
