@@ -7,6 +7,7 @@ release/031814
 !version.txt
 *.mp3
 *.wav
+*.png
 
 Unity\ Free\ Flight/Assets/Crow/
 Unity\ Free\ Flight/Assets/FreeFlightDemo/Standard\ Assets/
