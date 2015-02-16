@@ -66,6 +66,11 @@ namespace UnityFreeFlight {
 			groundMode.init (go, soundManager);
 		}
 
+		public void start () {
+			if (activeMode != MovementModes.None)
+				currentMode.startMode ();
+		}
+
 		public BaseMode currentMode {
 			get { return managers[ (int) activeMode ]; }
 		}

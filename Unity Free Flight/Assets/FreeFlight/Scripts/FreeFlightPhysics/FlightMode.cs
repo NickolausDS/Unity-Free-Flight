@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections;
+using System.Collections.Generic;
+
+using UnityFreeFlight;
 
 namespace UnityFreeFlight {
 
@@ -18,15 +21,30 @@ namespace UnityFreeFlight {
 				return _flightInputs;
 			}
 			set { _flightInputs = value;}
-		}
+		} 
 
-		public FreeFlightAnimationHashIDs hashIDs; 
+		public List<Mechanic> mechanics;
+		public Mechanic defaultMechanic;
+		private Mechanic currentMechanic = null;
+		//A mechanic defined explicity for testing purposes
 
 
 		public override void init (GameObject go, SoundManager sm) {
 			base.init (go, sm);
 			flightInputs = new FlightInputs ();
-			hashIDs = new FreeFlightAnimationHashIDs ();
+			mechanics = new List<Mechanic> ();
+			mechanics.Add (new Flapping ());
+			mechanics.Add (new Flaring ());
+			mechanics.Add (new Diving ());
+			foreach (Mechanic mech in mechanics) {
+				mech.init (go, sm, flightPhysics, flightInputs);
+				mech.FFStart ();
+			}
+			defaultMechanic = new Gliding();
+			defaultMechanic.init (go, sm, flightPhysics, flightInputs);
+			defaultMechanic.FFStart ();
+
+			currentMechanic = null;
 		}
 
 
@@ -41,74 +59,51 @@ namespace UnityFreeFlight {
 			}
 			set { _flightPhysics = value;}
 		}
-
-		public bool enabledGliding = true;
-		//Basic gliding input, values in degrees
-		public float maxTurnBank = 45.0f;
-		public float maxPitch = 20.0f;
-		public float directionalSensitivity = 2.0f;
-
-		public bool enabledWindNoise = true;
-		public AudioClip windNoiseClip;
-		//private AudioSource windNoiseSource;
-		public float windNoiseStartSpeed = 20.0f;
-		public float windNoiseMaxSpeed = 200.0f;
-
-
-		public bool enabledFlapping = true;
-		public AudioClip flapSoundClip;
-		//private AudioSource flapSoundSource;
-	//	public float regularFlaptime = 0.5f;
-	//	public float minimumFlapTime = 0.2f;
-		public float flapStrength = 60.0f;
-	//	public float downbeatStrength = 150.0f;
-		
-		public bool enabledFlaring = false;
-		public AudioClip flareSoundClip;
-		//private AudioSource flareSoundSource;
-		//The default pitch (x) we rotate to when we do a flare
-		public float flareAngle = 70.0f;
-		public float flareSpeed = 3.0f;
-		
-		public bool enabledDiving = false;
-		public AudioClip divingSoundClip;
-		//private AudioSource divingSoundSource;
-	
-		public bool enabledLanding = true;
-		public AudioClip landingSoundClip;
-		//private AudioSource landingSoundSource;
-		//Max time "standUp" will take to execute.
-		public float maxStandUpTime = 2.0f;
-		//Speed which "standUp" will correct rotation. 
-		public float standUpSpeed = 2.0f;
-	
-		public bool enabledCrashing = false;
-		public float crashSpeed = 40f;
-		public AudioClip crashSoundClip;
-		//private AudioSource crashSoundSource;
+//	
+//		public bool enabledLanding = true;
+//		public AudioClip landingSoundClip;
+//		//private AudioSource landingSoundSource;
+//		//Max time "standUp" will take to execute.
+//		public float maxStandUpTime = 2.0f;
+//		//Speed which "standUp" will correct rotation. 
+//		public float standUpSpeed = 2.0f;
+//	
+//		public bool enabledCrashing = false;
+//		public float crashSpeed = 40f;
+//		public AudioClip crashSoundClip;
+//		//private AudioSource crashSoundSource;
 
 		public override void startMode () {
-			soundManager.setupSound (flapSoundClip);
-			soundManager.setupSound (windNoiseClip);
+//			soundManager.setupSound (flapSoundClip);
+//			soundManager.setupSound (windNoiseClip);
 
-			animator.SetBool(hashIDs.flyingBool, true);
+			//HACK -- currently, drag is being fully calculated in flightPhysics.cs, so we don't want the
+			//rigidbody adding any more drag. This should change, it's confusing to users when they look at
+			//the rigidbody drag. 
+			rigidbody.drag = 0.0f;
+
 			rigidbody.freezeRotation = true;
 			rigidbody.isKinematic = false;
-		}
 
+			defaultMechanic.FFBegin ();
+			currentMechanic = null;
+
+		}
+//
 		public override void finishMode () {
 			flightInputs.resetInputs ();
-			rigidbody.freezeRotation = true;
-			animator.SetBool (hashIDs.flaringBool, false);
-			animator.SetBool(hashIDs.flyingBool, false);
-			if (enabledCrashing && flightPhysics.Speed >= crashSpeed) {
-				animator.SetTrigger(hashIDs.dyingTrigger);
-				//playSound (crashSoundSource);
-			} else {
-				//playSound (landingSoundSource);
-				FreeFlight ff = gameObject.GetComponent<FreeFlight>();
-				ff.StartCoroutine (standUp ());
-			}		}
+			if (currentMechanic != null)
+				currentMechanic.FFFinish ();
+			defaultMechanic.FFFinish ();
+//			if (enabledCrashing && flightPhysics.Speed >= crashSpeed) {
+//				animator.SetTrigger(hashIDs.dyingTrigger);
+//				//playSound (crashSoundSource);
+//			} else {
+//				//playSound (landingSoundSource);
+//				FreeFlight ff = gameObject.GetComponent<FreeFlight>();
+//				ff.StartCoroutine (standUp ());
+//			}		
+		}
 
 
 
@@ -117,158 +112,150 @@ namespace UnityFreeFlight {
 		}
 
 		public override void applyInputs () {
+
+			applyMechanicPrecedence ();
+
+			applyMechanic ();
+
+			applyPhysics ();
+		}
+
+		/// <summary>
+		/// Decide which mechanic should run. This solves players pressing multiple buttons at the
+		/// same time.
+		/// </summary>
+		private void applyMechanicPrecedence() {
+			foreach (Mechanic mech in mechanics) {
+				if (mech.FFInputSatisfied () && isHigherPrecedence(mech)) {
+					//If the current mechanic isn't done yet
+					if (currentMechanic != null && !currentMechanic.FFFinish ())
+						break;
+					currentMechanic = mech;
+					currentMechanic.FFBegin ();
+					break;
+				}
+			}		
+		}
+
+		/// <summary>
+		/// Apply the current mechanic behavior. 
+		/// </summary>
+		private void applyMechanic() {
+			//Apply the current mechanic. 
+			if (currentMechanic != null && currentMechanic != defaultMechanic) {
+				
+				currentMechanic.FFFixedUpdate ();
+				
+				if (!currentMechanic.FFInputSatisfied ()) {
+					if (currentMechanic.FFFinish()) {
+						currentMechanic = null;
+					}
+				}
+			} else {
+				defaultMechanic.FFFixedUpdate ();
+			}
+		}
+
+		private bool isHigherPrecedence(Mechanic mech) {
+			if (currentMechanic == null)
+				return true;
+
+			int currentMechIndex = -1;
+			int otherMechIndex = -1;
+			for (int i = 0; i < mechanics.Count; i++) {
+				if (currentMechanic == mechanics[i])
+					currentMechIndex = i;
+				if (mech == mechanics[i])
+					otherMechIndex = i;
+			}
+			return (otherMechIndex < currentMechIndex ? true : false);
+		}
+
+
+//		public override void applyInputs () {
 			//HACK -- currently, drag is being fully calculated in flightPhysics.cs, so we don't want the
 			//rigidbody adding any more drag. This should change, it's confusing to users when they look at
 			//the rigidbody drag. 
-			rigidbody.drag = 0.0f;
+//			rigidbody.drag = 0.0f;
 			//precedence is as follows: flaring, diving, regular gliding flight. This applies if the
 			//player provides multiple inputs. Some mechanics can be performed at the same time, such 
 			//as flapping while flaring, or turning while diving. 
 			
 			
-			//Flaring takes precedence over everything
-			if (enabledFlaring && flightInputs.inputFlaring) {
-				flare ();
-				if(flightInputs.inputFlap)
-					flap ();
-			} 
-			
-			//Diving takes precedence under flaring
-			if(enabledDiving && flightInputs.inputDiving && !flightInputs.inputFlaring) {
-				dive ();
-			} else if (!flightInputs.inputDiving && !flightPhysics.wingsOpen()) {
-				//Simulates coming out of a dive
-				dive ();
-			}
-			
-			//Regular flight takes last precedence. Do regular flight if not flaring or diving.
-			if ( !((enabledDiving && flightInputs.inputDiving) || (enabledFlaring && flightInputs.inputFlaring)) ) {
-				flightPhysics.directionalInput(getBank (), getPitch (false), directionalSensitivity);
-				//Allow flapping during normal flight
-				if (flightInputs.inputFlap)
-					flap ();
-			}
+//			//Flaring takes precedence over everything
+//			if (enabledFlaring && flightInputs.inputFlaring) {
+//				flare ();
+//				if(flightInputs.inputFlap)
+//					flap ();
+//			} 
+//			
+//			//Diving takes precedence under flaring
+//			if(enabledDiving && flightInputs.inputDiving && !flightInputs.inputFlaring) {
+//				dive ();
+//			} else if (!flightInputs.inputDiving && !flightPhysics.wingsOpen()) {
+//				//Simulates coming out of a dive
+//				dive ();
+//			}
+//			
+//			//Regular flight takes last precedence. Do regular flight if not flaring or diving.
+//			if ( !((enabledDiving && flightInputs.inputDiving) || (enabledFlaring && flightInputs.inputFlaring)) ) {
+//				flightPhysics.directionalInput(getBank (), getPitch (false), directionalSensitivity);
+//				//Allow flapping during normal flight
+//				if (flightInputs.inputFlap)
+//					flap ();
+//			}
+//
+//			if (!flightInputs.inputFlaring)
+//				animator.SetBool (hashIDs.flaringBool, false);
+//			if (!flightInputs.inputDiving) {
+//				animator.SetBool (hashIDs.divingBool, false);
+//			}
+//
+//			flightPhysics.doStandardPhysics ();
+//
+//			
+//	
+//			animator.SetFloat (hashIDs.speedFloat, rigidbody.velocity.magnitude);
+//			animator.SetFloat (hashIDs.angularSpeedFloat, getBank ());
+//	
+//			applyWindNoise ();
 
-			if (!flightInputs.inputFlaring)
-				animator.SetBool (hashIDs.flaringBool, false);
-			if (!flightInputs.inputDiving) {
-				animator.SetBool (hashIDs.divingBool, false);
-			}
-
-			flightPhysics.doStandardPhysics ();
-
-			
-	
-			animator.SetFloat (hashIDs.speedFloat, rigidbody.velocity.magnitude);
-			animator.SetFloat (hashIDs.angularSpeedFloat, getBank ());
-	
-			applyWindNoise ();
-
-		}
+//		}
 
 		protected override void applyPhysics ()
 		{
 			flightPhysics.doStandardPhysics ();
 		}
-		
-		
-		/// <summary>
-		/// Calculates pitch, based on user input and configured pitch parameters.
-		/// </summary>
-		/// <returns>The pitch in degrees.</returns>
-		/// <param name="flare">If set to <c>true</c> calculates pitch of a flare angle.</param>
-		protected float getPitch(bool flare) {
-			if (flare)
-				return flightInputs.inputPitch * maxPitch - flareAngle;
-			else
-				return flightInputs.inputPitch * maxPitch;
-		}
-		
-		protected float getBank() {
-			return flightInputs.inputBank * maxTurnBank;
-		}
-		
-		protected void flap() {
-			if(!enabledFlapping) {
-				return;
-			}
-			AnimatorStateInfo curstate = animator.GetCurrentAnimatorStateInfo (0);
-			if (curstate.nameHash != hashIDs.flappingState) {
-				soundManager.playSound (flapSoundClip);
-				rigidbody.AddForce (rigidbody.rotation * Vector3.up * flapStrength);
-				animator.SetTrigger (hashIDs.flappingTrigger);
-			}
-		}
-		
-		protected void flare() {
-			if (enabledFlaring) {
-				//playSound (flareSoundSource);
-				animator.SetBool (hashIDs.flaringBool, true);
-				//Flare is the same as directional input, except with exagerated pitch and custom speed. 
-				flightPhysics.directionalInput(getBank (), getPitch (true), flareSpeed);
-			}
-		}
-		
-		protected void dive() {
-			if (enabledDiving) {
-				//playSound (divingSoundSource);
-				animator.SetBool (hashIDs.divingBool, true);
-				flightPhysics.wingFold(flightInputs.inputLeftWingExposure, flightInputs.inputRightWingExposure);
-			}
-		}
-	
-		/// <summary>
-		/// Straightenes the flight object on landing, by rotating the roll and pitch
-		/// to zero over time. Public vars "standUpSpeed" and "maxStandUpTime" can 
-		/// be used to tweak behaviour.
-		/// </summary>
-		/// <returns>The up.</returns>
-		protected IEnumerator standUp() {
-			//Find the direction the flight object should stand, without any pitch and roll. 
-			Quaternion desiredRotation = Quaternion.identity;
-			desiredRotation.eulerAngles = new Vector3 (0.0f, rigidbody.rotation.eulerAngles.y, 0.0f);
-			//Grab the current time. We don't want 'standUp' to take longer than maxStandUpTime
-			float time = Time.time;
-	
-			rigidbody.rotation = desiredRotation; //Quaternion.Lerp (rigidbody.rotation, desiredRotation, standUpSpeed * Time.deltaTime);
-	
-			//Break if the player started flying again, or if we've reached the desired rotation (within 5 degrees)
-			while (Quaternion.Angle(rigidbody.rotation, desiredRotation) > 5.0f) {
-				//Additionally break if we have gone over time
-				if (time + maxStandUpTime < Time.time)
-					break;
-				//Correct the rotation
-				rigidbody.rotation = Quaternion.Lerp (rigidbody.rotation, desiredRotation, standUpSpeed * Time.deltaTime);
-				yield return null;
-			}
-			yield return null;
-		}
 
-		protected void applyWindNoise() {
-			
-			if (!windNoiseClip)
-				return;
+//	
+//		/// <summary>
+//		/// Straightenes the flight object on landing, by rotating the roll and pitch
+//		/// to zero over time. Public vars "standUpSpeed" and "maxStandUpTime" can 
+//		/// be used to tweak behaviour.
+//		/// </summary>
+//		/// <returns>The up.</returns>
+//		protected IEnumerator standUp() {
+//			//Find the direction the flight object should stand, without any pitch and roll. 
+//			Quaternion desiredRotation = Quaternion.identity;
+//			desiredRotation.eulerAngles = new Vector3 (0.0f, rigidbody.rotation.eulerAngles.y, 0.0f);
+//			//Grab the current time. We don't want 'standUp' to take longer than maxStandUpTime
+//			float time = Time.time;
+//	
+//			rigidbody.rotation = desiredRotation; //Quaternion.Lerp (rigidbody.rotation, desiredRotation, standUpSpeed * Time.deltaTime);
+//	
+//			//Break if the player started flying again, or if we've reached the desired rotation (within 5 degrees)
+//			while (Quaternion.Angle(rigidbody.rotation, desiredRotation) > 5.0f) {
+//				//Additionally break if we have gone over time
+//				if (time + maxStandUpTime < Time.time)
+//					break;
+//				//Correct the rotation
+//				rigidbody.rotation = Quaternion.Lerp (rigidbody.rotation, desiredRotation, standUpSpeed * Time.deltaTime);
+//				yield return null;
+//			}
+//			yield return null;
+//		}
+//
 
-			AudioSource windNoiseSource = soundManager.getSource (windNoiseClip);
-			if (!windNoiseSource) {
-				Debug.LogError ("Wind source noise has clip but not source!");
-				return;
-			}
-
-			if (flightPhysics.Speed > windNoiseStartSpeed) {
-				float volume = Mathf.Clamp (flightPhysics.Speed / (windNoiseStartSpeed + windNoiseMaxSpeed), 0.0f, 1.0f);
-				windNoiseSource.volume = volume;
-				//We want pitch to pick up at about half the volume
-				windNoiseSource.pitch = Mathf.Clamp (0.9f + flightPhysics.Speed / 2.0f / (windNoiseStartSpeed + windNoiseMaxSpeed), 0.9f, 1.5f);
-				//Use this to see how values are applied at various speeds.
-				//Debug.Log (string.Format ("Vol {0}, pitch {1}", audio.volume, audio.pitch));
-				if (! windNoiseSource.isPlaying) 
-					windNoiseSource.Play ();
-			} else {
-				windNoiseSource.Stop ();
-			}
-			
-		}
 
 	}
 }

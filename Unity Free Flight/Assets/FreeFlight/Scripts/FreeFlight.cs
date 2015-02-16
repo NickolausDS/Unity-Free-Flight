@@ -33,6 +33,10 @@ public class FreeFlight : MonoBehaviour {
 	void SwitchModes(MovementModes newmode) {
 		modeManager.switchModes (newmode);
 	}
+
+	void Start() {
+		modeManager.start ();
+	}
 	
 	/// <summary>
 	/// Get input from the player 
