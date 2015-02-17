@@ -22,10 +22,6 @@ namespace UnityFreeFlight {
 			}
 			set { _flightInputs = value;}
 		} 
-
-		public List<Mechanic> mechanics;
-		public Mechanic defaultMechanic;
-		private Mechanic currentMechanic = null;
 		//A mechanic defined explicity for testing purposes
 
 
@@ -105,122 +101,9 @@ namespace UnityFreeFlight {
 //			}		
 		}
 
-
-
 		public override void getInputs () {
 			flightInputs.getInputs ();
 		}
-
-		public override void applyInputs () {
-
-			applyMechanicPrecedence ();
-
-			applyMechanic ();
-
-			applyPhysics ();
-		}
-
-		/// <summary>
-		/// Decide which mechanic should run. This solves players pressing multiple buttons at the
-		/// same time.
-		/// </summary>
-		private void applyMechanicPrecedence() {
-			foreach (Mechanic mech in mechanics) {
-				if (mech.FFInputSatisfied () && isHigherPrecedence(mech)) {
-					//If the current mechanic isn't done yet
-					if (currentMechanic != null && !currentMechanic.FFFinish ())
-						break;
-					currentMechanic = mech;
-					currentMechanic.FFBegin ();
-					break;
-				}
-			}		
-		}
-
-		/// <summary>
-		/// Apply the current mechanic behavior. 
-		/// </summary>
-		private void applyMechanic() {
-			//Apply the current mechanic. 
-			if (currentMechanic != null && currentMechanic != defaultMechanic) {
-				
-				currentMechanic.FFFixedUpdate ();
-				
-				if (!currentMechanic.FFInputSatisfied ()) {
-					if (currentMechanic.FFFinish()) {
-						currentMechanic = null;
-					}
-				}
-			} else {
-				defaultMechanic.FFFixedUpdate ();
-			}
-		}
-
-		private bool isHigherPrecedence(Mechanic mech) {
-			if (currentMechanic == null)
-				return true;
-
-			int currentMechIndex = -1;
-			int otherMechIndex = -1;
-			for (int i = 0; i < mechanics.Count; i++) {
-				if (currentMechanic == mechanics[i])
-					currentMechIndex = i;
-				if (mech == mechanics[i])
-					otherMechIndex = i;
-			}
-			return (otherMechIndex < currentMechIndex ? true : false);
-		}
-
-
-//		public override void applyInputs () {
-			//HACK -- currently, drag is being fully calculated in flightPhysics.cs, so we don't want the
-			//rigidbody adding any more drag. This should change, it's confusing to users when they look at
-			//the rigidbody drag. 
-//			rigidbody.drag = 0.0f;
-			//precedence is as follows: flaring, diving, regular gliding flight. This applies if the
-			//player provides multiple inputs. Some mechanics can be performed at the same time, such 
-			//as flapping while flaring, or turning while diving. 
-			
-			
-//			//Flaring takes precedence over everything
-//			if (enabledFlaring && flightInputs.inputFlaring) {
-//				flare ();
-//				if(flightInputs.inputFlap)
-//					flap ();
-//			} 
-//			
-//			//Diving takes precedence under flaring
-//			if(enabledDiving && flightInputs.inputDiving && !flightInputs.inputFlaring) {
-//				dive ();
-//			} else if (!flightInputs.inputDiving && !flightPhysics.wingsOpen()) {
-//				//Simulates coming out of a dive
-//				dive ();
-//			}
-//			
-//			//Regular flight takes last precedence. Do regular flight if not flaring or diving.
-//			if ( !((enabledDiving && flightInputs.inputDiving) || (enabledFlaring && flightInputs.inputFlaring)) ) {
-//				flightPhysics.directionalInput(getBank (), getPitch (false), directionalSensitivity);
-//				//Allow flapping during normal flight
-//				if (flightInputs.inputFlap)
-//					flap ();
-//			}
-//
-//			if (!flightInputs.inputFlaring)
-//				animator.SetBool (hashIDs.flaringBool, false);
-//			if (!flightInputs.inputDiving) {
-//				animator.SetBool (hashIDs.divingBool, false);
-//			}
-//
-//			flightPhysics.doStandardPhysics ();
-//
-//			
-//	
-//			animator.SetFloat (hashIDs.speedFloat, rigidbody.velocity.magnitude);
-//			animator.SetFloat (hashIDs.angularSpeedFloat, getBank ());
-//	
-//			applyWindNoise ();
-
-//		}
 
 		protected override void applyPhysics ()
 		{

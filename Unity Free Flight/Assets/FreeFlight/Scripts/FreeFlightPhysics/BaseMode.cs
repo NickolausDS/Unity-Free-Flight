@@ -14,10 +14,12 @@ namespace UnityFreeFlight {
 	/// flying, walking, driving. These grouped actions are meant to be abstractions
 	/// for further 'mechanics' such as gliding, flapping, diving for the first group, 
 	/// standing, walking, running, jumping for the second group, and turning, accelerating, 
-	/// and braking for the third group. 
+	/// and braking for the third group. This class manages a single set of grouped actions
+	/// called mechanics (a group like gliding, flapping, diving) Moreover, the mode manager 
+	/// manages classes like this one, and decides which group of actions run.
 	/// </summary>
 	[Serializable]
-	public abstract class BaseMode {
+	public class BaseMode {
 
 		public bool alwaysApplyPhysics;
 
@@ -26,6 +28,10 @@ namespace UnityFreeFlight {
 		protected Rigidbody rigidbody;
 		[SerializeField]
 		protected SoundManager soundManager;
+
+		public List<Mechanic> mechanics;
+		public Mechanic defaultMechanic;
+		protected Mechanic currentMechanic = null;
 
 		/// <summary>
 		/// Since Unity's serialized scripts can't use complex constructors, we need to do
@@ -41,71 +47,96 @@ namespace UnityFreeFlight {
 			animator = gameObject.GetComponentInChildren<Animator> ();
 		}
 
-		/// <summary>
-		/// Needs access to physics
-		/// Will have a list of Mechanics classes, like flapping
-		/// 
-		/// </summary>
-
-//		public List<Mechanic> flightMechanics; 
-//
-////		private int defaultAnimationState;
-////		private int currentAnimationState;
-//		//The mechanic we fall back on if no mechanics are in effect
-//		private Mechanic _defaultMechanic;
-//		public Mechanic defaultMechanic { get; set;}
-//		//The current mechanic in effect;
-//		private Mechanic currentMechanic;
-//
-//		/// <summary>
-//		/// Fires off a mechanic based on what inputs are being set by the player. Mechanics 
-//		/// follow a strict priority set in the editor, and may exclude one another from happening.
-//		/// For example, the player can hold down both flap and dive inputs, but flapping takes
-//		/// precedence (if flapping is set higher in the list). Mechanics can contain their own set of
-//		/// physics (such as moving the player upwards in a flap) and also drive setting all variables
-//		/// in the Animation Controller.
-//		/// </summary>
-//		public void applyInputs() {
-//			//The next mechanic we might use
-//			Mechanic nextMechanic = null;
-//
-//			foreach (Mechanic mech in flightMechanics) {
-//				if (mech.enabled && mech.FFInputSatisfied ()) {
-//					nextMechanic = mech;
-//					mech.FFStart (animator, rigidbody);
-//				} else if (mech == currentMechanic && !mech.FFInputSatisfied()) {
-//					mech.FFFinish(animator, rigidbody);
-//				}
-//			}
-//
-//			if (nextMechanic != null) 
-//				currentMechanic = nextMechanic;
-//
-//			currentMechanic.FFFixedUpdate (animator, rigidbody);
-//			applyPhysics ();
-//		}
-//
+		public virtual void applyInputs () {
+			
+			applyMechanicPrecedence ();
+			
+			applyMechanic ();
+			
+			applyPhysics ();
+		}
 
 		/// <summary>
 		/// Tells the manager to gather inputs from the player.
 		/// This will happen in a frame-by-frame update time scale.
 		/// </summary>
-		public abstract void getInputs();
+		public virtual void getInputs() {}
 
-		public abstract void applyInputs();
+		/// <summary>
+		/// Tweak anything that needs to happen before this modes mechanics run. 
+		/// </summary>
+		public virtual void startMode () {}
 
-		public abstract void startMode ();
+		/// <summary>
+		/// Clean up any settings before this mode ends, including resetting things
+		/// to be in a healthy state when this mode is run again. Please be nice to 
+		/// the other modes, and reset any crazy values you temporarily set.
+		/// </summary>
+		public virtual void finishMode () {}
+		
+		protected virtual void applyPhysics() {
+			alwaysApplyPhysics = false;
+			throw new NotImplementedException("Physics for this mode has not been implemented. Disabling...");
+		}
 
-		public abstract void finishMode ();
-
-		protected abstract void applyPhysics();
-
+		
 		/// <summary>
 		/// The more serious version of applying physics. It calls the private method applyPhysics(), and
 		/// has keyword 'only' to tell you ONLY FLIGHT PHYSICS WILL BE APPLIED. Just to be clear. 
 		/// </summary>
 		public void applyPhysicsOnly () {
 			applyPhysics ();
+		}
+		
+		/// <summary>
+		/// Decide which mechanic should run. This solves players pressing multiple buttons at the
+		/// same time.
+		/// </summary>
+		private void applyMechanicPrecedence() {
+			foreach (Mechanic mech in mechanics) {
+				if (mech.FFInputSatisfied () && isHigherPrecedence(mech)) {
+					//If the current mechanic isn't done yet
+					if (currentMechanic != null && !currentMechanic.FFFinish ())
+						break;
+					currentMechanic = mech;
+					currentMechanic.FFBegin ();
+					break;
+				}
+			}		
+		}
+		
+		/// <summary>
+		/// Apply the current mechanic behavior. 
+		/// </summary>
+		private void applyMechanic() {
+			//Apply the current mechanic. 
+			if (currentMechanic != null && currentMechanic != defaultMechanic) {
+				
+				currentMechanic.FFFixedUpdate ();
+				
+				if (!currentMechanic.FFInputSatisfied ()) {
+					if (currentMechanic.FFFinish()) {
+						currentMechanic = null;
+					}
+				}
+			} else {
+				defaultMechanic.FFFixedUpdate ();
+			}
+		}
+		
+		private bool isHigherPrecedence(Mechanic mech) {
+			if (currentMechanic == null)
+				return true;
+			
+			int currentMechIndex = -1;
+			int otherMechIndex = -1;
+			for (int i = 0; i < mechanics.Count; i++) {
+				if (currentMechanic == mechanics[i])
+					currentMechIndex = i;
+				if (mech == mechanics[i])
+					otherMechIndex = i;
+			}
+			return (otherMechIndex < currentMechIndex ? true : false);
 		}
 
 
