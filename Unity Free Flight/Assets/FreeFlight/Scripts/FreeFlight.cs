@@ -10,23 +10,16 @@ using UnityFreeFlight;
 /// </summary>
 [RequireComponent (typeof(Rigidbody))]
 public class FreeFlight : MonoBehaviour {
+	
+	public ModeManager modeManager;
 
-	[SerializeField]
-	private ModeManager _modeManager; 
-	public ModeManager modeManager {
-		get { 
-			if (_modeManager == null)
-				_modeManager = new ModeManager();
-			return _modeManager; 
-		}
-		set { _modeManager = value;}
-	}
- 
 	//=============
 	//Unity Events
 	//=============
 
 	public void OnEnable () {
+		if (modeManager == null)
+			modeManager = new ModeManager ();
 		modeManager.init (gameObject);
 	}
 
