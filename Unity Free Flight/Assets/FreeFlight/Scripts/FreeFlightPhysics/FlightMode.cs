@@ -27,15 +27,19 @@ namespace UnityFreeFlight {
 
 		public override void init (GameObject go, SoundManager sm) {
 			base.init (go, sm);
-			flightInputs = new FlightInputs ();
-			mechanics = new List<Mechanic> ();
-			mechanics.Add (new Flapping ());
-			mechanics.Add (new Flaring ());
-			mechanics.Add (new Diving ());
+			name = "Flight Mode";
+
+			if (flightInputs == null)
+				flightInputs = new FlightInputs ();
+//			mechanics = new List<Mechanic> ();
+//			mechanics.Add (new Flapping ());
+//			mechanics.Add (new Flaring ());
+//			mechanics.Add (new Diving ());
 			foreach (Mechanic mech in mechanics) {
 				mech.init (go, sm, flightPhysics, flightInputs);
 				mech.FFStart ();
 			}
+
 			defaultMechanic = new Gliding();
 			defaultMechanic.init (go, sm, flightPhysics, flightInputs);
 			defaultMechanic.FFStart ();
@@ -109,6 +113,7 @@ namespace UnityFreeFlight {
 		{
 			flightPhysics.doStandardPhysics ();
 		}
+
 
 //	
 //		/// <summary>

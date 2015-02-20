@@ -21,6 +21,8 @@ namespace UnityFreeFlight {
 	[Serializable]
 	public class BaseMode {
 
+		public string name = "Base Mode";
+
 		public bool alwaysApplyPhysics;
 
 		protected GameObject gameObject;
@@ -29,7 +31,8 @@ namespace UnityFreeFlight {
 		[SerializeField]
 		protected SoundManager soundManager;
 
-		public List<Mechanic> mechanics;
+		public List<string> mechanicNames = new List<string> ();
+		public List<Mechanic> mechanics = new List<Mechanic> ();
 		public Mechanic defaultMechanic;
 		protected Mechanic currentMechanic = null;
 
@@ -52,6 +55,7 @@ namespace UnityFreeFlight {
 			applyMechanicPrecedence ();
 			
 			applyMechanic ();
+
 			
 			applyPhysics ();
 		}
