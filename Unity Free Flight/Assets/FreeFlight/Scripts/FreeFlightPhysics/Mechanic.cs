@@ -26,6 +26,8 @@ namespace UnityFreeFlight {
 		public string animationStateName;
 		protected int animationStateHash;
 
+		public string input = "";
+
 		protected GameObject gameObject;
 		protected Rigidbody rigidbody;
 		protected Animator animator;
@@ -59,7 +61,11 @@ namespace UnityFreeFlight {
 		/// Check if all the inputs necessary for firing this mechanic are set.
 		/// </summary>
 		/// <returns><c>true</c>, if player is pressing all buttons to fire mechanic, <c>false</c> otherwise.</returns>
-		public virtual bool FFInputSatisfied () { return false; }
+		public virtual bool FFInputSatisfied () { 
+			if (input != "")
+				return Input.GetKeyDown (input); 
+			return false;
+		}
 
 
 		/// <summary>
