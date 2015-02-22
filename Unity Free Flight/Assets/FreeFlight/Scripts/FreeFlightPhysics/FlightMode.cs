@@ -24,6 +24,17 @@ namespace UnityFreeFlight {
 		} 
 		//A mechanic defined explicity for testing purposes
 
+		/// <summary>
+		/// Special mechanics need to be explicitly defined. This is (a hack) because
+		/// Unity dosen't support polymorphic serialization for basic classes, 
+		/// and doing so with scriptable objects would result in a stupid user
+		/// experience.
+		/// </summary>
+		public Flapping flapping = new Flapping ();
+		public Flaring flaring = new Flaring ();
+		public Diving diving = new Diving ();
+		public Gliding gliding = new Gliding ();
+
 
 		public override void init (GameObject go, SoundManager sm) {
 			base.init (go, sm);
@@ -31,10 +42,9 @@ namespace UnityFreeFlight {
 
 			if (flightInputs == null)
 				flightInputs = new FlightInputs ();
-//			mechanics = new List<Mechanic> ();
-//			mechanics.Add (new Flapping ());
-//			mechanics.Add (new Flaring ());
-//			mechanics.Add (new Diving ());
+			if (mechanics == null)
+				mechanics = new List<Mechanic> ();
+
 			foreach (Mechanic mech in mechanics) {
 				mech.init (go, sm, flightPhysics, flightInputs);
 				mech.FFStart ();
