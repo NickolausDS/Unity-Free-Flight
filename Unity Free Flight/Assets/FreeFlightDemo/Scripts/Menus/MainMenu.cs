@@ -6,11 +6,17 @@ namespace FreeFlightDemo {
 
 	public class MainMenu : MonoBehaviour {
 
+		[Header ("Basic Button Functionality")]
 		public GameObject playButton;
 		public GameObject exitButton;
-		public GameObject loadLevelOutputText;
 
+		[Header ("Loading Properties")]
+		[Tooltip ("If webplayer, show percentage loaded on this text")]
+		public GameObject loadLevelOutputText;
+		public string loadingCompleteText = "Done Loading!";
+		[Tooltip ("Disable 'Play' button on webplayer until the scene is loaded")]
 		public bool disableWebPlayButtonUntilLevelLoad = true;
+		[Tooltip ("Disable 'Exit' button on webplayer")]
 		public bool disableWebExitButton = true;
 
 		public const int defaultLevel = 1;
@@ -41,9 +47,9 @@ namespace FreeFlightDemo {
 			
 			if (loadLevelOutputText) {
 				if (progress == 1f)
-					loadLevelOutputText.GetComponent<Text>().text = "";
+					loadLevelOutputText.GetComponent<Text>().text = loadingCompleteText;
 				else 
-					loadLevelOutputText.GetComponent<Text>().text = string.Format ("Level loaded: {0:P0}", progress);
+					loadLevelOutputText.GetComponent<Text>().text = string.Format ("Loading: {0:P0}", progress);
 			}
 			
 			if (playButton) {
