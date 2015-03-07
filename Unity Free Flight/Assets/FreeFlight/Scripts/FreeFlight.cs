@@ -37,7 +37,7 @@ public class FreeFlight : MonoBehaviour {
 	public CreatureFlightPhysics flightPhysics {
 		get {
 			if (_flightPhysics == null) {
-				_flightPhysics = new CreatureFlightPhysics(rigidbody);
+				_flightPhysics = new CreatureFlightPhysics(GetComponent<Rigidbody>());
 			}
 			return _flightPhysics;
 		}
@@ -228,8 +228,8 @@ public class FreeFlight : MonoBehaviour {
 		setupSound (crashSoundClip, ref crashSoundSource);
 		setupSound (walkingNoiseClip, ref walkingNoiseSource);
 		setupSound (jumpingNoiseClip, ref jumpingNoiseSource);
-		rigidbody.freezeRotation = true;
-		rigidbody.isKinematic = false;
+		GetComponent<Rigidbody>().freezeRotation = true;
+		GetComponent<Rigidbody>().isKinematic = false;
 	}
 	
 	void Start() {
@@ -314,23 +314,23 @@ public class FreeFlight : MonoBehaviour {
 	private void jump() {
 		anim.SetTrigger ("Jumping");
 		playSound(jumpingNoiseSource);
-		rigidbody.AddForce (0, jumpHeight, 0, ForceMode.Force);
+		GetComponent<Rigidbody>().AddForce (0, jumpHeight, 0, ForceMode.Force);
 
 	}
 
 	private void groundMove() {
-		rigidbody.drag = groundDrag;
+		GetComponent<Rigidbody>().drag = groundDrag;
 		if (_inputGroundForward > 0f) {
 			anim.SetBool (ffhash.walkingBool, true);
-			rigidbody.AddRelativeForce (Vector3.forward * maxGroundForwardSpeed * _inputGroundForward * Time.deltaTime, ForceMode.VelocityChange);
+			GetComponent<Rigidbody>().AddRelativeForce (Vector3.forward * maxGroundForwardSpeed * _inputGroundForward * Time.deltaTime, ForceMode.VelocityChange);
 		} else {
 			anim.SetBool (ffhash.walkingBool, false);
 		}
 
 		float turningSpeed = maxGroundTurningDegreesSecond * _inputGroundTurning * Time.deltaTime;
-		rigidbody.rotation *= Quaternion.AngleAxis (turningSpeed, Vector3.up);
+		GetComponent<Rigidbody>().rotation *= Quaternion.AngleAxis (turningSpeed, Vector3.up);
 
-		anim.SetFloat (ffhash.speedFloat, rigidbody.velocity.magnitude);
+		anim.SetFloat (ffhash.speedFloat, GetComponent<Rigidbody>().velocity.magnitude);
 		anim.SetFloat (ffhash.angularSpeedFloat, turningSpeed);
 	}
 
@@ -376,8 +376,8 @@ public class FreeFlight : MonoBehaviour {
 		if (!isFlying()) {
 			state = FlightState.Flight;
 			anim.SetBool(ffhash.flyingBool, true);
-			rigidbody.freezeRotation = true;
-			rigidbody.isKinematic = false;
+			GetComponent<Rigidbody>().freezeRotation = true;
+			GetComponent<Rigidbody>().isKinematic = false;
 			playSound (takeoffSoundSource);
 			if(flapLaunch) 
 				flap ();
@@ -389,8 +389,8 @@ public class FreeFlight : MonoBehaviour {
 			state = FlightState.Ground;
 			_inputFlaring = false;
 			_inputFlap = false;
-			rigidbody.freezeRotation = true;
-			rigidbody.isKinematic = false;
+			GetComponent<Rigidbody>().freezeRotation = true;
+			GetComponent<Rigidbody>().isKinematic = false;
 			anim.SetBool (ffhash.flaringBool, false);
 			anim.SetBool(ffhash.flyingBool, false);
 			if (enabledCrashing && flightPhysics.Speed >= crashSpeed) {
@@ -468,7 +468,7 @@ public class FreeFlight : MonoBehaviour {
 		//HACK -- currently, drag is being fully calculated in flightPhysics.cs, so we don't want the
 		//rigidbody adding any more drag. This should change, it's confusing to users when they look at
 		//the rigidbody drag. 
-		rigidbody.drag = 0.0f;
+		GetComponent<Rigidbody>().drag = 0.0f;
 		//precedence is as follows: flaring, diving, regular gliding flight. This applies if the
 		//player provides multiple inputs. Some mechanics can be performed at the same time, such 
 		//as flapping while flaring, or turning while diving. 
@@ -505,7 +505,7 @@ public class FreeFlight : MonoBehaviour {
 		
 		flightPhysics.doStandardPhysics ();
 
-		anim.SetFloat (ffhash.speedFloat, rigidbody.velocity.magnitude);
+		anim.SetFloat (ffhash.speedFloat, GetComponent<Rigidbody>().velocity.magnitude);
 		anim.SetFloat (ffhash.angularSpeedFloat, getBank ());
 
 	}
@@ -533,7 +533,7 @@ public class FreeFlight : MonoBehaviour {
 		AnimatorStateInfo curstate = anim.GetCurrentAnimatorStateInfo (0);
 		if (curstate.nameHash != ffhash.flappingState) {
 			playSound (flapSoundSource);
-			rigidbody.AddForce (rigidbody.rotation * Vector3.up * flapStrength);
+			GetComponent<Rigidbody>().AddForce (GetComponent<Rigidbody>().rotation * Vector3.up * flapStrength);
 			anim.SetTrigger (ffhash.flappingTrigger);
 		}
 	}
