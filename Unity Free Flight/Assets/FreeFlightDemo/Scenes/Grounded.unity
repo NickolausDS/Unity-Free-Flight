@@ -169,102 +169,6 @@ Transform:
   - {fileID: 850256167}
   m_Father: {fileID: 805079949}
   m_RootOrder: 0
---- !u!1 &95236368
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 100000, guid: 30f5ce133f8d84b8892cc8d7832b5cb1, type: 2}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 95236373}
-  - 33: {fileID: 95236372}
-  - 136: {fileID: 95236371}
-  - 23: {fileID: 95236370}
-  - 95: {fileID: 95236369}
-  m_Layer: 0
-  m_Name: FreeFlight_Model_Standin
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!95 &95236369
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 9500000, guid: 30f5ce133f8d84b8892cc8d7832b5cb1,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 95236368}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: eeb5efbb0a0b8410aaedddf070f8c58d, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 1
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
---- !u!23 &95236370
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 2300000, guid: 30f5ce133f8d84b8892cc8d7832b5cb1,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 95236368}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_Materials:
-  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
-  m_SubsetIndices: 
-  m_StaticBatchRoot: {fileID: 0}
-  m_UseLightProbes: 0
-  m_ReflectionProbeUsage: 1
-  m_ProbeAnchor: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_PreserveUVs: 0
-  m_ImportantGI: 0
-  m_AutoUVMaxDistance: .5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
---- !u!136 &95236371
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 13600000, guid: 30f5ce133f8d84b8892cc8d7832b5cb1,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 95236368}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: .5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!33 &95236372
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 3300000, guid: 30f5ce133f8d84b8892cc8d7832b5cb1,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 95236368}
-  m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
---- !u!4 &95236373
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 400000, guid: 30f5ce133f8d84b8892cc8d7832b5cb1, type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 95236368}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 639285584}
-  m_RootOrder: 0
 --- !u!1 &96001594
 GameObject:
   m_ObjectHideFlags: 0
@@ -1172,102 +1076,6 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!1 &639285583
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 100002, guid: 30f5ce133f8d84b8892cc8d7832b5cb1, type: 2}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 639285584}
-  - 54: {fileID: 639285586}
-  - 114: {fileID: 639285585}
-  m_Layer: 0
-  m_Name: Basic_Flight_Object
-  m_TagString: Player
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &639285584
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 400002, guid: 30f5ce133f8d84b8892cc8d7832b5cb1, type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 639285583}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -414.660004, y: 202.020004, z: 225.740005}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 95236373}
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
---- !u!114 &639285585
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11400000, guid: 30f5ce133f8d84b8892cc8d7832b5cb1,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 639285583}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fefe4066b30e94b11ba261565d83c27a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  applyFlightPhysicsOnGround: 0
-  enabledGliding: 1
-  maxTurnBank: 45
-  maxPitch: 20
-  directionalSensitivity: 2
-  enabledFlapping: 1
-  flapSoundClip: {fileID: 0}
-  flapStrength: 60
-  enabledFlaring: 0
-  flareSoundClip: {fileID: 0}
-  flareAngle: 70
-  flareSpeed: 3
-  enabledDiving: 0
-  divingSoundClip: {fileID: 0}
-  enabledTakeoff: 1
-  takeoffSoundClip: {fileID: 0}
-  enabledLaunchIfAirborn: 1
-  minHeightToLaunchIfAirborn: 2
-  enabledLanding: 1
-  landingSoundClip: {fileID: 0}
-  maxStandUpTime: 2
-  standUpSpeed: 2
-  enabledCrashing: 0
-  crashSpeed: 40
-  crashSoundClip: {fileID: 0}
-  enabledWindNoise: 1
-  windNoiseClip: {fileID: 0}
-  windNoiseStartSpeed: 20
-  windNoiseMaxSpeed: 200
-  launchTime: .200000003
-  enabledGround: 1
-  walkingNoiseClip: {fileID: 0}
-  maxGroundForwardSpeed: 40
-  groundDrag: 5
-  maxGroundTurningDegreesSecond: 40
-  enabledJumping: 0
-  jumpHeight: .5
-  jumpingNoiseClip: {fileID: 0}
---- !u!54 &639285586
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 5400000, guid: 30f5ce133f8d84b8892cc8d7832b5cb1,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 639285583}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: .0500000007
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!1 &649988354
 GameObject:
   m_ObjectHideFlags: 0
@@ -1822,27 +1630,27 @@ MonoBehaviour:
   maxPitch: 20
   directionalSensitivity: 2
   enabledFlapping: 1
-  flapSoundClip: {fileID: 0}
+  flapSoundClip: {fileID: 8300000, guid: 24a927e62b21f47e9a5445931cf7668b, type: 3}
   flapStrength: 60
-  enabledFlaring: 0
+  enabledFlaring: 1
   flareSoundClip: {fileID: 0}
   flareAngle: 70
   flareSpeed: 3
-  enabledDiving: 0
+  enabledDiving: 1
   divingSoundClip: {fileID: 0}
   enabledTakeoff: 1
   takeoffSoundClip: {fileID: 0}
   enabledLaunchIfAirborn: 1
   minHeightToLaunchIfAirborn: 2
   enabledLanding: 1
-  landingSoundClip: {fileID: 0}
+  landingSoundClip: {fileID: 8300000, guid: a906575dd0f5c412e8b72f874b6515e2, type: 3}
   maxStandUpTime: 2
   standUpSpeed: 2
   enabledCrashing: 0
   crashSpeed: 40
   crashSoundClip: {fileID: 0}
   enabledWindNoise: 1
-  windNoiseClip: {fileID: 0}
+  windNoiseClip: {fileID: 8300000, guid: b9532bedd6555433aae7d02f546bfab7, type: 3}
   windNoiseStartSpeed: 20
   windNoiseMaxSpeed: 200
   launchTime: .200000003
