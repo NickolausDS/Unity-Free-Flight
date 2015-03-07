@@ -11,7 +11,6 @@ GameObject:
   - 114: {fileID: 11400000}
   - 114: {fileID: 11400006}
   - 114: {fileID: 11400002}
-  - 114: {fileID: 11400004}
   m_Layer: 0
   m_Name: Menus
   m_TagString: Untagged
@@ -94,48 +93,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isPaused: 0
   playerObject: {fileID: 0}
---- !u!114 &11400004
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b858e794291e4612b874fae4067eb46, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  flightObject: {fileID: 0}
-  guiskin: {fileID: 11400000, guid: cce4dbea97ede4ac7a42d92e1ea7b79e, type: 2}
-  toggleStatsMenu: 1
-  togglePhysicsMenu: 1
-  toggleWorldPhysicsMenu: 1
-  toggleInputsMenu: 1
-  showAbbreviations: 1
-  statsPos:
-    serializedVersion: 2
-    x: 310
-    y: 10
-    width: 200
-    height: 110
-  physicsPos:
-    serializedVersion: 2
-    x: 100
-    y: 10
-    width: 200
-    height: 140
-  worldPhysicsPos:
-    serializedVersion: 2
-    x: 100
-    y: 160
-    width: 200
-    height: 90
-  InputsPos:
-    serializedVersion: 2
-    x: 580
-    y: 10
-    width: 220
-    height: 190
 --- !u!114 &11400006
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -397,4 +354,3 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 100000}
   m_IsPrefabParent: 1
-  m_IsExploded: 1
