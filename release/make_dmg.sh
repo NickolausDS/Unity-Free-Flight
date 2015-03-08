@@ -4,7 +4,15 @@
 # set up your app name, version number, and background image file name
 APP_NAME="FreeFlight"
 VERSION=`cat version.txt | head -n 1`
-DMG_BACKGROUND_IMG="Background.png"
+PROJECT_PATH="Unity Free Flight"
+
+#Copy the background to this dir. We do this to shorten the path, or else finder
+#will error when we try to set the background in the apple script below. 
+#THE COPY WILL BE DELETED. See end of script cleanup to change.
+BACKGROUND_IMG_PATH="../${PROJECT_PATH}/Assets/${APP_NAME}Demo/release/background.png"
+cp -v "$BACKGROUND_IMG_PATH" "./background.png"
+DMG_BACKGROUND_IMG="background.png"
+
 
 ###--- PACKAGING THE DMG ---###
 # by Andy Maloney
@@ -26,8 +34,8 @@ DMG_FINAL="${VOL_NAME}.dmg"         # final DMG name will be "SuperCoolApp 1.0.0
 STAGING_DIR="./Install"             # we copy all our stuff into this dir
 
 # Check the background image DPI and convert it if it isn't 72x72
-_BACKGROUND_IMAGE_DPI_H=`sips -g dpiHeight ${DMG_BACKGROUND_IMG} | grep -Eo '[0-9]+\.[0-9]+'`
-_BACKGROUND_IMAGE_DPI_W=`sips -g dpiWidth ${DMG_BACKGROUND_IMG} | grep -Eo '[0-9]+\.[0-9]+'`
+_BACKGROUND_IMAGE_DPI_H=`sips -g dpiHeight "${DMG_BACKGROUND_IMG}" | grep -Eo '[0-9]+\.[0-9]+'`
+_BACKGROUND_IMAGE_DPI_W=`sips -g dpiWidth "${DMG_BACKGROUND_IMG}" | grep -Eo '[0-9]+\.[0-9]+'`
 
 if [ $(echo " $_BACKGROUND_IMAGE_DPI_H != 72.0 " | bc) -eq 1 -o $(echo " $_BACKGROUND_IMAGE_DPI_W != 72.0 " | bc) -eq 1 ]; then
    echo "WARNING: The background image's DPI is not 72.  This will result in distorted backgrounds on Mac OS X 10.7+."
@@ -68,7 +76,11 @@ popd
 # figure out how big our DMG needs to be
 #  assumes our contents are at least 1M!
 SIZE=`du -sh "${STAGING_DIR}" | sed 's/\([0-9\.]*\)M\(.*\)/\1/'` 
-SIZE=`echo "${SIZE} + 1.0" | bc | awk '{print int($1+0.5)}'`
+echo "Size of app: $SIZE"
+BGSIZE=`du -sh "${DMG_BACKGROUND_IMG}" | sed 's/\([0-9\.]*\)M\(.*\)/\1/'` 
+echo "Size of background: $BGSIZE"
+SIZE=`echo "${SIZE} + ${BGSIZE} + 1.0" | bc | awk '{print int($1+0.5)}'`
+echo "Final Size of disk: $SIZE M"
 
 if [ $? -ne 0 ]; then
    echo "Error: Cannot compute size of staging dir"
@@ -133,6 +145,7 @@ hdiutil convert "${DMG_TMP}" -format UDZO -imagekey zlib-level=9 -o "${DMG_FINAL
 # clean up
 rm -rf "${DMG_TMP}"
 rm -rf "${STAGING_DIR}"
+rm "${DMG_BACKGROUND_IMG}"
 
 echo 'Done.'
 
