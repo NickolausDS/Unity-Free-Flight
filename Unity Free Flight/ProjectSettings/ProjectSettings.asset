@@ -137,7 +137,26 @@ PlayerSettings:
     m_Icons:
     - m_Icon: {fileID: 2800000, guid: 562400dc6d87d4f4e86b3aee2e4437f3, type: 3}
       m_Size: 128
-  m_BuildTargetBatching: []
+  - m_BuildTarget: Standalone
+    m_Icons:
+    - m_Icon: {fileID: 2800000, guid: 10262c3aa37b9447391f4aee20550564, type: 3}
+      m_Size: 1024
+    - m_Icon: {fileID: 2800000, guid: 10262c3aa37b9447391f4aee20550564, type: 3}
+      m_Size: 512
+    - m_Icon: {fileID: 2800000, guid: 10262c3aa37b9447391f4aee20550564, type: 3}
+      m_Size: 256
+    - m_Icon: {fileID: 2800000, guid: 10262c3aa37b9447391f4aee20550564, type: 3}
+      m_Size: 128
+    - m_Icon: {fileID: 2800000, guid: 10262c3aa37b9447391f4aee20550564, type: 3}
+      m_Size: 48
+    - m_Icon: {fileID: 2800000, guid: 10262c3aa37b9447391f4aee20550564, type: 3}
+      m_Size: 32
+    - m_Icon: {fileID: 2800000, guid: 10262c3aa37b9447391f4aee20550564, type: 3}
+      m_Size: 16
+  m_BuildTargetBatching:
+  - m_BuildTarget: Web
+    m_StaticBatching: 0
+    m_DynamicBatching: 1
   webPlayerTemplate: APPLICATION:Default
   m_TemplateCustomTags: {}
   actionOnDotNetUnhandledException: 1
