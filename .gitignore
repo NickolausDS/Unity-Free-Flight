@@ -7,10 +7,10 @@ release/031814
 !version.txt
 *.mp3
 *.wav
-*.png
 
 Unity\ Free\ Flight/Assets/Crow/
 Unity\ Free\ Flight/Assets/FreeFlightDemo/Standard\ Assets/
+Unity\ Free\ Flight/Assets/FreeFlightDemo/release
 Unity\ Free\ Flight/Assets/Plugins/
 
 # =============== #
@@ -21,9 +21,7 @@ Unity\ Free\ Flight/Library/
 Unity\ Free\ Flight/Build/
 Unity\ Free\ Flight/Library/ScriptAssemblies/
 Unity\ Free\ Flight/Assets/Standard\ Assets/
-Unity\ Free\ Flight/Assets/Standard\ Assets.meta
 *ShaderCache*
-*.meta
 
 
 # ===================================== #
