@@ -34,7 +34,31 @@ namespace UnityFreeFlight {
 		public Flaring flaring = new Flaring ();
 		public Diving diving = new Diving ();
 		public Gliding gliding = new Gliding ();
+//		public string[] availableMechanics;
+//		public string currentMechanic;
+//		public string[] mechanicPrecedence;
 
+		public void setupMechanics() {
+			mechanics.Clear ();
+			mechanics.Add (diving);
+			mechanics.Add (flaring);
+			mechanics.Add (flapping);
+			defaultMechanic = gliding;
+			if (mechanics == null)
+				mechanics = new List<Mechanic> ();
+			
+			foreach (Mechanic mech in mechanics) {
+				mech.init (gameObject, soundManager, flightPhysics, flightInputs);
+				mech.FFStart ();
+			}
+			
+			defaultMechanic.init (gameObject, soundManager, flightPhysics, flightInputs);
+			defaultMechanic.FFStart ();
+			
+			currentMechanic = null;
+
+//			Debug.Log ("Setup Flight Mechanics!");
+		}
 
 		public override void init (GameObject go, SoundManager sm) {
 			base.init (go, sm);
@@ -42,19 +66,8 @@ namespace UnityFreeFlight {
 
 			if (flightInputs == null)
 				flightInputs = new FlightInputs ();
-			if (mechanics == null)
-				mechanics = new List<Mechanic> ();
 
-			foreach (Mechanic mech in mechanics) {
-				mech.init (go, sm, flightPhysics, flightInputs);
-				mech.FFStart ();
-			}
-
-			defaultMechanic = new Gliding();
-			defaultMechanic.init (go, sm, flightPhysics, flightInputs);
-			defaultMechanic.FFStart ();
-
-			currentMechanic = null;
+			setupMechanics ();
 		}
 
 

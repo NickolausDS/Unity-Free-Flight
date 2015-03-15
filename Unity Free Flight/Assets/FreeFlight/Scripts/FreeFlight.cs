@@ -18,8 +18,11 @@ public class FreeFlight : MonoBehaviour {
 	//=============
 
 	public void OnEnable () {
-		if (modeManager == null)
+		if (modeManager == null) {
 			modeManager = new ModeManager ();
+			Debug.Log ("Instantiating Free Flight component");
+		}
+//		Debug.Log ("Initializing...");
 		modeManager.init (gameObject);
 	}
 

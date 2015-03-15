@@ -21,6 +21,7 @@ namespace UnityFreeFlight {
 	[Serializable]
 	public class BaseMode {
 
+		[HideInInspector]
 		public string name = "Base Mode";
 
 		public bool alwaysApplyPhysics;
@@ -28,12 +29,12 @@ namespace UnityFreeFlight {
 		protected GameObject gameObject;
 		protected Animator animator;
 		protected Rigidbody rigidbody;
-		[SerializeField]
+		[SerializeField][HideInInspector]
 		protected SoundManager soundManager;
 
-		public List<string> mechanicNames = new List<string> ();
-		public List<Mechanic> mechanics = new List<Mechanic> ();
-		public Mechanic defaultMechanic;
+//		public List<string> mechanicNames = new List<string> ();
+		protected List<Mechanic> mechanics = new List<Mechanic> ();
+		protected Mechanic defaultMechanic;
 		protected Mechanic currentMechanic = null;
 
 		/// <summary>
