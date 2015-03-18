@@ -32,10 +32,17 @@ namespace UnityFreeFlight {
 		[SerializeField][HideInInspector]
 		protected SoundManager soundManager;
 
+
+
 //		public List<string> mechanicNames = new List<string> ();
-		protected List<Mechanic> mechanics = new List<Mechanic> ();
-		protected Mechanic defaultMechanic;
+		[NonSerialized]
+		public List<Mechanic> mechanics = new List<Mechanic> ();
+		[NonSerialized]
+		public Mechanic defaultMechanic;
 		protected Mechanic currentMechanic = null;
+
+		public List<string> mechanicTypeNames = new List<string> ();
+		public string defaultMechanicTypeName = "";
 
 		/// <summary>
 		/// Since Unity's serialized scripts can't use complex constructors, we need to do
@@ -49,7 +56,12 @@ namespace UnityFreeFlight {
 			soundManager = sm;
 			rigidbody = gameObject.GetComponent<Rigidbody> ();
 			animator = gameObject.GetComponentInChildren<Animator> ();
+//			setupMechanics ();
 		}
+
+//		public virtual void setupMechanics() {
+//			throw new NotImplementedException ("setupMechanics needs to be implemented");
+//		}
 
 		public virtual void applyInputs () {
 			

@@ -1,5 +1,6 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System;
+using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -23,41 +24,44 @@ namespace UnityFreeFlight {
 			set { _flightInputs = value;}
 		} 
 		//A mechanic defined explicity for testing purposes
-
-		/// <summary>
-		/// Special mechanics need to be explicitly defined. This is (a hack) because
-		/// Unity dosen't support polymorphic serialization for basic classes, 
-		/// and doing so with scriptable objects would result in a stupid user
-		/// experience.
-		/// </summary>
-		public Flapping flapping = new Flapping ();
-		public Flaring flaring = new Flaring ();
-		public Diving diving = new Diving ();
-		public Gliding gliding = new Gliding ();
-//		public string[] availableMechanics;
-//		public string currentMechanic;
-//		public string[] mechanicPrecedence;
+		public FlightMechanics flightMechanics;
 
 		public void setupMechanics() {
-			mechanics.Clear ();
-			mechanics.Add (diving);
-			mechanics.Add (flaring);
-			mechanics.Add (flapping);
-			defaultMechanic = gliding;
-			if (mechanics == null)
-				mechanics = new List<Mechanic> ();
-			
+			//			defaultMechanic =  (defaultMechanicName);
+			//			defaultMechanic = null;
+//			if (mechanics == null)
+//			mechanics = new List<Mechanic> ();
+
 			foreach (Mechanic mech in mechanics) {
 				mech.init (gameObject, soundManager, flightPhysics, flightInputs);
 				mech.FFStart ();
+//				Debug.Log ("Setup complete for " + mech.GetType().Name);
 			}
 			
-			defaultMechanic.init (gameObject, soundManager, flightPhysics, flightInputs);
-			defaultMechanic.FFStart ();
+			if (defaultMechanic != null) {
+				defaultMechanic.init (gameObject, soundManager, flightPhysics, flightInputs);
+				defaultMechanic.FFStart ();
+//				Debug.Log ("Setup complete for default mechanic " + defaultMechanic.GetType().Name);
+				
+			} else {
+				Debug.LogError ("Default mechanic null: Not setup!");
+			}
 			
 			currentMechanic = null;
 
-//			Debug.Log ("Setup Flight Mechanics!");
+//			Debug.Log ("initializing flight mode");
+//			foreach (var field in typeof(FlightMode).GetFields(BindingFlags.Instance|BindingFlags.Public)) {
+//				Debug.Log ("Prop: " + field.Name);
+//
+//				if (field.Name.ToLower().Equals (defaultMechanicTypeName)) {
+//					Debug.Log ("Prop set to " + field.Name);
+//					defaultMechanic = (Mechanic) field.GetValue (this);
+//					//Testing the default mechanic polymorphic type
+//					Debug.Log ("Polymorphic type: " + defaultMechanic.GetType ().Name);
+//				}
+//			}
+			
+
 		}
 
 		public override void init (GameObject go, SoundManager sm) {
@@ -67,7 +71,12 @@ namespace UnityFreeFlight {
 			if (flightInputs == null)
 				flightInputs = new FlightInputs ();
 
+			if (flightMechanics == null)
+				flightMechanics = new FlightMechanics ();
+
+			flightMechanics.load (this);
 			setupMechanics ();
+
 		}
 
 
@@ -99,6 +108,7 @@ namespace UnityFreeFlight {
 		public override void startMode () {
 //			soundManager.setupSound (flapSoundClip);
 //			soundManager.setupSound (windNoiseClip);
+//			setupMechanics ();
 
 			//HACK -- currently, drag is being fully calculated in flightPhysics.cs, so we don't want the
 			//rigidbody adding any more drag. This should change, it's confusing to users when they look at

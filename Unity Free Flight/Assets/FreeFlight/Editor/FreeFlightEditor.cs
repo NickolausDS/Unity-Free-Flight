@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEditor;
 using System;
+using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -44,9 +45,12 @@ public class FreeFlightEditor : Editor {
 //		freeFlight = (FreeFlight)target;
 //		freeFlight.OnEnable ();
 		EditorGUILayout.PropertyField( serializedObject.FindProperty ("modeManager"), true);
+//		freeFlight = (FreeFlight)target;
+//		setupMechanics (freeFlight.modeManager.flightMode);
 		serializedObject.ApplyModifiedProperties ();
 
 	}
+	
 
 	public Type getTypeByName(List<Type> list, string s) {
 		foreach (Type t in list) {

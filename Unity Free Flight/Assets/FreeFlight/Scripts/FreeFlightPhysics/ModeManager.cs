@@ -17,6 +17,7 @@ namespace UnityFreeFlight {
 	[Serializable]
 	public class ModeManager {
 
+
 		private BaseMode[] _managers; 
 		public BaseMode[] managers {
 			get { 
@@ -64,15 +65,20 @@ namespace UnityFreeFlight {
 			if (groundMode == null)
 				groundMode = new GroundMode ();
 			groundMode.init (go, soundManager);
+
+//			Debug.Log (string.Format ("groundmode {0}, flightmode {1}", groundMode, flightMode));
+		
+
 		}
 
 		public void start () {
+//			Debug.Log ("active mode: " + currentMode);
 			if (activeMode != MovementModes.None)
 				currentMode.startMode ();
 		}
 
 		public BaseMode currentMode {
-			get { return managers[ (int) activeMode ]; }
+			get {return managers[ (int) activeMode ]; }
 		}
 
 		public void getInputs() {

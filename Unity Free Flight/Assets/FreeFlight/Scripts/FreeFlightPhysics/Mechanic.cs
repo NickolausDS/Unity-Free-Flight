@@ -16,7 +16,7 @@ namespace UnityFreeFlight {
 
 		private static System.Random randomNumber = new System.Random ();
 
-
+		[HideInInspector]
 		public string name = "Anonymous Mechanic"; 
 		public bool enabled = true;
 		//list of mechanics this mechanic can and can't execute alongside
