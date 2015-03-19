@@ -111,7 +111,7 @@ namespace UnityFreeFlight {
 		/// </summary>
 		private void applyMechanicPrecedence() {
 			foreach (Mechanic mech in mechanics) {
-				if (mech.FFInputSatisfied () && isHigherPrecedence(mech)) {
+				if (mech.enabled && mech.FFInputSatisfied () && isHigherPrecedence(mech)) {
 					//If the current mechanic isn't done yet
 					if (currentMechanic != null && !currentMechanic.FFFinish ())
 						break;
