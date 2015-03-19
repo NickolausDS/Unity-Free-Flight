@@ -18,6 +18,7 @@ namespace UnityFreeFlight {
 
 		[HideInInspector]
 		public string name = "Anonymous Mechanic"; 
+		[HideInInspector]
 		public bool enabled = true;
 		//list of mechanics this mechanic can and can't execute alongside
 		//This list is managed by the mechanic manager exclusively.

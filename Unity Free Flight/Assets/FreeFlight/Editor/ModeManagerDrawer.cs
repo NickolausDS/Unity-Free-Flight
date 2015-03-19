@@ -5,78 +5,78 @@ using System.Collections.Generic;
 using System;
 using UnityFreeFlight;
 
-//class ModeDrawer : PropertyDrawer {
 [CustomPropertyDrawer (typeof(ModeManager))]
 public class ModeManagerDrawer : PropertyDrawer {
 
+	bool flightModeFoldout;
 
 	public override void OnGUI (Rect position, SerializedProperty property, GUIContent label) {
-//		SerializedProperty cm = property.FindPropertyRelative ("currentMode");
-//		EditorGUILayout.PropertyField (property.FindPropertyRelative("_activeMode"));
+		EditorGUILayout.PropertyField (property.FindPropertyRelative("_activeMode"));
+
+		//TODO Ground mode still uses a generic property field, as it hasn't been refactored yet.
+		EditorGUILayout.PropertyField (property.FindPropertyRelative ("groundMode"), true);
 
 
-//		SerializedProperty flightMode = property.FindPropertyRelative ("flightMode");
-//		EditorGUILayout.PropertyField (flightMode.FindPropertyRelative ("name"));
-
-
-//		EditorGUILayout.PropertyField (property.FindPropertyRelative ("flightMode"), true);
-//		EditorGUILayout.PropertyField (property.FindPropertyRelative ("groundMode"), true);
-		displayMode (position, property.FindPropertyRelative ("flightMode"), label);
-//		displayMode (position, property.FindPropertyRelative ("groundMode"), label);
-
-
-		//This is how we *should* display the managers
-//		SerializedProperty modes = property.FindPropertyRelative ("managers");
-//		for (int i = 0; i < modes.arraySize; i++) {
-////			if (modes.GetArrayElementAtIndex (i).serializedObject != null) {
-//				EditorGUILayout.PropertyField (property.GetArrayElementAtIndex(i), true);
-//
-////			}
-//		}
-
-
+		flightModeFoldout = EditorPrefs.GetBool ("flightModeFoldout");
+		if(flightModeFoldout = EditorGUILayout.Foldout (flightModeFoldout, "Flight Mode"))
+			displayMode (position, property.FindPropertyRelative ("flightMode"), label);
+		EditorPrefs.SetBool ("flightModeFoldout", flightModeFoldout);
 	}
 
 
 	public void displayMode(Rect position, SerializedProperty mode, GUIContent label) {
-		EditorGUILayout.LabelField (mode.name);
 		EditorGUILayout.PropertyField (mode.FindPropertyRelative ("alwaysApplyPhysics"));
 
-
-//		EditorGUILayout.PropertyField (mode.FindPropertyRelative ("mechanics"), true);
-
 		List<string> mechanicNames = getMechanicNames ();
+		SerializedProperty modeMechs = mode.FindPropertyRelative ("flightMechanics");
 
+
+		EditorGUILayout.LabelField ("Default Mechanic:");
+		EditorGUILayout.BeginHorizontal ();
+		EditorGUI.indentLevel++;
 		SerializedProperty flightModeDefaultMechanicName = mode.FindPropertyRelative ("defaultMechanicTypeName");
 		int theNewValue = EditorGUILayout.Popup(mechanicNames.IndexOf (
 			flightModeDefaultMechanicName.stringValue), mechanicNames.ToArray());
 		if (theNewValue > -1)
 			flightModeDefaultMechanicName.stringValue = mechanicNames[theNewValue];
+		EditorGUI.indentLevel--;
+		EditorGUILayout.Space ();
+		EditorGUILayout.Space ();
+		EditorGUILayout.Space ();
+		EditorGUILayout.Space ();
+		EditorGUILayout.EndHorizontal ();
 
+		EditorGUILayout.LabelField ("Mechanics");
+		EditorGUI.indentLevel++;
 		SerializedProperty flightModeMechTypeNames = mode.FindPropertyRelative ("mechanicTypeNames");
 		for (int i = 0; i < flightModeMechTypeNames.arraySize; i++) {
-//			EditorGUILayout.PropertyField (mechanics.GetArrayElementAtIndex(i), false);
-//			EditorGUILayout.LabelField ( flightModeMechTypeNames.GetArrayElementAtIndex(i).stringValue);
+			EditorGUILayout.BeginHorizontal();
+
 			int newValue = EditorGUILayout.Popup(mechanicNames.IndexOf (
 				flightModeMechTypeNames.GetArrayElementAtIndex(i).stringValue), mechanicNames.ToArray());
 			if (newValue > -1)
 				flightModeMechTypeNames.GetArrayElementAtIndex (i).stringValue = mechanicNames[newValue];
-		}
 
-		if (GUILayout.Button ("+")) {
-			flightModeMechTypeNames.InsertArrayElementAtIndex(0);
-		}
+			if (GUILayout.Button ('\u2193'.ToString()))
+				flightModeMechTypeNames.MoveArrayElement(i, i+1);
+			if (GUILayout.Button ("+")) 
+				flightModeMechTypeNames.InsertArrayElementAtIndex(i);
+			if (GUILayout.Button ("-")) 
+				flightModeMechTypeNames.DeleteArrayElementAtIndex(i);
+			EditorGUILayout.PropertyField(modeMechs.FindPropertyRelative(flightModeMechTypeNames.GetArrayElementAtIndex(i).stringValue.ToLower())
+			                              .FindPropertyRelative("enabled"));
 
-		if (GUILayout.Button ("-")) {
-			flightModeMechTypeNames.DeleteArrayElementAtIndex(0);
+			EditorGUILayout.EndHorizontal();
 		}
+		EditorGUI.indentLevel--;
 
-//		EditorGUILayout.PropertyField (mode.FindPropertyRelative ("defaultMechanicName"));
-		SerializedProperty modeMechs = mode.FindPropertyRelative ("flightMechanics");
+
+		EditorGUILayout.LabelField ("Mechanics Configuration");
+		EditorGUI.indentLevel+=1;
 		foreach (string mechName in mechanicNames) {
-//			Debug.Log (mechName);
 			EditorGUILayout.PropertyField(modeMechs.FindPropertyRelative(mechName.ToLower()), true);
 		}
+		EditorGUI.indentLevel-=1;
 
 	}
 
