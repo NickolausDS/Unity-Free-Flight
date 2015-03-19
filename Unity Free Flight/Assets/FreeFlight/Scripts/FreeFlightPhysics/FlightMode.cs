@@ -27,40 +27,20 @@ namespace UnityFreeFlight {
 		public FlightMechanics flightMechanics;
 
 		public void setupMechanics() {
-			//			defaultMechanic =  (defaultMechanicName);
-			//			defaultMechanic = null;
-//			if (mechanics == null)
-//			mechanics = new List<Mechanic> ();
 
 			foreach (Mechanic mech in mechanics) {
 				mech.init (gameObject, soundManager, flightPhysics, flightInputs);
 				mech.FFStart ();
-//				Debug.Log ("Setup complete for " + mech.GetType().Name);
 			}
 			
 			if (defaultMechanic != null) {
 				defaultMechanic.init (gameObject, soundManager, flightPhysics, flightInputs);
 				defaultMechanic.FFStart ();
-//				Debug.Log ("Setup complete for default mechanic " + defaultMechanic.GetType().Name);
-				
 			} else {
-				Debug.LogError ("Default mechanic null: Not setup!");
+				Debug.LogError ("Default Flight Mechanic not setup!");
 			}
 			
 			currentMechanic = null;
-
-//			Debug.Log ("initializing flight mode");
-//			foreach (var field in typeof(FlightMode).GetFields(BindingFlags.Instance|BindingFlags.Public)) {
-//				Debug.Log ("Prop: " + field.Name);
-//
-//				if (field.Name.ToLower().Equals (defaultMechanicTypeName)) {
-//					Debug.Log ("Prop set to " + field.Name);
-//					defaultMechanic = (Mechanic) field.GetValue (this);
-//					//Testing the default mechanic polymorphic type
-//					Debug.Log ("Polymorphic type: " + defaultMechanic.GetType ().Name);
-//				}
-//			}
-			
 
 		}
 
@@ -74,7 +54,9 @@ namespace UnityFreeFlight {
 			if (flightMechanics == null)
 				flightMechanics = new FlightMechanics ();
 
-			flightMechanics.load (this);
+			flightMechanics.load<Mechanic> (defaultMechanicTypeName, ref defaultMechanic);
+			flightMechanics.load<Mechanic> (mechanicTypeNames, ref mechanics);
+
 			setupMechanics ();
 
 		}
