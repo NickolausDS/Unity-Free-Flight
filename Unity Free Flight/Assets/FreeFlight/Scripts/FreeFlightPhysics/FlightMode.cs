@@ -63,11 +63,11 @@ namespace UnityFreeFlight {
 
 
 
-		private CreatureFlightPhysics _flightPhysics;
-		public CreatureFlightPhysics flightPhysics {
+		private FreeFlightPhysics _flightPhysics;
+		public FreeFlightPhysics flightPhysics {
 			get {
 				if (_flightPhysics == null) {
-					_flightPhysics = new CreatureFlightPhysics(rigidbody);
+					_flightPhysics = new FreeFlightPhysics(rigidbody);
 				}
 				return _flightPhysics;
 			}
