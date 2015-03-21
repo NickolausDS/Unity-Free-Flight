@@ -48,14 +48,16 @@ public class ModeManagerDrawer : PropertyDrawer {
 
 		EditorGUILayout.LabelField ("Mechanics");
 		EditorGUI.indentLevel++;
-		SerializedProperty flightModeMechTypeNames = mode.FindPropertyRelative ("mechanicTypeNames");
+		SerializedProperty flightModeMechTypeNames = mode.FindPropertyRelative ("mechanicTypeNames"); 
+
 		for (int i = 0; i < flightModeMechTypeNames.arraySize; i++) {
 			EditorGUILayout.BeginHorizontal();
+			SerializedProperty curMech = flightModeMechTypeNames.GetArrayElementAtIndex(i);
 
 			int newValue = EditorGUILayout.Popup(mechanicNames.IndexOf (
-				flightModeMechTypeNames.GetArrayElementAtIndex(i).stringValue), mechanicNames.ToArray());
+				curMech.stringValue), mechanicNames.ToArray());
 			if (newValue > -1)
-				flightModeMechTypeNames.GetArrayElementAtIndex (i).stringValue = mechanicNames[newValue];
+				curMech.stringValue = mechanicNames[newValue];
 
 			if (GUILayout.Button ('\u2193'.ToString()))
 				flightModeMechTypeNames.MoveArrayElement(i, i+1);
@@ -63,11 +65,18 @@ public class ModeManagerDrawer : PropertyDrawer {
 				flightModeMechTypeNames.InsertArrayElementAtIndex(i);
 			if (GUILayout.Button ("-")) 
 				flightModeMechTypeNames.DeleteArrayElementAtIndex(i);
-			EditorGUILayout.PropertyField(modeMechs.FindPropertyRelative(flightModeMechTypeNames.GetArrayElementAtIndex(i).stringValue.ToLower())
+
+			if (curMech.stringValue != "")
+				EditorGUILayout.PropertyField(modeMechs.FindPropertyRelative(curMech.stringValue.ToLower())
 			                              .FindPropertyRelative("enabled"));
 
 			EditorGUILayout.EndHorizontal();
 		}
+
+		if (flightModeMechTypeNames.arraySize == 0) 
+			if (GUILayout.Button ("+")) 
+				flightModeMechTypeNames.InsertArrayElementAtIndex(0);
+
 		EditorGUI.indentLevel--;
 
 
