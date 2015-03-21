@@ -29,7 +29,7 @@ namespace UnityFreeFlight {
 		public bool load<T>(string typeName, ref T obj) {
 			T loadedObj = (T) getField (typeName, this);
 
-			if (!loadedObj.Equals (obj)) {
+			if (loadedObj != null && !loadedObj.Equals (obj)) {
 				obj = loadedObj;
 				return true;
 			}
