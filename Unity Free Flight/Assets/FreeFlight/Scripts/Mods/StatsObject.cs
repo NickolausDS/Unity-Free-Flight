@@ -9,6 +9,7 @@ namespace UnityFreeFlight {
 public class StatsObject : MonoBehaviour {
 	
 		public Text text;
+		protected string preparedStatsInfo;
 		
 		// Use this for initialization
 		public virtual void Start () {
@@ -18,14 +19,14 @@ public class StatsObject : MonoBehaviour {
 		}
 		
 		public void updateText (System.Object obj, string headerTitle) {
-			string newText = headerTitle + ":\n";
+			preparedStatsInfo = headerTitle + ":\n";
 			BindingFlags flags = /*BindingFlags.NonPublic | */BindingFlags.Public | 
 				BindingFlags.Instance | BindingFlags.Static;
 			PropertyInfo[] flightInputProperties = obj.GetType().GetProperties(flags);
 			foreach (PropertyInfo propertyInfo in flightInputProperties) {
-				newText += string.Format ("{0}: {1}\n", propertyInfo.Name, propertyInfo.GetValue(obj, null));
+				preparedStatsInfo += string.Format ("{0}: {1}\n", propertyInfo.Name, propertyInfo.GetValue(obj, null));
 			}
-			text.text = newText;
+			text.text = preparedStatsInfo;
 		}
 		
 		public virtual void autoConfig() {
