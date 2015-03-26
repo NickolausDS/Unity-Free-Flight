@@ -13,6 +13,7 @@ namespace UnityFreeFlight {
 	/// and shifts control flow accordingly. Control flow in this case is the keyboard/mouse/joystick
 	/// input groups, and which set of code is applied to each set of inputs. 
 	/// on those inputs. 
+	//TODO: Mode manager has no way to continue applying physics to non-current modes. 
 	/// </summary>
 	[Serializable]
 	public class ModeManager {

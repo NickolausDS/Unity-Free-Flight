@@ -16,7 +16,7 @@ namespace UnityFreeFlight {
 		AnimatorStateInfo curstate;
 
 
-		public override void init (GameObject go, SoundManager sm, FreeFlightPhysics fp, FlightInputs fi) {
+		public override void init (GameObject go, SoundManager sm, FlightPhysics fp, FlightInputs fi) {
 			base.init (go, sm, fp, fi);
 			name = "Flapping Mechanic";
 			animationStateName = "Flapping";

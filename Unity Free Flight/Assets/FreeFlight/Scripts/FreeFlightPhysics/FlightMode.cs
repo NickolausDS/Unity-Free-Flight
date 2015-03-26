@@ -25,6 +25,7 @@ namespace UnityFreeFlight {
 		} 
 		//A mechanic defined explicity for testing purposes
 		public FlightMechanics flightMechanics;
+		public FlightPhysics flightPhysics;
 
 		public void setupMechanics() {
 
@@ -54,6 +55,10 @@ namespace UnityFreeFlight {
 			if (flightMechanics == null)
 				flightMechanics = new FlightMechanics ();
 
+			if (flightPhysics == null)
+				flightPhysics = new FlightPhysics ();
+
+
 			flightMechanics.load<Mechanic> (defaultMechanicTypeName, ref defaultMechanic);
 			flightMechanics.load<Mechanic> (mechanicTypeNames, ref mechanics);
 
@@ -61,19 +66,6 @@ namespace UnityFreeFlight {
 
 		}
 
-
-
-		private FreeFlightPhysics _flightPhysics;
-		public FreeFlightPhysics flightPhysics {
-			get {
-				if (_flightPhysics == null) {
-					_flightPhysics = new FreeFlightPhysics(rigidbody);
-				}
-				return _flightPhysics;
-			}
-			set { _flightPhysics = value;}
-		}
-//	
 //		public bool enabledLanding = true;
 //		public AudioClip landingSoundClip;
 //		//private AudioSource landingSoundSource;
@@ -126,7 +118,7 @@ namespace UnityFreeFlight {
 
 		protected override void applyPhysics ()
 		{
-			flightPhysics.doStandardPhysics ();
+			flightPhysics.applyPhysics(rigidbody);
 		}
 
 

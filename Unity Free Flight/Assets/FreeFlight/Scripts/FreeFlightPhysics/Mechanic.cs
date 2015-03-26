@@ -33,7 +33,7 @@ namespace UnityFreeFlight {
 		protected Rigidbody rigidbody;
 		protected Animator animator;
 		protected SoundManager soundManager;
-		protected FreeFlightPhysics flightPhysics;
+		protected FlightPhysics flightPhysics;
 		protected FlightInputs flightInputs;
 
 		public AudioClip[] sounds;
@@ -43,7 +43,7 @@ namespace UnityFreeFlight {
 		/// </summary>
 		/// <param name="go">Go.</param>
 		/// <param name="sm">Sm.</param>
-		public virtual void init(GameObject go, SoundManager sm, FreeFlightPhysics fp, FlightInputs fi) {
+		public virtual void init(GameObject go, SoundManager sm, FlightPhysics fp, FlightInputs fi) {
 			if (!gameObject)
 				gameObject = go;
 			if (flightPhysics == null)

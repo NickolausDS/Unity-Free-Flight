@@ -9,7 +9,7 @@ namespace UnityFreeFlight {
 	[Serializable]
 	public class Diving : Mechanic {
 
-		public override void init (GameObject go, SoundManager sm, FreeFlightPhysics fp, FlightInputs fi) {
+		public override void init (GameObject go, SoundManager sm, FlightPhysics fp, FlightInputs fi) {
 			base.init (go, sm, fp, fi);
 			name = "Diving Mechanic";
 			animationStateName = "Diving";
@@ -27,7 +27,7 @@ namespace UnityFreeFlight {
 		
 		
 		public void wingFold(float left, float right) {
-			flightPhysics.setWingPosition (left, right);
+			flightPhysics.setWingExposure (left, right);
 			
 			float torqueSpeed = (rigidbody.velocity.magnitude) / 15.0f;
 			rigidbody.AddTorque (rigidbody.rotation * Vector3.forward * (right - left) * torqueSpeed);
@@ -37,7 +37,7 @@ namespace UnityFreeFlight {
 				//Rotate the pitch down based on the angle of attack
 				//This gives the player the feeling of falling
 				Quaternion pitchRot = Quaternion.identity;
-				pitchRot.eulerAngles = new Vector3 (flightPhysics.AngleOfAttack, 0, 0);
+				pitchRot.eulerAngles = new Vector3 (flightPhysics.angleOfAttack, 0, 0);
 				pitchRot = rigidbody.rotation * pitchRot;
 				rigidbody.rotation = Quaternion.Lerp (rigidbody.rotation, pitchRot, torqueSpeed * Time.deltaTime);
 			}
