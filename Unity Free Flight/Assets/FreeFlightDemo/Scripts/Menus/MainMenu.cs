@@ -4,13 +4,19 @@ using System.Collections;
 
 namespace FreeFlightDemo {
 
+	[AddComponentMenu ("Scripts/FreeFlightDemo/MainMenu")]
 	public class MainMenu : MonoBehaviour {
 
+		[Tooltip ("Attach a play button to disable it until level load for web builds")]
 		public GameObject playButton;
+		[Tooltip ("Attach the exit button to disable it for web builds")]
 		public GameObject exitButton;
+		[Tooltip ("The UI Text for percentage 'loading text' to be displayed")]
 		public GameObject loadLevelOutputText;
 
+		[Tooltip ("Disables play button on web build until level is loaded")]
 		public bool disableWebPlayButtonUntilLevelLoad = true;
+		[Tooltip ("Disables exit button on web build")]
 		public bool disableWebExitButton = true;
 
 		public const int defaultLevel = 1;
