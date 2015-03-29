@@ -1365,6 +1365,7 @@ MonoBehaviour:
       mechanicTypeNames:
       - Diving
       - Flapping
+      - Flaring
       defaultMechanicTypeName: Gliding
       flightMechanics:
         gliding:
@@ -2147,6 +2148,10 @@ Prefab:
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1615785687}
+    - target: {fileID: 11490904, guid: 91df570bd3ad54a18b0fefe51b657583, type: 2}
+      propertyPath: isPaused
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 91df570bd3ad54a18b0fefe51b657583, type: 2}
   m_IsPrefabParent: 0
