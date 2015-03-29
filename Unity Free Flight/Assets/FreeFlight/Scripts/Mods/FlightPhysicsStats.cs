@@ -10,8 +10,8 @@ namespace UnityFreeFlight {
 		private FreeFlight ffComponent;
 		private FlightPhysics fPhysics;
 		
-		public override void Start () {
-			base.Start ();
+		public override void OnEnable () {
+			base.OnEnable ();
 			nullCheck ("flightObject", flightObject, "Please set it to an object with a Free Flight Component");
 		}
 		
@@ -31,8 +31,7 @@ namespace UnityFreeFlight {
 			}
 			
 			if (fPhysics == null && ffComponent != null)
-				fPhysics = ffComponent.modeManager.flightMode.flightPhysics;
-			
+				fPhysics = ffComponent.modeManager.flightMode.flightPhysics;	
 		}
 	}
 

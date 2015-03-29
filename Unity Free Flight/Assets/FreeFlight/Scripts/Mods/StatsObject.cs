@@ -12,13 +12,16 @@ public class StatsObject : MonoBehaviour {
 		protected string preparedStatsInfo;
 		
 		// Use this for initialization
-		public virtual void Start () {
+		public virtual void OnEnable () {
 			autoConfig ();
 			nullCheck ("text", text, gameObject.name + " missing a 'Text' UI object to display stats information");
 			
 		}
 		
 		public void updateText (System.Object obj, string headerTitle) {
+			if (obj == null)
+				throw new UnityException("Please set a target object for " + gameObject.name);
+
 			preparedStatsInfo = headerTitle + ":\n";
 			BindingFlags flags = /*BindingFlags.NonPublic | */BindingFlags.Public | 
 				BindingFlags.Instance | BindingFlags.Static;

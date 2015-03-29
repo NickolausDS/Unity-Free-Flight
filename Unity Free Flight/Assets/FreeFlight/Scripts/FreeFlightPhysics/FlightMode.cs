@@ -25,7 +25,7 @@ namespace UnityFreeFlight {
 		} 
 		//A mechanic defined explicity for testing purposes
 		public FlightMechanics flightMechanics;
-		public FlightPhysics flightPhysics;
+		public FlightPhysics flightPhysics = new FlightPhysics ();
 
 		public void setupMechanics() {
 

@@ -9,8 +9,8 @@ namespace UnityFreeFlight {
 		private FreeFlight ffComponent;
 		private FlightInputs fInputs;
 
-		public override void Start () {
-			base.Start ();
+		public override void OnEnable () {
+			base.OnEnable ();
 			nullCheck ("flightObject", flightObject, "Please set it to an object with a Free Flight Component");
 		}
 		
