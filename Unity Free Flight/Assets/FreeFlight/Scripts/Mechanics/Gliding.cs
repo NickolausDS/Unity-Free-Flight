@@ -34,7 +34,7 @@ namespace UnityFreeFlight {
 		
 		public override void FFFixedUpdate ()
 		{
-			directionalInput(getBank (), getPitch (false), directionalSensitivity);
+			directionalInput(getBank (), getPitch (false) + flightPhysics.angleOfAttack + 5f, directionalSensitivity);
 		}
 
 		public void directionalInput(float bank, float pitch, float sensitivity) {

@@ -4,22 +4,37 @@ using UnityFreeFlight;
 
 namespace UnityFreeFlight {
 
+	[System.Serializable]
 	public class FlightPhysics {
 
 		//Wing Properties
-		[Header ("Wing Properties")]
-		public float wingChord = .7f; //in meters
-		public float wingSpan = 1.715f;  //in meters
-		public float wingArea { get { return wingChord * wingSpan; } }
-		public float aspectRatio { get { return wingSpan / wingChord; } }
+//		[Header ("Wing Properties")]
+//		public float wingChord = .7f; //in meters
+//		public float wingSpan = 1.715f;  //in meters
+		public float wingArea { get { return .51f; } }
+		public float aspectRatio { get { return 3f; } }
+		//Common Raven
+		//Span -- 42cm | Chord -- 125cm
+		//Area -- .51 sqMet | Aspect Ratio -- 3:1 
+		//Turkey Vulture
+		//Span -- 1.715M | Chord -- .7M
+		//Area -- 1.2sqMet | Aspect Ratio -- 2.45:1
+//		public float wingArea = .51f;
+//		public float aspectRatio = 3f;
+
 		public float weight = 1f;	// in kilograms
 		public float baseDrag = 1f;
+		[Range(.7f, .999f)]
 		public float wingEfficiency = 0.9f; 
 
 		[HideInInspector]
 		public float wingExposureArea;
+		[Range (0.001f, 1.0f)]
 		public float leftWingExposure;
+		[Range (0.001f, 1.0f)]
 		public float rightWingExposure;
+
+		public AnimationCurve dragCoefficientCurve = new AnimationCurve();
 
 		private float _angleOfAttack;
 		public float angleOfAttack { get { return _angleOfAttack; } }
@@ -54,7 +69,7 @@ namespace UnityFreeFlight {
 			//causes physics to fail.
 			leftWingExposure = (cleftWingExposure == 0.0f) ? 0.01f : cleftWingExposure;
 			rightWingExposure = (crightWingExposure == 0.0f) ? 0.01f : crightWingExposure;
-			wingExposureArea = wingSpan * wingChord * (leftWingExposure + rightWingExposure) / 2;
+			wingExposureArea = wingArea * (leftWingExposure + rightWingExposure) / 2;
 		}
 
 		public bool wingsOpen() {
@@ -77,8 +92,8 @@ namespace UnityFreeFlight {
 			                                   getDirectionalVelocity(rigidbody.rotation, rigidbody.velocity), 
 			                                   Time.deltaTime);	
 
-			rigidbody.AddForce (_liftForceVector * Time.deltaTime);
-			rigidbody.AddForce (_dragForceVector * Time.deltaTime);
+			rigidbody.AddForce (_liftForceVector);
+			rigidbody.AddForce (_dragForceVector);
 		}
 
 		/// <summary>
@@ -133,7 +148,7 @@ namespace UnityFreeFlight {
 		/// <param name="area">Area Meters^2</param>
 		/// <param name="liftCoff">Lift coff. (dimensionless)</param>
 		public float getLift(float velocity, float area, float liftCoff) {
-			return velocity * velocity * WorldPhysics.pressure * area * liftCoff;
+			return .5f * velocity * velocity * WorldPhysics.pressure * area * liftCoff;
 		}
 
 		/// <summary>
@@ -142,17 +157,8 @@ namespace UnityFreeFlight {
 		/// <returns>The lift coefficient.</returns>
 		/// <param name="angleDegrees">Angle degrees.</param>
 		public float getLiftCoefficient(float angleDegrees) {
-			float cof;
-			//			if(angleDegrees > 40.0f)
-			//				cof = 0.0f;
-			//			if(angleDegrees < 0.0f)
-			//				cof = angleDegrees/90.0f + 1.0f;
-			//			else
-			//				cof = -0.0024f * angleDegrees * angleDegrees + angleDegrees * 0.0816f + 1.0064f;
-			//Formula based on theoretical thin airfoil theory. We get a very rough estimate here,
-			//and this does not take into account wing aspect ratio
-			cof = 2 * Mathf.PI * angleDegrees * Mathf.Deg2Rad;
-			return cof;	
+			angleDegrees = Mathf.Clamp (angleDegrees, -1f, 26.2f);
+			return -1f / 100f * (angleDegrees * angleDegrees - 26f * angleDegrees - 31f);
 		}
 
 		/// <summary>
@@ -192,12 +198,8 @@ namespace UnityFreeFlight {
 		}
 
 		public float getDragCoefficient(float angleDegrees) {
-			float cof;
-			//if(angleDegrees < -20.0f)
-			//	cof = 0.0f;
-			//else
-			cof = .0039f * angleDegrees * angleDegrees + .025f;
-			return cof;
+			angleDegrees = Mathf.Clamp (angleDegrees, 0f, 22f);
+			return .001f * angleDegrees * angleDegrees + .025f;
 		}
 		
 		//Rotates the object down when velocity gets low enough to simulate "stalling"
