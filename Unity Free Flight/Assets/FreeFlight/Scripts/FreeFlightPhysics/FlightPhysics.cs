@@ -4,26 +4,30 @@ using UnityFreeFlight;
 
 namespace UnityFreeFlight {
 
+	/// <summary>
+	/// Flight Physics determines the external forces acting on an airfoil-like
+	/// object as it moves thought the air. It's responsible for calculating these
+	/// forces, then applying them. 
+	/// 
+	/// There are three forces that Flight physics calculates: Lift, Drag, and a 
+	/// non-physical force that corrects the objects directional velocity. 
+	/// </summary>
 	[System.Serializable]
 	public class FlightPhysics {
 
-		//Wing Properties
-//		[Header ("Wing Properties")]
-//		public float wingChord = .7f; //in meters
-//		public float wingSpan = 1.715f;  //in meters
-		public float wingArea { get { return .51f; } }
-		public float aspectRatio { get { return 3f; } }
+		[Header ("Wing Properties")]
+
 		//Common Raven
 		//Span -- 42cm | Chord -- 125cm
 		//Area -- .51 sqMet | Aspect Ratio -- 3:1 
+		//Weight .69 - 2.0 KG
 		//Turkey Vulture
 		//Span -- 1.715M | Chord -- .7M
 		//Area -- 1.2sqMet | Aspect Ratio -- 2.45:1
-//		public float wingArea = .51f;
-//		public float aspectRatio = 3f;
-
+		//Weight .08 - 2.3 KG
 		public float weight = 1f;	// in kilograms
-		public float baseDrag = 1f;
+		public float wingArea { get { return .51f; } }
+		public float aspectRatio { get { return 3f; } }
 		[Range(.7f, .999f)]
 		public float wingEfficiency = 0.9f; 
 
@@ -33,8 +37,6 @@ namespace UnityFreeFlight {
 		public float leftWingExposure;
 		[Range (0.001f, 1.0f)]
 		public float rightWingExposure;
-
-		public AnimationCurve dragCoefficientCurve = new AnimationCurve();
 
 		private float _angleOfAttack;
 		public float angleOfAttack { get { return _angleOfAttack; } }
@@ -64,6 +66,13 @@ namespace UnityFreeFlight {
 			setWingExposure (1f, 1f);
 		}
 
+		/// <summary>
+		/// Set the left and right wing exposure to the wind. zero is closed, and one
+		/// is open. Therefore, .5 would be a half folded wing that would generate half
+		/// as much lift. 
+		/// </summary>
+		/// <param name="cleftWingExposure">Cleft wing exposure.</param>
+		/// <param name="crightWingExposure">Cright wing exposure.</param>
 		public void setWingExposure(float cleftWingExposure, float crightWingExposure) {
 			//Make sure area is never actually zero, as this is technically impossible and 
 			//causes physics to fail.
@@ -72,12 +81,20 @@ namespace UnityFreeFlight {
 			wingExposureArea = wingArea * (leftWingExposure + rightWingExposure) / 2;
 		}
 
+		/// <summary>
+		/// Check if wings are open
+		/// </summary>
+		/// <returns><c>true</c>, if wings are open, <c>false</c> otherwise.</returns>
 		public bool wingsOpen() {
 			if (wingExposureArea == wingArea)
 				return true;
 			return false;
 		}
 
+		/// <summary>
+		/// Calculate flight physics, then apply them to the rigidbody.
+		/// </summary>
+		/// <param name="rigidbody">Rigidbody.</param>
 		public void applyPhysics(Rigidbody rigidbody) {
 
 			//TODO: swap rigidbody.velocity for the relative airspeed. Current calculation does not take into
@@ -97,7 +114,7 @@ namespace UnityFreeFlight {
 		}
 
 		/// <summary>
-		/// Calculate lift, drag, and angle of attack for this instant.
+		/// Calculate lift, drag, and angle of attack for this physics timestep.
 		/// </summary>
 		public void physicsTick(Vector3 relativeAirVelocity, Quaternion rotation) {
 			if (relativeAirVelocity == Vector3.zero)
@@ -116,19 +133,20 @@ namespace UnityFreeFlight {
 			//Calculate drag
 			_dragCoefficient = getDragCoefficient (_angleOfAttack);
 			_liftInducedDragForce = getLiftInducedDrag (_liftForce, _airspeed, wingExposureArea, wingEfficiency, aspectRatio);
+			//TODO: wing exposure may not be a valid parameter to give here, because it assums wind is hitting the wings at a
+			//ninety degree angle. This may be the reason for very high drag values. 
 			_formDragForce = getFormDrag (_airspeed, wingExposureArea, _dragCoefficient);
 			_dragForceVector = getDragForceVector (relativeAirVelocity, _liftInducedDragForce + _formDragForce);
 
 		}
 
 		/// <summary>
-		/// Get a Vector 3 meausring the direction of the 
-		/// lift and the magnitude of the force.
+		/// Get a Vector 3 meausring the direction of the lift and the magnitude of the force.
+		/// It's assumed that: unit=meter. 
 		/// </summary>
 		/// <returns>The lift 3d directional force vector.</returns>
 		/// <param name="relativeAirVelocity">Relative air velocity.</param>
-		/// <param name="wingArea">Total wing area capable of generating lift</param>
-		/// <param name="liftCoeff">The wings lift coefficient</param>
+		/// <param name="lift">Amount of force the lift has generated (in newtons)</param>
 		public Vector3 getLiftForceVector(Vector3 relativeAirVelocity, float lift) {
 			if (relativeAirVelocity != Vector3.zero || lift == 0) {
 				return Quaternion.LookRotation(relativeAirVelocity) * Vector3.up * liftForce;
@@ -138,13 +156,10 @@ namespace UnityFreeFlight {
 		
 		
 		/// <summary>
-		/// 	Get the current lift force on the object based on the paramaters. 
-		/// 
-		/// 	All dimensions must be in metric.
+		/// 	Get the current lift force on the object in newtons
 		/// </summary>
 		/// <returns>The lift in Newtons</returns>
 		/// <param name="velocity">Velocity Meters/Second</param>
-		/// <param name="pressure">Pressure (something)</param>
 		/// <param name="area">Area Meters^2</param>
 		/// <param name="liftCoff">Lift coff. (dimensionless)</param>
 		public float getLift(float velocity, float area, float liftCoff) {
@@ -166,7 +181,7 @@ namespace UnityFreeFlight {
 		/// </summary>
 		/// <returns>The drag force vector.</returns>
 		/// <param name="relativeAirVelocity">Relative air velocity.</param>
-		/// <param name="drag">Drag.</param>
+		/// <param name="drag">Drag force in newtnos</param>
 		public Vector3 getDragForceVector(Vector3 relativeAirVelocity, float drag) {
 			if (relativeAirVelocity != Vector3.zero)
 				return Quaternion.LookRotation(relativeAirVelocity) * Vector3.back * drag;
@@ -176,7 +191,7 @@ namespace UnityFreeFlight {
 		/// <summary>
 		/// Get the drag caused by the shape and size of the airfoil. 
 		/// </summary>
-		/// <returns>The form drag.</returns>
+		/// <returns>The form drag (in newtons)</returns>
 		/// <param name="velocity">airspeed</param>
 		/// <param name="area">current wing exposure</param>
 		/// <param name="dragCoff">Drag coff.</param>
@@ -197,20 +212,16 @@ namespace UnityFreeFlight {
 			return (lift*lift) / (.5f * WorldPhysics.pressure * velocity * velocity * area * Mathf.PI * wingefficiency * aspectR);
 		}
 
+		/// <summary>
+		/// Get the drag coefficient based on angle of attack and velocity. 
+		/// </summary>
+		/// <returns>The drag coefficient.</returns>
+		/// <param name="angleDegrees">Angle degrees.</param>
 		public float getDragCoefficient(float angleDegrees) {
 			angleDegrees = Mathf.Clamp (angleDegrees, 0f, 22f);
 			return .001f * angleDegrees * angleDegrees + .025f;
 		}
-		
-		//Rotates the object down when velocity gets low enough to simulate "stalling"
-		public Quaternion getStallRotation (Quaternion curRot, float velocity) {
-			//This equation isn't based on any real-world physics. But it seems to work pretty well as is.
-			float pitchRotationSpeed = 10.0f / (velocity * velocity);
-			Quaternion pitchrot = Quaternion.LookRotation (Vector3.down);
-			Quaternion newRot = Quaternion.Lerp (curRot, pitchrot, Mathf.Abs (pitchRotationSpeed) * Time.deltaTime);
-			return newRot;
-		}
-		
+
 		//When we do a turn, we don't just want to rotate our character. We want their
 		//velocity to match the direction they are facing. 
 		public Vector3 getDirectionalVelocity(Quaternion theCurrentRotation, Vector3 theCurrentVelocity) {
@@ -221,9 +232,13 @@ namespace UnityFreeFlight {
 			return vel;
 		}
 		
-		//Get new yaw and roll, store the value in newRotation
+		/// <summary>
+		/// Rotate the object around the Y axis based on how much roll it has. Imagine an airplane making a
+		/// banked turn.
+		/// </summary>
+		/// <returns>The banked turn rotation.</returns>
+		/// <param name="theCurrentRotation">The current rotation.</param>
 		public Quaternion getBankedTurnRotation(Quaternion theCurrentRotation) {
-			//Quaternion getBankedTurnRotation(float curZRot, float curLift, float curVel, float mass) {
 			// The physics of a banked turn is as follows
 			//  L * Sin(0) = M * V^2 / r
 			//	L is the lift acting on the aircraft
