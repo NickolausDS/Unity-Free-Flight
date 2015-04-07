@@ -15,7 +15,7 @@ namespace UnityFreeFlight {
 		}
 		
 		public void Update () {
-			updateText (fInputs, flightObject.name);
+			defaultUpdate (fInputs, flightObject.name);
 		}
 
 		public override void autoConfig() {
