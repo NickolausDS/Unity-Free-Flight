@@ -49,7 +49,7 @@ namespace UnityFreeFlight {
 
 		public bool isFlapping () {
 			curstate = animator.GetCurrentAnimatorStateInfo (0);
-			if (curstate.nameHash != animationStateHash) {
+			if (curstate.fullPathHash != animationStateHash) {
 				return false;
 			}
 			return true;

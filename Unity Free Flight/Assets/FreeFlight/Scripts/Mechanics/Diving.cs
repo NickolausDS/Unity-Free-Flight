@@ -14,6 +14,8 @@ namespace UnityFreeFlight {
 			name = "Diving Mechanic";
 			animationStateName = "Diving";
 			animationStateHash = Animator.StringToHash (animationStateName);
+			animator.SetBool (animationStateHash, false);
+
 		}
 		
 		public override bool FFInputSatisfied () {
