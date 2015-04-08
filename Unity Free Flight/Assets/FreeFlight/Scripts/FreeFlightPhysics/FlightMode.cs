@@ -49,21 +49,14 @@ namespace UnityFreeFlight {
 			base.init (go, sm);
 			name = "Flight Mode";
 
-			if (flightInputs == null)
-				flightInputs = new FlightInputs ();
-
-			if (flightMechanics == null)
-				flightMechanics = new FlightMechanics ();
-
-			if (flightPhysics == null)
-				flightPhysics = new FlightPhysics ();
-
+			flightInputs = new FlightInputs ();
+			flightMechanics = new FlightMechanics ();
+			flightPhysics = new FlightPhysics ();
 
 			flightMechanics.load<Mechanic> (defaultMechanicTypeName, ref defaultMechanic);
 			flightMechanics.load<Mechanic> (mechanicTypeNames, ref mechanics);
 
 			setupMechanics ();
-
 		}
 
 //		public bool enabledLanding = true;
@@ -93,8 +86,6 @@ namespace UnityFreeFlight {
 			rigidbody.isKinematic = false;
 
 			defaultMechanic.FFBegin ();
-			currentMechanic = null;
-
 		}
 //
 		public override void finishMode () {

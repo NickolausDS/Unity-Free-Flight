@@ -44,18 +44,12 @@ namespace UnityFreeFlight {
 		/// <param name="go">Go.</param>
 		/// <param name="sm">Sm.</param>
 		public virtual void init(GameObject go, SoundManager sm, FlightPhysics fp, FlightInputs fi) {
-			if (!gameObject)
-				gameObject = go;
-			if (flightPhysics == null)
-				flightPhysics = fp;
-			if (soundManager == null)
-				soundManager = sm;
-			if (!animator)
-				animator = gameObject.GetComponentInChildren <Animator> ();
-			if (!rigidbody)
-				rigidbody = gameObject.GetComponent <Rigidbody> ();
-			if (flightInputs == null)
-				flightInputs = fi;
+			gameObject = go;
+			flightPhysics = fp;
+			soundManager = sm;
+			animator = gameObject.GetComponentInChildren <Animator> ();
+			rigidbody = gameObject.GetComponent <Rigidbody> ();
+			flightInputs = fi;
 		}
 
 		/// <summary>
@@ -72,11 +66,7 @@ namespace UnityFreeFlight {
 		/// <summary>
 		/// Do prep work, usually applying any settings changed by the user in the inspector 
 		/// </summary>
-		/// <param name="animator">Animator.</param>
-		/// <param name="rigidbody">Rigidbody.</param>
 		public virtual void FFStart () {
-			//usually what we want for start()
-			animationStateHash = Animator.StringToHash (animationStateName);
 		}
 
 		/// <summary>

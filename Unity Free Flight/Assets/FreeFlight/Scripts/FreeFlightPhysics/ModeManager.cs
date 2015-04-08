@@ -19,20 +19,8 @@ namespace UnityFreeFlight {
 	public class ModeManager {
 
 
-		private BaseMode[] _managers; 
-		public BaseMode[] managers {
-			get { 
-				//Setup dynamic managers This needs to match the enum "movement Modes"
-				if (_managers == null) {
-					_managers = new BaseMode[3]; 
-					_managers [0] = null;
-					_managers [1] = groundMode;
-					_managers [2] = flightMode;
-				}
-				return _managers;
-			}
-			set {_managers = value;}
-		}
+		public BaseMode[] managers;
+
 		public FlightMode flightMode;
 		public GroundMode groundMode;
 		[SerializeField]
@@ -67,13 +55,14 @@ namespace UnityFreeFlight {
 				groundMode = new GroundMode ();
 			groundMode.init (go, soundManager);
 
-//			Debug.Log (string.Format ("groundmode {0}, flightmode {1}", groundMode, flightMode));
-		
+			managers = new BaseMode[3]; 
+			managers [0] = null;
+			managers [1] = groundMode;
+			managers [2] = flightMode;
 
 		}
 
 		public void start () {
-//			Debug.Log ("active mode: " + currentMode);
 			if (activeMode != MovementModes.None)
 				currentMode.startMode ();
 		}

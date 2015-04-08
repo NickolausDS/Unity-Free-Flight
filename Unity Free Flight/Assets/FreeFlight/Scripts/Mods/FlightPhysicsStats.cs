@@ -18,7 +18,6 @@ namespace UnityFreeFlight {
 
 		public override void OnEnable () {
 			base.OnEnable ();
-			nullCheck ("flightObject", flightObject, "Please set it to an object with a Free Flight Component");
 		}
 		
 		public void Update () {
@@ -37,20 +36,20 @@ namespace UnityFreeFlight {
 		
 		public override void autoConfig() {
 			base.autoConfig ();
-			
+
 			if (!flightObject) {
 				flightObject = GameObject.FindGameObjectWithTag ("Player");
 			}
-			
-			if (!ffComponent) {
-				ffComponent = flightObject.GetComponent<FreeFlight> ();
-			}
 
-			if (!frigidbody)
-				frigidbody = flightObject.GetComponent<Rigidbody> ();
+			nullCheck ("flightObject", flightObject, "Please set it to an object with a Free Flight Component");
 			
-			if (fPhysics == null && ffComponent != null)
-				fPhysics = ffComponent.modeManager.flightMode.flightPhysics;	
+			ffComponent = flightObject.GetComponent<FreeFlight> ();
+			frigidbody = flightObject.GetComponent<Rigidbody> ();
+			
+			if (ffComponent != null)
+				fPhysics = ffComponent.modeManager.flightMode.flightPhysics;
+
+
 		}
 	}
 

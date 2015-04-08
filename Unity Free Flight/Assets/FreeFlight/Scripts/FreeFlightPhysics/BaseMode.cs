@@ -64,10 +64,14 @@ namespace UnityFreeFlight {
 //		}
 
 		public virtual void applyInputs () {
+
+			try {
+				applyMechanicPrecedence ();
 			
-			applyMechanicPrecedence ();
-			
-			applyMechanic ();
+				applyMechanic ();
+			} catch (Exception e) {
+				Debug.LogException(e);
+			}
 
 			
 			applyPhysics ();
