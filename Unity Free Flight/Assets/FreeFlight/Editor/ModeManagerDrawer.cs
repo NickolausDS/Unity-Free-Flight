@@ -79,6 +79,16 @@ public class ModeManagerDrawer : PropertyDrawer {
 
 		EditorGUI.indentLevel--;
 
+		EditorGUILayout.LabelField ("Finish Mechanic:");
+		EditorGUILayout.BeginHorizontal ();
+		EditorGUI.indentLevel++;
+		SerializedProperty flightModeFinishMechanicName = mode.FindPropertyRelative ("finishMechanicTypeName");
+		theNewValue = EditorGUILayout.Popup(mechanicNames.IndexOf (
+			flightModeFinishMechanicName.stringValue), mechanicNames.ToArray());
+		if (theNewValue > -1)
+			flightModeFinishMechanicName.stringValue = mechanicNames[theNewValue];
+		EditorGUI.indentLevel--;
+		EditorGUILayout.EndHorizontal ();
 
 		EditorGUILayout.LabelField ("Mechanics Configuration");
 		EditorGUI.indentLevel+=1;
@@ -86,6 +96,8 @@ public class ModeManagerDrawer : PropertyDrawer {
 			EditorGUILayout.PropertyField(modeMechs.FindPropertyRelative(mechName.ToLower()), true);
 		}
 		EditorGUI.indentLevel-=1;
+
+		EditorGUILayout.PropertyField (mode.FindPropertyRelative ("flightPhysics"), true);
 
 	}
 

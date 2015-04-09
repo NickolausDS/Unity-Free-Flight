@@ -67,14 +67,6 @@ namespace UnityFreeFlight {
 		/// Do prep work, usually applying any settings changed by the user in the inspector 
 		/// </summary>
 		public virtual void FFStart () {
-		}
-
-		/// <summary>
-		/// Do anything needed to start the mechanic. Set the animation bools or triggers here, and do any
-		/// other prep work needed. 
-		/// </summary>
-		public virtual void FFBegin () {
-			//usually what we want for begin()
 			animator.SetBool (animationStateHash, true);
 		}
 

@@ -28,9 +28,9 @@ namespace UnityFreeFlight {
 		}
 
 		/// <summary>
-		/// Override FFBegin to do nothing. The Stock Begin() isn't what we want
+		/// Override FFStart to do nothing. The Stock Begin() isn't what we want
 		/// </summary>
-		public override void FFBegin () {}
+		public override void FFStart () {}
 
 		public override void FFFixedUpdate () {
 			if (!isFlapping()) {

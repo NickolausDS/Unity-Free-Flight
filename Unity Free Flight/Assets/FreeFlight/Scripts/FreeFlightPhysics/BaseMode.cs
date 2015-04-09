@@ -40,9 +40,15 @@ namespace UnityFreeFlight {
 		[NonSerialized]
 		public Mechanic defaultMechanic;
 		protected Mechanic currentMechanic = null;
+		[NonSerialized]
+		public Mechanic finishMechanic;
+
 
 		public List<string> mechanicTypeNames = new List<string> ();
 		public string defaultMechanicTypeName = "";
+		public string finishMechanicTypeName;
+
+
 
 		/// <summary>
 		/// Since Unity's serialized scripts can't use complex constructors, we need to do
@@ -120,7 +126,7 @@ namespace UnityFreeFlight {
 					if (currentMechanic != null && !currentMechanic.FFFinish ())
 						break;
 					currentMechanic = mech;
-					currentMechanic.FFBegin ();
+					currentMechanic.FFStart ();
 					break;
 				}
 			}		

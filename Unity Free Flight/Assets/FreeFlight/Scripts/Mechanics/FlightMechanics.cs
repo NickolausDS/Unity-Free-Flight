@@ -15,6 +15,7 @@ namespace UnityFreeFlight {
 		public Flaring flaring = new Flaring ();
 		public Diving diving = new Diving ();
 		public Flapping flapping = new Flapping ();
+		public Landing landing = new Landing ();
 	}
 
 }
