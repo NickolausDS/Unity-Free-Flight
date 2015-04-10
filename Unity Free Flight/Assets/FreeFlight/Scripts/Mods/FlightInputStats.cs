@@ -25,12 +25,13 @@ namespace UnityFreeFlight {
 				flightObject = GameObject.FindGameObjectWithTag ("Player");
 			}
 
-			if (!ffComponent) {
-				ffComponent = flightObject.GetComponent<FreeFlight> ();
-			}
+			nullCheck ("flightObject", flightObject, "Please set it to an object with a Free Flight Component");
 
-			if (fInputs == null && ffComponent != null)
-				fInputs = ffComponent.modeManager.flightMode.flightInputs;
+			ffComponent = flightObject.GetComponent<FreeFlight> ();
+
+			nullCheck ("", flightObject, "This object can only display stats info for objects with a Free Flight Component.");
+
+			fInputs = ffComponent.modeManager.flightMode.flightInputs;
 
 		}
 

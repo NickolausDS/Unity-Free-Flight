@@ -20,6 +20,12 @@ namespace UnityFreeFlight {
 			
 		}
 
+		//Doing an additional autoconfig fixes a problem where this script loads before the 
+		//object we're stat-ing. This way, we'll always be stat-ing the correct objects. 
+		public virtual void Start() {
+			autoConfig ();
+		}
+
 		/// <summary>
 		/// Show all properties in an object, in whatever order they appear within that object. 
 		/// </summary>
@@ -49,8 +55,8 @@ namespace UnityFreeFlight {
 		
 		public void nullCheck (string name, System.Object obj, string helpMSG) {
 			if (obj == null || obj.ToString().Equals ("null")) {
-				Debug.LogError(this.name + ": " + name + " is null. " + helpMSG);
 				this.enabled = false;
+				throw new UnityException(this.name + ": " + name + " is null. " + helpMSG);
 			}
 
 		}
@@ -67,7 +73,6 @@ namespace UnityFreeFlight {
 		public PropertyInfo[] getProperites(System.Object obj, BindingFlags bflags) { 
 			return obj.GetType().GetProperties(bflags);
 		}
-		
 		
 	}
 }
