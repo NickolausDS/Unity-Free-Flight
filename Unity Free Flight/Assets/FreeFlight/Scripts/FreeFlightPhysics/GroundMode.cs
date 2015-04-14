@@ -5,6 +5,11 @@ using UnityFreeFlight;
 
 namespace UnityFreeFlight {
 
+	//TODO (Apr 14th 2014/v0.5.0): This class is still used, however it's very old. It resembles an 
+	//old prototype for testing ground movement with rigidbodies. In the future,
+	//it will be refactored into a true "mode", with mechanics to handle movement,
+	//animation, and sound. 
+
 	/// <summary>
 	/// Apply ground movements when enabled by the mode manager. 
 	/// </summary>
