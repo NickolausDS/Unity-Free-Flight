@@ -87,6 +87,21 @@ namespace UnityFreeFlight {
 			return true;
 		}
 
+		/// <summary>
+		/// Hash the string, and also check whether the hash exists within
+		/// the animation controller. If no matching state exists within 
+		/// the controller, the hash is set to zero. 
+		/// </summary>
+		/// <param name="animString">Animation string.</param>
+		/// <param name="animHash">Animation hash.</param>
+		public void setupAnimation(string animString, int layer, ref int animHash) {
+			if (animator != null && animString != null) {
+				animHash = Animator.StringToHash (animString);
+				if (!animator.HasState (layer, animHash))
+					animHash = 0;
+			}
+		}
+
 
 	}
 }
