@@ -8,29 +8,47 @@ namespace UnityFreeFlight {
 	[Serializable]
 	public class Landing : Mechanic {
 
-		//private AudioSource landingSoundSource;
-		//Max time "standUp" will take to execute.
+		[Header ("Landing")]
+		public string landingAnimation = "landing";
+		public int landingLayerIndex = 0;
+		private int landingHash;
+		public AudioClip landingSound;
+		[Tooltip("Time in seconds until standup will snap to the correct rotation")]
 		public float maxStandUpTime = 2.0f;
-		//Speed which "standUp" will correct rotation. 
+		[Tooltip("Speed to slowely correct to upright orientation")]
 		public float standUpSpeed = 2.0f;
+		//Main Free Flight script is used to start coroutines.
 		private FreeFlight mainMonbehaviour;
 
-		//	
-		//		public bool enabledCrashing = false;
-		//		public float crashSpeed = 40f;
-		//		public AudioClip crashSoundClip;
-		//		//private AudioSource crashSoundSource;
+		[Header ("Crashing")]
+		public bool enabledCrashing = false;
+		public string crashingAnimation = "crashing";
+		public int crashingLayerIndex = 0;
+		private int crashingHash;
+		public AudioClip crashSound;
+		[Tooltip ("The speed a crash will happen instead of a landing")]
+		public float crashSpeed = 20f;
 
-		public override void init (GameObject go, SoundManager sm, FlightPhysics fp, FlightInputs fi) {
-			base.init (go, sm, fp, fi);
+		public override void init (GameObject go, FlightPhysics fp, FlightInputs fi) {
+			base.init (go, fp, fi);
 			mainMonbehaviour = gameObject.GetComponent<FreeFlight> ();
+			setupAnimation (landingAnimation, landingLayerIndex, ref landingHash);
+			setupAnimation (crashingAnimation, crashingLayerIndex, ref crashingHash);
 		}
 
 
 		public override void FFStart () {
-			if (animationStateHash != 0)
-				animator.SetTrigger(animationStateHash);
-			mainMonbehaviour.StartCoroutine (standUp ());
+			//Check for a crash
+			if (enabledCrashing && flightPhysics.airspeed > crashSpeed) {
+				if (crashingHash != 0)
+					animator.SetTrigger(crashingHash);
+				soundManager.playSound (crashSound);
+			//Do a regular landing otherwise
+			} else {
+				if (landingHash != 0)
+					animator.SetTrigger(landingAnimation);
+				mainMonbehaviour.StartCoroutine (standUp ());
+			}
 		}
 
 		//Don't do default behavior. 
