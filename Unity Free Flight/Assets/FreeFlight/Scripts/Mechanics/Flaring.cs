@@ -21,8 +21,8 @@ namespace UnityFreeFlight {
 
 		
 		
-		public override void init (GameObject go, SoundManager sm, FlightPhysics fp, FlightInputs fi) {
-			base.init (go, sm, fp, fi);
+		public override void init (GameObject go, FlightPhysics fp, FlightInputs fi) {
+			base.init (go, fp, fi);
 			name = "Flaring Mechanic";
 			animationStateName = "Flaring";
 			animationStateHash = Animator.StringToHash (animationStateName);

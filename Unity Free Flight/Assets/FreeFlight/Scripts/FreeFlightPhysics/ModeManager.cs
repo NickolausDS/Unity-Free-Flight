@@ -23,8 +23,7 @@ namespace UnityFreeFlight {
 
 		public FlightMode flightMode;
 		public GroundMode groundMode;
-		[SerializeField]
-		public SoundManager soundManager;
+//		public SoundManager soundManager;
 
 
 		[SerializeField]
@@ -43,17 +42,14 @@ namespace UnityFreeFlight {
 		}
 
 		public void init (GameObject go) {
-			if (soundManager == null)
-				soundManager = new SoundManager();
-			soundManager.init (go);
 
 			if (flightMode == null)
 				flightMode = new FlightMode ();
-			flightMode.init (go, soundManager);
+			flightMode.init (go);
 
 			if (groundMode == null)
 				groundMode = new GroundMode ();
-			groundMode.init (go, soundManager);
+			groundMode.init (go);
 
 			managers = new BaseMode[3]; 
 			managers [0] = null;

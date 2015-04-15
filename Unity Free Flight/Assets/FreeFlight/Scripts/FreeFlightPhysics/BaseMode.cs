@@ -29,8 +29,6 @@ namespace UnityFreeFlight {
 		protected GameObject gameObject;
 		protected Animator animator;
 		protected Rigidbody rigidbody;
-		[SerializeField][HideInInspector]
-		protected SoundManager soundManager;
 
 
 
@@ -57,9 +55,8 @@ namespace UnityFreeFlight {
 		/// are used, because most methods will depend on cached references set by init().
 		/// </summary>
 		/// <param name="go">Go.</param>
-		public virtual void init (GameObject go, SoundManager sm) {
+		public virtual void init (GameObject go) {
 			gameObject = go;
-			soundManager = sm;
 			rigidbody = gameObject.GetComponent<Rigidbody> ();
 			animator = gameObject.GetComponentInChildren<Animator> ();
 //			setupMechanics ();

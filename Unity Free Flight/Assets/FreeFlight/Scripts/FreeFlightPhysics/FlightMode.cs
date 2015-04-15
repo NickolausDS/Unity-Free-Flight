@@ -21,26 +21,26 @@ namespace UnityFreeFlight {
 		public void setupMechanics() {
 
 			foreach (Mechanic mech in mechanics) {
-				mech.init (gameObject, soundManager, flightPhysics, flightInputs);
+				mech.init (gameObject, flightPhysics, flightInputs);
 			}
 			
 			if (defaultMechanic != null) {
-				defaultMechanic.init (gameObject, soundManager, flightPhysics, flightInputs);
+				defaultMechanic.init (gameObject, flightPhysics, flightInputs);
 				defaultMechanic.FFStart ();
 			} else {
 				Debug.LogError ("Default Flight Mechanic not setup!");
 			}
 
 			if (finishMechanic != null) {
-				finishMechanic.init (gameObject, soundManager, flightPhysics, flightInputs);
+				finishMechanic.init (gameObject, flightPhysics, flightInputs);
 			}
 			
 			currentMechanic = null;
 
 		}
 
-		public override void init (GameObject go, SoundManager sm) {
-			base.init (go, sm);
+		public override void init (GameObject go) {
+			base.init (go);
 			name = "Flight Mode";
 
 			flightInputs = new FlightInputs ();

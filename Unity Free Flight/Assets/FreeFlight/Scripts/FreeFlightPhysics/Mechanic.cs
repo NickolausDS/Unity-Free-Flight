@@ -14,8 +14,6 @@ namespace UnityFreeFlight {
 	[Serializable]
 	public class Mechanic {
 
-		private static System.Random randomNumber = new System.Random ();
-
 		[HideInInspector]
 		public string name = "Anonymous Mechanic"; 
 		[HideInInspector]
@@ -36,17 +34,16 @@ namespace UnityFreeFlight {
 		protected FlightPhysics flightPhysics;
 		protected FlightInputs flightInputs;
 
-		public AudioClip[] sounds;
-
 		/// <summary>
 		/// Special Method, called on OnEnable() of master component. Do any initializing or caching here. 
 		/// </summary>
 		/// <param name="go">Go.</param>
 		/// <param name="sm">Sm.</param>
-		public virtual void init(GameObject go, SoundManager sm, FlightPhysics fp, FlightInputs fi) {
+		public virtual void init(GameObject go, FlightPhysics fp, FlightInputs fi) {
 			gameObject = go;
 			flightPhysics = fp;
-			soundManager = sm;
+			soundManager = new SoundManager ();
+			soundManager.init (go);
 			animator = gameObject.GetComponentInChildren <Animator> ();
 			rigidbody = gameObject.GetComponent <Rigidbody> ();
 			flightInputs = fi;
@@ -90,15 +87,6 @@ namespace UnityFreeFlight {
 			return true;
 		}
 
-		/// <summary>
-		/// Plays a random sound from the list provided.
-		/// </summary>
-		public virtual void playSound() {
-			if (sounds.Length > 0) {
-				//pick a random sound from the list
-				soundManager.playSound(sounds[randomNumber.Next (sounds.Length)]);
-			}
 
-		}
 	}
 }

@@ -21,8 +21,8 @@ namespace UnityFreeFlight {
 		public float windNoiseStartSpeed = 20.0f;
 		public float windNoiseMaxSpeed = 200.0f;
 		
-		public override void init (GameObject go, SoundManager sm, FlightPhysics fm, FlightInputs fi) {
-			base.init (go, sm, fm, fi);
+		public override void init (GameObject go, FlightPhysics fm, FlightInputs fi) {
+			base.init (go, fm, fi);
 			name = "Gliding";
 			animationStateName = "Flying";
 			animationStateHash = Animator.StringToHash (animationStateName);
@@ -49,24 +49,24 @@ namespace UnityFreeFlight {
 			if (!windNoiseClip)
 				return;
 			
-			AudioSource windNoiseSource = soundManager.getSource (windNoiseClip);
-			if (!windNoiseSource) {
-				Debug.LogError ("Wind source noise has clip but not source!");
-				return;
-			}
+//			AudioSource windNoiseSource = soundManager.getSource (windNoiseClip);
+//			if (!windNoiseSource) {
+//				Debug.LogError ("Wind source noise has clip but not source!");
+//				return;
+//			}
 			
-			if (flightPhysics.airspeed > windNoiseStartSpeed) {
-				float volume = Mathf.Clamp (flightPhysics.airspeed / (windNoiseStartSpeed + windNoiseMaxSpeed), 0.0f, 1.0f);
-				windNoiseSource.volume = volume;
-				//We want pitch to pick up at about half the volume
-				windNoiseSource.pitch = Mathf.Clamp (0.9f + flightPhysics.airspeed / 2.0f / (windNoiseStartSpeed + windNoiseMaxSpeed), 0.9f, 1.5f);
-				//Use this to see how values are applied at various speeds.
-				//Debug.Log (string.Format ("Vol {0}, pitch {1}", audio.volume, audio.pitch));
-				if (! windNoiseSource.isPlaying) 
-					windNoiseSource.Play ();
-			} else {
-				windNoiseSource.Stop ();
-			}
+//			if (flightPhysics.airspeed > windNoiseStartSpeed) {
+//				float volume = Mathf.Clamp (flightPhysics.airspeed / (windNoiseStartSpeed + windNoiseMaxSpeed), 0.0f, 1.0f);
+//				windNoiseSource.volume = volume;
+//				//We want pitch to pick up at about half the volume
+//				windNoiseSource.pitch = Mathf.Clamp (0.9f + flightPhysics.airspeed / 2.0f / (windNoiseStartSpeed + windNoiseMaxSpeed), 0.9f, 1.5f);
+//				//Use this to see how values are applied at various speeds.
+//				//Debug.Log (string.Format ("Vol {0}, pitch {1}", audio.volume, audio.pitch));
+//				if (! windNoiseSource.isPlaying) 
+//					windNoiseSource.Play ();
+//			} else {
+//				windNoiseSource.Stop ();
+//			}
 			
 		}
 

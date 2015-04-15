@@ -19,9 +19,9 @@ namespace UnityFreeFlight {
 		public GroundInputs inputs;
 		public FreeFlightAnimationHashIDs hashIDs; 
 
-		public override void init (GameObject go, SoundManager sm)
+		public override void init (GameObject go)
 		{
-			base.init (go, sm);
+			base.init (go);
 			inputs = new GroundInputs ();
 			hashIDs = new FreeFlightAnimationHashIDs ();
 		}

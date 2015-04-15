@@ -6,65 +6,64 @@ using System.Collections.Generic;
 namespace UnityFreeFlight {
 
 	/// <summary>
-	/// Keep track of audio clips setup via setupSound(), and their corresponding
-	/// AudioSoruce (which the Sound Manager keeps a private list).
-	/// HACK1: Sound manager is setup on a component basis, which is very limmiting
-	/// because ALL sounds come from the main game object only. I'd like to eventually
-	/// push this off onto separate "sound" objects that are more modifyable. 
-	/// HACK2: Sound manager is not well achitected for a *new* mechanic system. I think
-	/// the mechanic system will come next, so I'm suspending extra features with this class
-	/// until Mechanics are finished and strict requirements can be written.
-	/// HACK3: Sounds will probably be managed by the various "mode" classes, meaning that's 
-	/// where setupSound() will be called. That's bad because it will be less obvious when
-	/// sounds are setup relative to starting the game, and there will probably be a performance
-	/// impact if they're called on every mode change.  This will be fixed when mechanics get 
-	/// properly refactored and Editors get written for them (which should be responsible for
-	/// setting up sounds before the game starts). 
+	/// Sound manager.
 	/// </summary>
 	[Serializable]
 	public class SoundManager {
 
-		private GameObject gameObject;
-		public Dictionary<AudioClip, AudioSource> soundDict;
+		private static System.Random randomNumber = new System.Random ();
 
+
+		private GameObject _gameObject;
+		public GameObject gameObject {
+			get { return _gameObject;}
+			set { init (value); }
+		}
+
+		[NonSerialized]
+		public AudioSource audioSource;
+
+		/// <summary>
+		/// Initialize the sound manager to use the specified game object with an attached
+		/// Audio Source.
+		/// </summary>
+		/// <param name="go">Go.</param>
 		public void init (GameObject go) {
-			gameObject = go;
-			soundDict = new Dictionary<AudioClip, AudioSource> ();
+			_gameObject = go;
+			audioSource = gameObject.GetComponent<AudioSource> ();
 		}
 
-		public void setupSound(AudioClip sound) {
-
-			if (!sound)
-				return;
-
-			AudioSource source;
-			if (!soundDict.TryGetValue (sound, out source)) {
-				source = gameObject.AddComponent<AudioSource> ();
-				soundDict.Add (sound, source);
-			}
-
-			source.loop = false;
-			source.clip = sound;
-
-		}
-
-		public AudioSource getSource(AudioClip sound) {
-			AudioSource source = null;
-			soundDict.TryGetValue (sound, out source);
-			return source;
-		}
-
-		public void playSound(AudioClip sound) {
+		/// <summary>
+		/// Play an audio clip, with an optional delay. 
+		/// </summary>
+		/// <param name="sound">Sound.</param>
+		/// <param name="delay">Delay.</param>
+		public void playSound(AudioClip sound, ulong delay = 0) {
 			if (sound != null) {
-				getSource (sound).Play ();
-//				Debug.Log (string.Format ("Played sound: {0}", getSource(sound).name));
-			} else {
-				if (sound) {
-					setupSound(sound);
-					playSound(sound);
+				if (audioSource != null) {
+					audioSource.clip = sound;
+					audioSource.Play(delay);
+				} else {
+					//Try one last time to setup the audio source. Since it's fairly common for developers
+					//to change things during runtime, this makes things very convienient for them. 
+					audioSource = _gameObject.GetComponent<AudioSource> ();
+					if (audioSource == null)
+						Debug.LogError (string.Format ("No audio source setup for '{0}', unable to play sounds.", gameObject.name));
 				}
 			}
 		}
+
+		/// <summary>
+		/// Play a random sound from an array. 
+		/// </summary>
+		/// <param name="sounds">Sounds.</param>
+		/// <param name="delay">Delay.</param>
+		public void playRandomSound(AudioClip[] sounds, ulong delay=0) {
+			if (sounds != null)
+				playSound(sounds[randomNumber.Next (sounds.Length)], delay);
+		}
+
+
 
 	}
 

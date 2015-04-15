@@ -14,10 +14,11 @@ namespace UnityFreeFlight {
 		public float flapStrength = 60.0f;
 	//	public float downbeatStrength = 150.0f;
 		AnimatorStateInfo curstate;
+		public AudioClip[] sounds;
 
 
-		public override void init (GameObject go, SoundManager sm, FlightPhysics fp, FlightInputs fi) {
-			base.init (go, sm, fp, fi);
+		public override void init (GameObject go, FlightPhysics fp, FlightInputs fi) {
+			base.init (go, fp, fi);
 			name = "Flapping Mechanic";
 			animationStateName = "Flapping";
 			animationStateHash = Animator.StringToHash (animationStateName);
@@ -34,7 +35,7 @@ namespace UnityFreeFlight {
 
 		public override void FFFixedUpdate () {
 			if (!isFlapping()) {
-				//playSound ();
+				soundManager.playRandomSound(sounds);
 				rigidbody.AddForce (rigidbody.rotation * Vector3.up * flapStrength);
 				animator.SetTrigger (animationStateHash);
 			}

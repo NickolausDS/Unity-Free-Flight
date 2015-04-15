@@ -9,8 +9,8 @@ namespace UnityFreeFlight {
 	[Serializable]
 	public class Diving : Mechanic {
 
-		public override void init (GameObject go, SoundManager sm, FlightPhysics fp, FlightInputs fi) {
-			base.init (go, sm, fp, fi);
+		public override void init (GameObject go, FlightPhysics fp, FlightInputs fi) {
+			base.init (go, fp, fi);
 			name = "Diving Mechanic";
 			animationStateName = "Diving";
 			animationStateHash = Animator.StringToHash (animationStateName);
