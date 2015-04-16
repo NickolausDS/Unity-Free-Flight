@@ -10,7 +10,6 @@ namespace UnityFreeFlight {
 
 		[Header ("Landing")]
 		public string landingAnimation = "landing";
-		public int landingLayerIndex = 0;
 		private int landingHash;
 		public AudioClip landingSound;
 		[Tooltip("Time in seconds until standup will snap to the correct rotation")]
@@ -23,7 +22,6 @@ namespace UnityFreeFlight {
 		[Header ("Crashing")]
 		public bool enabledCrashing = false;
 		public string crashingAnimation = "crashing";
-		public int crashingLayerIndex = 0;
 		private int crashingHash;
 		public AudioClip crashSound;
 		[Tooltip ("The speed a crash will happen instead of a landing")]
@@ -36,8 +34,8 @@ namespace UnityFreeFlight {
 			base.init (go, fp, fi);
 			soundManager.init (go);
 			mainMonbehaviour = gameObject.GetComponent<FreeFlight> ();
-			setupAnimation (landingAnimation, landingLayerIndex, ref landingHash);
-			setupAnimation (crashingAnimation, crashingLayerIndex, ref crashingHash);
+			setupAnimation (landingAnimation, ref landingHash);
+			setupAnimation (crashingAnimation, ref crashingHash);
 		}
 
 

@@ -8,10 +8,16 @@ namespace UnityFreeFlight {
 	
 	[Serializable]
 	public class Flaring : Mechanic {
-		
-		public bool enabledFlaring = false;
+
+		[Header("Animation")]
+		public string flaringAnimation = "Flaring";
+		private int flaringHash;
+
+		[Header("Sound")]
 		public AudioClip flareSoundClip;
-		//private AudioSource flareSoundSource;
+		public SoundManager soundManager = new SoundManager();
+
+		[Header("General")]
 		//The default pitch (x) we rotate to when we do a flare
 		public float flareAngle = 70.0f;
 		public float flareSpeed = 3.0f;
@@ -24,18 +30,26 @@ namespace UnityFreeFlight {
 		public override void init (GameObject go, FlightPhysics fp, FlightInputs fi) {
 			base.init (go, fp, fi);
 			name = "Flaring Mechanic";
-			animationStateName = "Flaring";
-			animationStateHash = Animator.StringToHash (animationStateName);
-			animator.SetBool (animationStateHash, false);
+			setupAnimation (flaringAnimation, ref flaringHash);
 		}
 		
 		public override bool FFInputSatisfied () {
 			return flightInputs.inputFlaring;
 		}
+
+		public override void FFStart () {
+			animator.SetBool (flaringHash, true);
+			soundManager.playSound (flareSoundClip);
+		} 
 		
 		public override void FFFixedUpdate () {
 			//Flare is the same as directional input, except with exagerated pitch and custom speed. 
 			directionalInput(getBank (), getPitch (), directionalSensitivity);
+		}
+
+		public override bool FFFinish () {
+			animator.SetBool (flaringHash, false);
+			return true;
 		}
 
 

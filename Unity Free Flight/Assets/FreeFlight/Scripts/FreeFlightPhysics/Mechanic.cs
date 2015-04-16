@@ -21,12 +21,6 @@ namespace UnityFreeFlight {
 		//list of mechanics this mechanic can and can't execute alongside
 		//This list is managed by the mechanic manager exclusively.
 //		public List<bool> executionPriority; 
-		//Animation
-		public string animationStateName;
-		protected int animationStateHash;
-
-		public string input = "";
-
 		protected GameObject gameObject;
 		protected Rigidbody rigidbody;
 		protected Animator animator;
@@ -50,9 +44,7 @@ namespace UnityFreeFlight {
 		/// Check if all the inputs necessary for firing this mechanic are set.
 		/// </summary>
 		/// <returns><c>true</c>, if player is pressing all buttons to fire mechanic, <c>false</c> otherwise.</returns>
-		public virtual bool FFInputSatisfied () { 
-			if (input != "")
-				return Input.GetKeyDown (input); 
+		public virtual bool FFInputSatisfied () {  
 			return false;
 		}
 
@@ -60,16 +52,12 @@ namespace UnityFreeFlight {
 		/// <summary>
 		/// Do prep work, usually applying any settings changed by the user in the inspector 
 		/// </summary>
-		public virtual void FFStart () {
-			animator.SetBool (animationStateHash, true);
-		}
+		public virtual void FFStart () {}
 
 		/// <summary>
 		/// Apply constant changes to the flight object under the fixed update time scale. This includes
 		/// any ongoing physics related to this mechanic (excluding general flight physics).
 		/// </summary>
-		/// <param name="animator">Animator.</param>
-		/// <param name="rigidbody">Rigidbody.</param>
 		public virtual void FFFixedUpdate () {}
 
 
@@ -77,10 +65,7 @@ namespace UnityFreeFlight {
 		/// The mechanic inputs are no longer satisfied, do anything required to stop animation, such as setting bools to 
 		/// false. Clean up and reset any temporary variables or timers. 
 		/// </summary>
-		/// <param name="animator">Animator.</param>
-		/// <param name="rigidbody">Rigidbody.</param>
 		public virtual bool FFFinish () {
-			animator.SetBool (animationStateHash, false);
 			return true;
 		}
 
@@ -90,12 +75,18 @@ namespace UnityFreeFlight {
 		/// the controller, the hash is set to zero. 
 		/// </summary>
 		/// <param name="animString">Animation string.</param>
+		/// <param name="layer">The animation layer.</param>
 		/// <param name="animHash">Animation hash.</param>
-		public void setupAnimation(string animString, int layer, ref int animHash) {
-			if (animator != null && animString != null) {
-				animHash = Animator.StringToHash (animString);
-				if (!animator.HasState (layer, animHash))
-					animHash = 0;
+		public void setupAnimation(string animString, ref int animHash) {
+			if (animator != null && animString != null && !animString.Equals("")) {
+				foreach (AnimatorControllerParameter param in animator.parameters) {
+					if (param.name.Equals (animString)) {
+						animHash = Animator.StringToHash (animString);
+						return;
+					}
+				}
+				animHash = 0;
+				Debug.LogWarning (string.Format ("Object {0} does not appear to have the {1} animation.", gameObject.name, animString));
 			}
 		}
 

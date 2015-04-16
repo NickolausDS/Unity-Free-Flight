@@ -8,33 +8,43 @@ namespace UnityFreeFlight {
 
 	[Serializable]
 	public class Gliding : Mechanic {
-		
-//		public bool enabledGliding = true;
+
+		[Header("Animation")]
+		public string glidingAnimation = "Gliding";
+		private int glidingHash;
+
+		[Header("Sound")]
+		public float windNoiseStartSpeed = 20.0f;
+		public float windNoiseMaxSpeed = 200.0f;
+		public AudioClip windNoiseClip;
+		public SoundManager soundManager = new SoundManager();
+
+		[Header("General")]
 		//Basic gliding input, values in degrees
 		public float maxTurnBank = 45.0f;
 		public float maxPitch = 20.0f;
 		public float directionalSensitivity = 2.0f;
-
-//		public bool enabledWindNoise = true;
-		public AudioClip windNoiseClip;
-		//private AudioSource windNoiseSource;
-		public float windNoiseStartSpeed = 20.0f;
-		public float windNoiseMaxSpeed = 200.0f;
 		
 		public override void init (GameObject go, FlightPhysics fm, FlightInputs fi) {
 			base.init (go, fm, fi);
-			name = "Gliding";
-			animationStateName = "Flying";
-			animationStateHash = Animator.StringToHash (animationStateName);
+			setupAnimation (glidingAnimation, ref glidingHash);
 		}
 		
 		public override bool FFInputSatisfied () {
 			return true;
 		}
+
+		public override void FFStart () {
+			animator.SetBool (glidingHash, true);
+		}
 		
-		public override void FFFixedUpdate ()
-		{
+		public override void FFFixedUpdate () {
 			directionalInput(getBank (), getPitch (false) + flightPhysics.angleOfAttack + 5f, directionalSensitivity);
+		}
+
+		public override bool FFFinish () {
+			animator.SetBool (glidingHash, false);
+			return true;
 		}
 
 		public void directionalInput(float bank, float pitch, float sensitivity) {

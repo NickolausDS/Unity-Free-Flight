@@ -10,6 +10,8 @@ namespace UnityFreeFlight {
 	public class Flapping : Mechanic {
 
 		[Header("Settings")]
+		public string flappingAnimation = "Flapping";
+		private int flappingHash;
 		public float flapStrength = 20.0f;
 		AnimatorStateInfo curstate;
 		public AudioClip[] sounds;
@@ -19,8 +21,7 @@ namespace UnityFreeFlight {
 			base.init (go, fp, fi);
 			soundManager.init (go);
 			name = "Flapping Mechanic";
-			animationStateName = "Flapping";
-			animationStateHash = Animator.StringToHash (animationStateName);
+			setupAnimation (flappingAnimation, ref flappingHash);
 		}
 
 		public override bool FFInputSatisfied () {
@@ -36,7 +37,7 @@ namespace UnityFreeFlight {
 			if (!isFlapping()) {
 				soundManager.playRandomSound(sounds);
 				rigidbody.AddForce (rigidbody.rotation * Vector3.up * flapStrength);
-				animator.SetTrigger (animationStateHash);
+				animator.SetTrigger (flappingHash);
 			}
 		}
 
@@ -49,7 +50,7 @@ namespace UnityFreeFlight {
 
 		public bool isFlapping () {
 			curstate = animator.GetCurrentAnimatorStateInfo (0);
-			if (curstate.fullPathHash != animationStateHash) {
+			if (curstate.fullPathHash != flappingHash) {
 				return false;
 			}
 			return true;

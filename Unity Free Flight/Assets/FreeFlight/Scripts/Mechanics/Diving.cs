@@ -9,22 +9,39 @@ namespace UnityFreeFlight {
 	[Serializable]
 	public class Diving : Mechanic {
 
+		[Header("Animation")]
+		public string divingAnimation = "Diving";
+		private int divingHash;
+
+		[Header("Sound")]
+		public AudioClip divingSound;
+		public SoundManager soundManager = new SoundManager();
+
+
 		public override void init (GameObject go, FlightPhysics fp, FlightInputs fi) {
 			base.init (go, fp, fi);
 			name = "Diving Mechanic";
-			animationStateName = "Diving";
-			animationStateHash = Animator.StringToHash (animationStateName);
-			animator.SetBool (animationStateHash, false);
+			setupAnimation (divingAnimation, ref divingHash);
 
 		}
 		
 		public override bool FFInputSatisfied () {
 			return flightInputs.inputDiving;
 		}
+
+		public override void FFStart () {
+			animator.SetBool (divingHash, true);
+		}
 		
 		public override void FFFixedUpdate () {
 			//Flare is the same as directional input, except with exagerated pitch and custom speed. 
 			wingFold (flightInputs.inputLeftWingExposure, flightInputs.inputRightWingExposure);
+		}
+
+		public override bool FFFinish ()
+		{
+			animator.SetBool (divingHash, false);
+			return true;
 		}
 		
 		
