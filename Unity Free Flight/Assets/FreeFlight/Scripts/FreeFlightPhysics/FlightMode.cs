@@ -59,21 +59,18 @@ namespace UnityFreeFlight {
 
 
 		public override void startMode () {
-//			soundManager.setupSound (flapSoundClip);
-//			soundManager.setupSound (windNoiseClip);
-//			setupMechanics ();
+			//Make sure these properties are correctly set, otherwise
+			//flight with rigidbodies is impossible.
 
-			//HACK -- currently, drag is being fully calculated in flightPhysics.cs, so we don't want the
-			//rigidbody adding any more drag. This should change, it's confusing to users when they look at
-			//the rigidbody drag. 
+			//Drag is based on a linear model, which can't be used alongside flight
 			rigidbody.drag = 0.0f;
-
+			//Don't use rigidbody based auto rotation, it fights with physics
 			rigidbody.freezeRotation = true;
 			rigidbody.isKinematic = false;
 
 			defaultMechanic.FFStart ();
 		}
-//
+
 		public override void finishMode () {
 			flightInputs.resetInputs ();
 			if (currentMechanic != null)
@@ -81,16 +78,7 @@ namespace UnityFreeFlight {
 			defaultMechanic.FFFinish ();
 
 			finishMechanic.FFStart ();
-			finishMechanic.FFFinish ();
-
-//			if (enabledCrashing && flightPhysics.Speed >= crashSpeed) {
-//				animator.SetTrigger(hashIDs.dyingTrigger);
-//				//playSound (crashSoundSource);
-//			} else {
-//				//playSound (landingSoundSource);
-//				FreeFlight ff = gameObject.GetComponent<FreeFlight>();
-//				ff.StartCoroutine (standUp ());
-//			}		
+			finishMechanic.FFFinish ();		
 		}
 
 		public override void getInputs () {
