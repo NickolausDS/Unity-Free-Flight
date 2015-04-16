@@ -43,9 +43,12 @@ namespace UnityFreeFlight {
 			base.init (go);
 			name = "Flight Mode";
 
-			flightInputs = new FlightInputs ();
-			flightMechanics = new FlightMechanics ();
-			flightPhysics = new FlightPhysics ();
+			if (flightInputs == null)
+				flightInputs = new FlightInputs ();
+			if (flightMechanics == null)
+				flightMechanics = new FlightMechanics ();
+			if (flightPhysics == null)
+				flightPhysics = new FlightPhysics ();
 
 			flightMechanics.load<Mechanic> (defaultMechanicTypeName, ref defaultMechanic);
 			flightMechanics.load<Mechanic> (mechanicTypeNames, ref mechanics);
