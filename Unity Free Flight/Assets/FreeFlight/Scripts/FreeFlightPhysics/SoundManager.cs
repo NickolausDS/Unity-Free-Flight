@@ -6,21 +6,14 @@ using System.Collections.Generic;
 namespace UnityFreeFlight {
 
 	/// <summary>
-	/// Sound manager.
+	/// A convienience class for linking audio sources to game objects. Sound clips can then be played
+	/// through this class, with all null checking handled automatically. 
 	/// </summary>
 	[Serializable]
 	public class SoundManager {
 
 		private static System.Random randomNumber = new System.Random ();
-
-
-		private GameObject _gameObject;
-		public GameObject gameObject {
-			get { return _gameObject;}
-			set { init (value); }
-		}
-
-		[NonSerialized]
+		private GameObject gameObject;
 		public AudioSource audioSource;
 
 		/// <summary>
@@ -29,8 +22,11 @@ namespace UnityFreeFlight {
 		/// </summary>
 		/// <param name="go">Go.</param>
 		public void init (GameObject go) {
-			_gameObject = go;
-			audioSource = gameObject.GetComponent<AudioSource> ();
+			gameObject = go;
+			if (gameObject && audioSource == null)
+				audioSource = gameObject.GetComponent<AudioSource> ();
+			if (gameObject == null && audioSource != null)
+				gameObject = audioSource.gameObject;
 		}
 
 		/// <summary>
@@ -46,9 +42,9 @@ namespace UnityFreeFlight {
 				} else {
 					//Try one last time to setup the audio source. Since it's fairly common for developers
 					//to change things during runtime, this makes things very convienient for them. 
-					audioSource = _gameObject.GetComponent<AudioSource> ();
-					if (audioSource == null)
-						Debug.LogError (string.Format ("No audio source setup for '{0}', unable to play sounds.", gameObject.name));
+					if (gameObject != null)
+						audioSource = gameObject.GetComponent<AudioSource> ();
+					Debug.LogError (string.Format ("No audio source setup for '{0}', unable to play sounds.", gameObject.name));
 				}
 			}
 		}

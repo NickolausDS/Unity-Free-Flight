@@ -29,8 +29,12 @@ namespace UnityFreeFlight {
 		[Tooltip ("The speed a crash will happen instead of a landing")]
 		public float crashSpeed = 20f;
 
+		[Header ("Sound")]
+		public SoundManager soundManager = new SoundManager();
+
 		public override void init (GameObject go, FlightPhysics fp, FlightInputs fi) {
 			base.init (go, fp, fi);
+			soundManager.init (go);
 			mainMonbehaviour = gameObject.GetComponent<FreeFlight> ();
 			setupAnimation (landingAnimation, landingLayerIndex, ref landingHash);
 			setupAnimation (crashingAnimation, crashingLayerIndex, ref crashingHash);

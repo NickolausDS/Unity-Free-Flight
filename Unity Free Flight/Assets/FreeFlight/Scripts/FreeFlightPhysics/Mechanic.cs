@@ -30,7 +30,6 @@ namespace UnityFreeFlight {
 		protected GameObject gameObject;
 		protected Rigidbody rigidbody;
 		protected Animator animator;
-		protected SoundManager soundManager;
 		protected FlightPhysics flightPhysics;
 		protected FlightInputs flightInputs;
 
@@ -42,8 +41,6 @@ namespace UnityFreeFlight {
 		public virtual void init(GameObject go, FlightPhysics fp, FlightInputs fi) {
 			gameObject = go;
 			flightPhysics = fp;
-			soundManager = new SoundManager ();
-			soundManager.init (go);
 			animator = gameObject.GetComponentInChildren <Animator> ();
 			rigidbody = gameObject.GetComponent <Rigidbody> ();
 			flightInputs = fi;

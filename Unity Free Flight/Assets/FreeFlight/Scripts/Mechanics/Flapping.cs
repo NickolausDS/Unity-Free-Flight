@@ -9,16 +9,15 @@ namespace UnityFreeFlight {
 	[Serializable]
 	public class Flapping : Mechanic {
 
-	//	public float regularFlaptime = 0.5f;
-	//	public float minimumFlapTime = 0.2f;
-		public float flapStrength = 60.0f;
-	//	public float downbeatStrength = 150.0f;
+		[Header("Settings")]
+		public float flapStrength = 20.0f;
 		AnimatorStateInfo curstate;
 		public AudioClip[] sounds;
-
+		public SoundManager soundManager = new SoundManager();
 
 		public override void init (GameObject go, FlightPhysics fp, FlightInputs fi) {
 			base.init (go, fp, fi);
+			soundManager.init (go);
 			name = "Flapping Mechanic";
 			animationStateName = "Flapping";
 			animationStateHash = Animator.StringToHash (animationStateName);
