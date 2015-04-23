@@ -18,12 +18,16 @@ namespace UnityFreeFlight {
 
 		public GroundInputs inputs;
 		public FreeFlightAnimationHashIDs hashIDs; 
+		private Rigidbody rigidbody;
+		private Animator animator;
 
 		public override void init (GameObject go)
 		{
 			base.init (go);
 			inputs = new GroundInputs ();
 			hashIDs = new FreeFlightAnimationHashIDs ();
+			rigidbody = go.GetComponent<Rigidbody> ();
+			animator = go.GetComponentInChildren<Animator> ();
 		}
 
 

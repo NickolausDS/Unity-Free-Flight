@@ -27,18 +27,15 @@ namespace UnityFreeFlight {
 		public bool alwaysApplyPhysics;
 
 		protected GameObject gameObject;
-		protected Animator animator;
-		protected Rigidbody rigidbody;
+		//Not serialized because this is a use of polymorphism, and unity doesn't like that. Child classes
+		//will have special inputs, so they will serialize the data. General methods called in this reference
+		[NonSerialized]
+		protected Inputs inputs;
 
-
-
-//		public List<string> mechanicNames = new List<string> ();
 		[NonSerialized]
 		public List<Mechanic> mechanics = new List<Mechanic> ();
 		[NonSerialized]
 		public Mechanic defaultMechanic;
-		[NonSerialized]
-		public Mechanic currentMechanic = null;
 		[NonSerialized]
 		public Mechanic finishMechanic;
 		[NonSerialized]
@@ -60,9 +57,6 @@ namespace UnityFreeFlight {
 		/// <param name="go">Go.</param>
 		public virtual void init (GameObject go) {
 			gameObject = go;
-			rigidbody = gameObject.GetComponent<Rigidbody> ();
-			animator = gameObject.GetComponentInChildren<Animator> ();
-//			setupMechanics ();
 		}
 
 //		public virtual void setupMechanics() {
@@ -70,19 +64,12 @@ namespace UnityFreeFlight {
 //		}
 
 		public virtual void applyInputs () {
-
 			try {
-//				applyMechanicPrecedence ();
-//				simplePrecedenceChaining ();
-				recursivePrecedenceChaining ();
-
-//				applyMechanic ();
 				applyMechanics ();
 			} catch (Exception e) {
 				Debug.LogException(e);
 			}
 
-			
 			applyPhysics ();
 		}
 
@@ -90,19 +77,33 @@ namespace UnityFreeFlight {
 		/// Tells the manager to gather inputs from the player.
 		/// This will happen in a frame-by-frame update time scale.
 		/// </summary>
-		public virtual void getInputs() {}
+		public virtual void getInputs() {
+			applyMechanicPrecedence ();
+			applyrecursivePrecedenceChaining ();
+			if (inputs != null)
+				inputs.getInputs ();
+		}
 
 		/// <summary>
 		/// Tweak anything that needs to happen before this modes mechanics run. 
 		/// </summary>
-		public virtual void startMode () {}
+		public virtual void startMode () {
+			defaultMechanic.FFStart ();
+		}
 
 		/// <summary>
 		/// Clean up any settings before this mode ends, including resetting things
 		/// to be in a healthy state when this mode is run again. Please be nice to 
 		/// the other modes, and reset any crazy values you temporarily set.
 		/// </summary>
-		public virtual void finishMode () {}
+		public virtual void finishMode () {
+			if (inputs != null)
+				inputs.resetInputs ();
+			defaultMechanic.FFFinish ();
+			
+			finishMechanic.FFStart ();
+			finishMechanic.FFFinish ();	
+		}
 		
 		protected virtual void applyPhysics() {
 			alwaysApplyPhysics = false;
@@ -124,31 +125,14 @@ namespace UnityFreeFlight {
 		/// </summary>
 		private void applyMechanicPrecedence() {
 			foreach (Mechanic mech in mechanics) {
-				if (mech.enabled && mech.FFInputSatisfied () && isHigherPrecedence(mech)) {
-					//If the current mechanic isn't done yet
-					if (currentMechanic != null && !currentMechanic.FFFinish ())
-						break;
-					currentMechanic = mech;
-					currentMechanic.FFStart ();
+				if (mech.enabled && mech.FFInputSatisfied()) {
+					if (currentMechanics.First == null || !mech.Equals (currentMechanics.First.Value)) {
+						currentMechanics.AddFirst (mech);
+						currentMechanics.First.Value.FFStart ();
+					}
 					break;
 				}
 			}		
-		}
-
-		/// <summary>
-		/// Does NOT check what the current mechanic chains to. Instead, all other mechanics
-		/// with less precedence are automatically chained. 
-		/// </summary>
-		private void simplePrecedenceChaining() {
-			if (currentMechanics.First == null)
-				return;
-
-			for (int i = getPrecedence (currentMechanics.First.Value); i < mechanics.Count; i++) {
-				if (mechanics[i].FFInputSatisfied() && !currentMechanics.Contains(mechanics[i])) {
-					currentMechanics.AddLast(mechanics[i]);
-					mechanics[i].FFStart();
-				}
-			}
 		}
 
 		/// <summary>
@@ -157,70 +141,70 @@ namespace UnityFreeFlight {
 		/// additional chained mechanic can also chain mechanics, hence recursive chanining. 
 		/// Precondidtion: All mechanics must only chain to mechanics of lower precedence. 
 		/// </summary>
-		private void recursivePrecedenceChaining() {
+		private void applyrecursivePrecedenceChaining() {
 			//If the root mechanic isn't finished executing, do nothing.
 			if (currentMechanics.First != null && !currentMechanics.First.Value.FFInputSatisfied())
 				return;
 
-			//Ensure the first input satisfied mechanic is at the top of the list.
-			int i;
-			for (i = 0; i < mechanics.Count; i++) {
-				if (mechanics[i].enabled && mechanics[i].FFInputSatisfied()) {
-					if (currentMechanics.First == null || !mechanics[i].Equals (currentMechanics.First.Value)) {
-						currentMechanics.AddFirst (mechanics[i]);
-						currentMechanics.First.Value.FFStart ();
-					}
-					break;
-				}
-			}
+			//Add any chained mechanics
+			LinkedListNode<Mechanic> chain = recursiveChain (currentMechanics.First);
 
-			LinkedListNode<Mechanic> chain = recurseChain (currentMechanics.First);
-			if (chain != null) {
-				//Set the chain to the tail, which will be all the mechanics we want to finish.
-				chain = chain.Next;
-				LinkedListNode<Mechanic> next;
-				while (chain != null) {
-					next = chain.Next;
-					if (chain.Value.FFFinish())
-						currentMechanics.Remove(chain);
-					chain = next;
-				}
-			}
+			//Remove the tail
+			if (chain != null)
+				removeTail (chain.Next);
 		}
 
-		private LinkedListNode<Mechanic> recurseChain(LinkedListNode<Mechanic> mech) {
+		/// <summary>
+		/// Recursive Chain adds and starts additional mechanics according to the first mechanics
+		/// chain rules (also requires the mechanic to satisfy input). All new mechanics are added
+		/// directly after the main. If the main mechanic is swapped for another, and still allows
+		/// old mechanics in the chain, they are carried over. If the new main DOES NOT allow some 
+		/// old mechanics, they REMAIN IN THE TAIL OF THE CHAIN. This method returns the last valid 
+		/// mechanic in the chain, so the old tail mechanics are accessible via chain.Next.
+		/// </summary>
+		/// <returns>The last chained mechanic.</returns>
+		/// <param name="mech">Mech.</param>
+		private LinkedListNode<Mechanic> recursiveChain(LinkedListNode<Mechanic> chain) {
 			//Go through each mech's chain rules and start any mechanics with inputs
-			if (mech == null || mech.Value.chainRules.Count == 0)
-				return mech;
+			if (chain == null || chain.Value.chainRules.Count == 0)
+				return chain;
 
-			foreach (int chainRule in mech.Value.chainRules) {
+			foreach (int chainRule in chain.Value.chainRules) {
 				if (mechanics[chainRule].FFInputSatisfied()) {
 					//If the next one we expect in the list isn't 
-					if (mech.Next == null || !mech.Next.Value.Equals (mechanics[chainRule])) {
+					if (chain.Next == null || !chain.Next.Value.Equals (mechanics[chainRule])) {
 						//if mechanic not already in list
-						LinkedListNode<Mechanic> node = mech;
+						LinkedListNode<Mechanic> node = chain;
 						while (node != null && !node.Value.Equals(mechanics[chainRule])) {node = node.Next;}
 						if (node == null) {
 							//Add the new mechanic into the chain
-							currentMechanics.AddAfter(mech, mechanics[chainRule]);
+							currentMechanics.AddAfter(chain, mechanics[chainRule]);
 							mechanics[chainRule].FFStart();
 							//Debug.Log ("Chaining " + mechanics[chainRule].GetType().Name);
 						} else {
 							//The mechanic was already in the chain, reposition it. 
 							currentMechanics.Remove (node);
-							currentMechanics.AddAfter (mech, node);
+							currentMechanics.AddAfter (chain, node);
 							//Debug.Log (string.Format ("Re-chaining {0} to after {1}", node.Value.GetType().Name, mech.Value.GetType().Name));
 						}
 
 					}
 					//Recurse chain the next one
-					mech = mech.Next;
-					return recurseChain(mech);
+					chain = chain.Next;
+					return recursiveChain(chain);
 				}
 			}
+			return chain;
+		}
 
-
-			return mech;
+		private void removeTail(LinkedListNode<Mechanic> chain) {
+			LinkedListNode<Mechanic> next;
+			while (chain != null) {
+				next = chain.Next;
+				if (chain.Value.FFFinish())
+					currentMechanics.Remove(chain);
+				chain = next;
+			}
 		}
 
 		private void applyMechanics() {
@@ -236,52 +220,6 @@ namespace UnityFreeFlight {
 			}
 			
 		}
-		
-		/// <summary>
-		/// Apply the current mechanic behavior. 
-		/// </summary>
-		private void applyMechanic() {
-			//Apply the current mechanic. 
-			if (currentMechanic != null && currentMechanic != defaultMechanic) {
-				
-				currentMechanic.FFFixedUpdate ();
-				
-				if (!currentMechanic.FFInputSatisfied ()) {
-					if (currentMechanic.FFFinish()) {
-						currentMechanic = null;
-					}
-				}
-			} else {
-				defaultMechanic.FFFixedUpdate ();
-			}
-		}
-
-		private int getPrecedence(Mechanic mech) {
-			for (int i = 0; i < mechanics.Count; i++) {
-				if (mechanics[i].Equals (mech))
-					return i;
-			}
-
-			return -1;
-		}
-		
-		private bool isHigherPrecedence(Mechanic mech) {
-			if (currentMechanic == null)
-				return true;
-			
-			int currentMechIndex = -1;
-			int otherMechIndex = -1;
-			for (int i = 0; i < mechanics.Count; i++) {
-				if (currentMechanic == mechanics[i])
-					currentMechIndex = i;
-				if (mech == mechanics[i])
-					otherMechIndex = i;
-			}
-			return (otherMechIndex < currentMechIndex ? true : false);
-		}
-
-
-
 
 	}
 

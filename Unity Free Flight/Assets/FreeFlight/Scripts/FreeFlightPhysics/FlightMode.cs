@@ -18,6 +18,8 @@ namespace UnityFreeFlight {
 		public FlightMechanics flightMechanics;
 		public FlightPhysics flightPhysics;
 
+		public Rigidbody rigidbody;
+
 		public void setupMechanics() {
 
 			foreach (Mechanic mech in mechanics) {
@@ -26,7 +28,6 @@ namespace UnityFreeFlight {
 			
 			if (defaultMechanic != null) {
 				defaultMechanic.init (gameObject, flightPhysics, flightInputs);
-				defaultMechanic.FFStart ();
 			} else {
 				Debug.LogError ("Default Flight Mechanic not setup!");
 			}
@@ -34,14 +35,11 @@ namespace UnityFreeFlight {
 			if (finishMechanic != null) {
 				finishMechanic.init (gameObject, flightPhysics, flightInputs);
 			}
-			
-			currentMechanic = null;
 
 		}
 
 		public override void init (GameObject go) {
 			base.init (go);
-			name = "Flight Mode";
 
 			if (flightInputs == null)
 				flightInputs = new FlightInputs ();
@@ -49,6 +47,11 @@ namespace UnityFreeFlight {
 				flightMechanics = new FlightMechanics ();
 			if (flightPhysics == null)
 				flightPhysics = new FlightPhysics ();
+
+			rigidbody = gameObject.GetComponent<Rigidbody> ();
+			inputs = flightInputs;
+
+			name = "Flight Mode";
 
 			flightMechanics.load<Mechanic> (defaultMechanicTypeName, ref defaultMechanic);
 			flightMechanics.load<Mechanic> (mechanicTypeNames, ref mechanics);
@@ -59,6 +62,7 @@ namespace UnityFreeFlight {
 
 
 		public override void startMode () {
+			base.startMode ();
 			//Make sure these properties are correctly set, otherwise
 			//flight with rigidbodies is impossible.
 
@@ -67,22 +71,6 @@ namespace UnityFreeFlight {
 			//Don't use rigidbody based auto rotation, it fights with physics
 			rigidbody.freezeRotation = true;
 			rigidbody.isKinematic = false;
-
-			defaultMechanic.FFStart ();
-		}
-
-		public override void finishMode () {
-			flightInputs.resetInputs ();
-			if (currentMechanic != null)
-				currentMechanic.FFFinish ();
-			defaultMechanic.FFFinish ();
-
-			finishMechanic.FFStart ();
-			finishMechanic.FFFinish ();		
-		}
-
-		public override void getInputs () {
-			flightInputs.getInputs ();
 		}
 
 		protected override void applyPhysics ()
