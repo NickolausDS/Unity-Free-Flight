@@ -71,6 +71,19 @@ public class ModeManagerDrawer : PropertyDrawer {
 			                              .FindPropertyRelative("enabled"));
 
 			EditorGUILayout.EndHorizontal();
+
+			EditorGUILayout.LabelField("Chain Rules");
+			SerializedProperty chain = modeMechs.FindPropertyRelative(curMech.stringValue.ToLower ()).FindPropertyRelative ("chainRules");
+			//Only lower precedence chains are allowed, so get rid of everything above this (minus one for the current mechanic)
+			int chainSize = flightModeMechTypeNames.arraySize - i - 1;
+			for (int j = 0; j < chainSize; j++) {
+				int chainRule = flightModeMechTypeNames.arraySize - chainSize + j;
+				EditorGUILayout.BeginHorizontal ();
+				EditorGUILayout.LabelField(flightModeMechTypeNames.GetArrayElementAtIndex(chainRule).stringValue);
+				setChainForMechanicIndex(chainRule, chain, EditorGUILayout.Toggle(getChainMechanicIndex(chainRule, chain)));
+				EditorGUILayout.EndHorizontal ();
+			}
+
 		}
 
 		if (flightModeMechTypeNames.arraySize == 0) 
@@ -99,6 +112,47 @@ public class ModeManagerDrawer : PropertyDrawer {
 
 		EditorGUILayout.PropertyField (mode.FindPropertyRelative ("flightPhysics"), true);
 
+	}
+
+
+	public bool getChainMechanicIndex(int chainInt, SerializedProperty serializedIntArray) {
+		for (int i = 0; i < serializedIntArray.arraySize; i++) {
+			if (serializedIntArray.GetArrayElementAtIndex(i).intValue == chainInt) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public void setChainForMechanicIndex(int mechanicIndex, SerializedProperty serializedChainIntArray, bool state) {
+		int i;
+		for (i = 0; i < serializedChainIntArray.arraySize; i++) {
+			if (serializedChainIntArray.GetArrayElementAtIndex(i).intValue == mechanicIndex) {
+				if (state == false) {
+					//Delete chain 
+					serializedChainIntArray.DeleteArrayElementAtIndex(i);
+					return;
+				} else {
+					//we need the value to be present and it is. Nothing to do. 
+					return;
+				}
+			}
+
+			if (serializedChainIntArray.GetArrayElementAtIndex(i).intValue > mechanicIndex) {
+				break;
+			}
+			
+		}
+
+		if (state == true) {
+			//insert chain
+			serializedChainIntArray.InsertArrayElementAtIndex(i);
+			serializedChainIntArray.GetArrayElementAtIndex(i).intValue = mechanicIndex;
+			return;
+		} else {
+			//We need the value to not exist and it doesn't. Nothing to do.
+			return;
+		}
 	}
 
 	public List<string> getMechanicNames() {
