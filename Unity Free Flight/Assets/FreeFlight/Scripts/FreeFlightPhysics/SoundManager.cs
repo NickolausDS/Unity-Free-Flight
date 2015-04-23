@@ -55,7 +55,7 @@ namespace UnityFreeFlight {
 		/// <param name="sounds">Sounds.</param>
 		/// <param name="delay">Delay.</param>
 		public void playRandomSound(AudioClip[] sounds, ulong delay=0) {
-			if (sounds != null)
+			if (sounds != null && sounds.Length > 0)
 				playSound(sounds[randomNumber.Next (sounds.Length)], delay);
 		}
 
