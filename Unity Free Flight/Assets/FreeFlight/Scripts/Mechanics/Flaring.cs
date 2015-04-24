@@ -49,6 +49,7 @@ namespace UnityFreeFlight {
 
 		public override bool FFFinish () {
 			animator.SetBool (flaringHash, false);
+			flightPhysics.releasePhysicsRotation (this);
 			return true;
 		}
 
@@ -56,7 +57,7 @@ namespace UnityFreeFlight {
 		public void directionalInput(float bank, float pitch, float sensitivity) {
 			Quaternion _desiredDirectionalInput = Quaternion.identity;
 			_desiredDirectionalInput.eulerAngles = new Vector3(pitch, rigidbody.rotation.eulerAngles.y, bank);
-			rigidbody.MoveRotation (Quaternion.Lerp (rigidbody.rotation, _desiredDirectionalInput, sensitivity * Time.deltaTime));	
+			flightPhysics.applyPhysicsRotation(Quaternion.Lerp (flightPhysics.getPhysicsRotation(), _desiredDirectionalInput, sensitivity * Time.deltaTime), this);
 		}
 
 		protected float getPitch() {

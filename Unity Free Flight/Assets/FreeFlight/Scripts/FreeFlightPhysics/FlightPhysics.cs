@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using UnityFreeFlight;
+using System;
+using System.Collections.Generic;
 
 
 namespace UnityFreeFlight {
@@ -12,7 +14,7 @@ namespace UnityFreeFlight {
 	/// There are three forces that Flight physics calculates: Lift, Drag, and a 
 	/// non-physical force that corrects the objects directional velocity. 
 	/// </summary>
-	[System.Serializable]
+	[Serializable]
 	public class FlightPhysics {
 
 		[Header ("Wing Properties")]
@@ -37,6 +39,12 @@ namespace UnityFreeFlight {
 		public float leftWingExposure;
 		[Range (0.001f, 1.0f)]
 		public float rightWingExposure;
+
+		public Quaternion rotation;
+		[NonSerialized]
+		private List<Quaternion> physicsRotations = new List<Quaternion> ();
+		[NonSerialized]
+		private List<Mechanic> physicsRotationRegister = new List<Mechanic> ();
 
 		private float _angleOfAttack;
 		public float angleOfAttack { get { return _angleOfAttack; } }
@@ -91,15 +99,52 @@ namespace UnityFreeFlight {
 			return false;
 		}
 
+		private int findRotationIndex(Mechanic id) {
+			for (int i = 0; i < physicsRotationRegister.Count; i++) {
+				if (physicsRotationRegister[i].Equals (id)) {
+					return i;
+				}
+			}
+			return -1;
+		}
+
+		public Quaternion getPhysicsRotation() {
+			return rotation;
+		}
+
+		public void applyPhysicsRotation(Quaternion rotation, Mechanic registerID) {
+			int id = findRotationIndex(registerID);
+			if (id > -1) {
+				physicsRotations[id] = rotation;
+			} else {
+				physicsRotations.Add (rotation);
+				physicsRotationRegister.Add (registerID);
+			}
+		}
+
+		public void releasePhysicsRotation(Mechanic id) {
+			for (int i = 0; i < physicsRotationRegister.Count; i++) {
+				if (physicsRotationRegister[i].Equals (id)) {
+					physicsRotations.RemoveAt(i);
+					physicsRotationRegister.RemoveAt(i);
+				}
+			}
+		}
+
 		/// <summary>
 		/// Calculate flight physics, then apply them to the rigidbody.
 		/// </summary>
 		/// <param name="rigidbody">Rigidbody.</param>
 		public void applyPhysics(Rigidbody rigidbody) {
 
+			rotation = rigidbody.rotation;
+			foreach (Quaternion quat in physicsRotations) {
+				rotation *= quat;
+			}
+
 			//TODO: swap rigidbody.velocity for the relative airspeed. Current calculation does not take into
 			//account wind or other forces.
-			physicsTick (rigidbody.velocity, rigidbody.rotation);
+			physicsTick (rigidbody.velocity, rotation);
 
 			if (rigidbody.isKinematic)
 				return;
