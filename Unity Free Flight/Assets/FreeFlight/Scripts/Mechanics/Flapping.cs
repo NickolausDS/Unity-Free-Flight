@@ -6,6 +6,10 @@ using UnityFreeFlight;
 
 namespace UnityFreeFlight {
 
+	/// <summary>
+	/// The flapping mechanic provides thrust and lift for flight objects. It supports multiple sounds, animation, and
+	/// some general settings with regard to flap behavior. 
+	/// </summary>
 	[Serializable]
 	public class Flapping : Mechanic {
 
@@ -50,7 +54,6 @@ namespace UnityFreeFlight {
 		public override void FFStart () {}
 
 		public override void FFFixedUpdate () {
-//			Debug.Log (curstate.shortNameHash + " : " + Animator.StringToHash (flappingAnimation));
 			if (animator.GetNextAnimatorStateInfo(0).fullPathHash != stateHash &&
 			    animator.GetCurrentAnimatorStateInfo(0).fullPathHash != stateHash &&
 			    FFInputSatisfied()
@@ -58,7 +61,7 @@ namespace UnityFreeFlight {
 					soundManager.playRandomSound(sounds);
 					animator.SetTrigger (paramHash);
 					startTime = Time.time;
-			} 
+			}
 
 			applyFlapForce ();
 		}
@@ -70,12 +73,21 @@ namespace UnityFreeFlight {
 			return isDoneFlapping();
 		}
 
+		/// <summary>
+		/// Check if the physics behind the flap are done. This is not conneceted to the animation, 
+		/// and must be synced manually.
+		/// </summary>
+		/// <returns><c>true</c>, if done flapping , <c>false</c> otherwise.</returns>
 		public bool isDoneFlapping() {
 			if (startTime + duration + lagTime < Time.time)
 				return true;
 			return false;
 		}
 
+		/// <summary>
+		/// Apply flapping force, which won't execute until "lag time" has passed, and will only
+		/// execute for as long as "duration" lasts. Total time = lag time + duration. 
+		/// </summary>
 		public void applyFlapForce() {
 			if (startTime + lagTime < Time.time && startTime + duration + lagTime > Time.time) {
 				rigidbody.AddForce (getFlapForce (0f));
