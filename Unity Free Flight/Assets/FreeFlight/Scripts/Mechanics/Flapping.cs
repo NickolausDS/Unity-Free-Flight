@@ -31,6 +31,13 @@ namespace UnityFreeFlight {
 		[Tooltip("Duration in seconds of flap (not connected to animation length)")]
 		public float duration = .5f;
 		private float startTime;
+		//maximum angle to apply downward force. 90 is down. Private, because I don't think people will
+		//want to change this.
+		private float maxAngle = 90f;
+		[Tooltip("The maximum airspeed for vectoring lift downwards. Higher numbers make easier takeoff")]
+		public float maxVectoring = 4f;
+		[Tooltip("The strength of a downward vectored flap compared to a forward vectored flap.")]
+		public float takeoffStrengthMult = 1.5f;
 
 		public override void init (GameObject go, FlightPhysics fp, FlightInputs fi) {
 			base.init (go, fp, fi);
@@ -90,7 +97,10 @@ namespace UnityFreeFlight {
 		/// </summary>
 		public void applyFlapForce() {
 			if (startTime + lagTime < Time.time && startTime + duration + lagTime > Time.time) {
-				rigidbody.AddForce (getFlapForce (0f));
+				float scale = maxAngle / maxVectoring;
+				float angle = Mathf.Clamp ((maxVectoring - flightPhysics.airspeed) * scale, 0.1f, maxAngle); 
+				float strength = angle / maxAngle * takeoffStrengthMult + flapStrength;
+				rigidbody.AddForce (getFlapForce (angle, strength));
 			}
 		}
 
@@ -99,8 +109,9 @@ namespace UnityFreeFlight {
 		/// </summary>
 		/// <returns>The flap force.</returns>
 		/// <param name="angle">direction of flap. 0 = thrusts forward, 90 = thrusts stright up.</param>
-		public Vector3 getFlapForce(float angle) {
-			return rigidbody.rotation * Quaternion.AngleAxis (angle, Vector3.right) * Vector3.forward * flapStrength;
+		/// <param name="strength>strength of flap.</para>">
+		public Vector3 getFlapForce(float angle, float strength) {
+			return rigidbody.rotation * Quaternion.AngleAxis (angle, Vector3.left) * Vector3.forward * strength;
 		}
 
 
