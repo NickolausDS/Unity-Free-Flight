@@ -21,9 +21,10 @@ namespace UnityFreeFlight {
 
 		[Header("General")]
 		//Basic gliding input, values in degrees
-		public float maxTurnBank = 45.0f;
+		public float maxBank = 45.0f;
+		public float bankSensitivity = 2.0f;
 		public float maxPitch = 20.0f;
-		public float directionalSensitivity = 2.0f;
+		public float pitchSensitivity = 2.0f;
 		
 		public override void init (GameObject go, FlightPhysics fm, FlightInputs fi) {
 			base.init (go, fm, fi);
@@ -39,19 +40,14 @@ namespace UnityFreeFlight {
 		}
 		
 		public override void FFFixedUpdate () {
-			directionalInput(getBank (), getPitch (false) + flightPhysics.angleOfAttack + 5f, directionalSensitivity);
+			flightPhysics.addBank (flightInputs.inputBank * maxBank, bankSensitivity);
+			flightPhysics.addPitch (flightInputs.inputPitch * maxPitch + flightPhysics.angleOfAttack + 5f, pitchSensitivity);
+
 		}
 
 		public override bool FFFinish () {
 			animator.SetBool (glidingHash, false);
 			return true;
-		}
-
-		public void directionalInput(float bank, float pitch, float sensitivity) {
-			Quaternion _desiredDirectionalInput = Quaternion.identity;
-			_desiredDirectionalInput.eulerAngles = new Vector3(pitch, rigidbody.rotation.eulerAngles.y, bank);
-			
-			rigidbody.MoveRotation(Quaternion.Lerp( rigidbody.rotation, _desiredDirectionalInput, sensitivity * Time.deltaTime));
 		}
 		
 		private void applyWindNoise() {
@@ -79,20 +75,6 @@ namespace UnityFreeFlight {
 //			}
 			
 		}
-
-		/// <summary>
-		/// Calculates pitch, based on user input and configured pitch parameters.
-		/// </summary>
-		/// <returns>The pitch in degrees.</returns>
-		/// <param name="flare">If set to <c>true</c> calculates pitch of a flare angle.</param>
-		protected float getPitch(bool flare) {
-			return flightInputs.inputPitch * maxPitch;
-		}
-		
-		protected float getBank() {
-			return flightInputs.inputBank * maxTurnBank;
-		}
-		
 	
 	}
 }

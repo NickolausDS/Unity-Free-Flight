@@ -40,6 +40,8 @@ namespace UnityFreeFlight {
 
 		public override void init (GameObject go) {
 			base.init (go);
+			rigidbody = gameObject.GetComponent<Rigidbody> ();
+
 
 			if (flightInputs == null)
 				flightInputs = new FlightInputs ();
@@ -48,7 +50,8 @@ namespace UnityFreeFlight {
 			if (flightPhysics == null)
 				flightPhysics = new FlightPhysics ();
 
-			rigidbody = gameObject.GetComponent<Rigidbody> ();
+			flightPhysics.init (rigidbody);
+
 			inputs = flightInputs;
 
 			name = "Flight Mode";
@@ -75,7 +78,7 @@ namespace UnityFreeFlight {
 
 		protected override void applyPhysics ()
 		{
-			flightPhysics.applyPhysics(rigidbody);
+			flightPhysics.applyPhysics();
 		}
 
 	}

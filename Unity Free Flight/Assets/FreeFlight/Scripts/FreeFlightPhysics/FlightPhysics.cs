@@ -40,7 +40,18 @@ namespace UnityFreeFlight {
 		[Range (0.001f, 1.0f)]
 		public float rightWingExposure;
 
-		public Quaternion rotation;
+		private Transform transform;
+		private Rigidbody rigidbody;
+
+		//Physics modes. These allow for switching between applying physics to a rigidbody, or directly
+		// to a game object transform. 
+		//NOTE: as of v0.5.0, transforms are not yet supported, so these are made private and unaccessible. 
+		private enum PhysicsMode { Transform, Rigidbody }
+		[SerializeField][HideInInspector]
+		private PhysicsMode physicsMode = PhysicsMode.Rigidbody;
+
+		//rotation + physics rotations. Used for special physics without rotating the game object.
+		private Quaternion physicsRotation;
 		[NonSerialized]
 		private List<Quaternion> physicsRotations = new List<Quaternion> ();
 		[NonSerialized]
@@ -75,28 +86,103 @@ namespace UnityFreeFlight {
 		}
 
 		/// <summary>
-		/// Set the left and right wing exposure to the wind. zero is closed, and one
-		/// is open. Therefore, .5 would be a half folded wing that would generate half
-		/// as much lift. 
+		/// Initialization for flight physics, specifically when using rigidbodies. You need to 
+		/// re-initialize any time the rigidbody changes, which is every time OnEnable() is called
+		/// in unity (which happens on game start, and during any code recompiles).
 		/// </summary>
-		/// <param name="cleftWingExposure">Cleft wing exposure.</param>
-		/// <param name="crightWingExposure">Cright wing exposure.</param>
-		public void setWingExposure(float cleftWingExposure, float crightWingExposure) {
-			//Make sure area is never actually zero, as this is technically impossible and 
-			//causes physics to fail.
-			leftWingExposure = (cleftWingExposure == 0.0f) ? 0.01f : cleftWingExposure;
-			rightWingExposure = (crightWingExposure == 0.0f) ? 0.01f : crightWingExposure;
-			wingExposureArea = wingArea * (leftWingExposure + rightWingExposure) / 2;
+		/// <param name="rig">Rig.</param>
+		public void init (Rigidbody rig) {
+			rigidbody = rig;
+			physicsMode = PhysicsMode.Rigidbody;
 		}
 
 		/// <summary>
-		/// Check if wings are open
+		/// Add pitch in degrees to the current rotation. Can be called multiple times, and the pitches
+		/// will average.
 		/// </summary>
-		/// <returns><c>true</c>, if wings are open, <c>false</c> otherwise.</returns>
-		public bool wingsOpen() {
-			if (wingExposureArea == wingArea)
-				return true;
-			return false;
+		/// <param name="angle">Angle.</param>
+		/// <param name="sensitivity">Sensitivity.</param>
+		public void addPitch(float angle, float sensitivity) {
+			Quaternion rot = Quaternion.identity;
+			rot.eulerAngles = new Vector3 (angle, rotation.eulerAngles.y, rotation.eulerAngles.z);
+			addRotation (Quaternion.Lerp (rotation, rot, sensitivity * Time.fixedDeltaTime));
+		}
+
+		/// <summary>
+		/// Add bank in degrees to the current rotation. Can be called multiple times, and the bank
+		/// angles will average between calls.
+		/// </summary>
+		/// <param name="angle">Angle.</param>
+		/// <param name="sensitivity">Sensitivity.</param>
+		public void addBank(float angle, float sensitivity) {
+			Quaternion rot = Quaternion.identity;
+			rot.eulerAngles = new Vector3 (rotation.eulerAngles.x, rotation.eulerAngles.y, angle);
+			addRotation (Quaternion.Lerp (rotation, rot, sensitivity * Time.fixedDeltaTime));
+		}
+
+		/// <summary>
+		/// Get the current game object rotation
+		/// </summary>
+		/// <value>The rotation.</value>
+		public Quaternion rotation {
+			get { 
+				Quaternion rot;
+				switch (physicsMode) {
+				case PhysicsMode.Transform:
+					throw new UnityException("Transform physics not implemented");
+				case PhysicsMode.Rigidbody:
+					rot = rigidbody.rotation;
+					break;
+				default:
+					throw new UnityException ("Rotation mode not supported.");
+				}
+				return rot;
+			}
+
+		}
+
+		/// <summary>
+		/// Add a rotation to the game object.
+		/// </summary>
+		/// <param name="angle">Angle.</param>
+		public void addRotation(Quaternion angle) {
+			switch (physicsMode) {
+			case PhysicsMode.Transform:
+				throw new UnityException("Transform physics not implemented");
+			case PhysicsMode.Rigidbody:
+				rigidbody.MoveRotation(angle);
+				break;
+			default:
+				throw new UnityException ("Rotation mode not supported.");
+			}
+		}
+
+		/// <summary>
+		/// Add pitch as a physics rotation only (in degrees). The rotation only affects physics, and 
+		/// no rotation is added to the game object. Multiple calls average the rotation. NOTE: The 
+		/// rotation is stored within flight physics, and can only be undone with releasePhysicsRotation()
+		/// </summary>
+		/// <param name="angle">Angle in degrees</param>
+		/// <param name="sensitivity">Sensitivity in degrees per second.</param>
+		/// <param name="id">Identifier.</param>
+		public void addPhysicsPitch(float angle, float sensitivity, Mechanic id) {
+			Quaternion rot = Quaternion.identity;
+			rot.eulerAngles = new Vector3 (angle, rotation.eulerAngles.y, rotation.eulerAngles.z);
+			applyPhysicsRotation (Quaternion.Lerp (rotation, rot, sensitivity * Time.fixedDeltaTime), id);
+		}
+		
+		/// <summary>
+		/// Add bank as a physics rotation only (in degrees). The rotation only affects physics, and 
+		/// no rotation is added to the game object. Multiple calls average the rotation. NOTE: The 
+		/// rotation is stored within flight physics, and can only be undone with releasePhysicsRotation()
+		/// </summary>
+		/// <param name="angle">Angle in degrees</param>
+		/// <param name="sensitivity">Sensitivity in degrees per second.</param>
+		/// <param name="id">Identifier.</param>
+		public void addPhysicsBank(float angle, float sensitivity, Mechanic id) {
+			Quaternion rot = Quaternion.identity;
+			rot.eulerAngles = new Vector3 (rotation.eulerAngles.x, rotation.eulerAngles.y, angle);
+			applyPhysicsRotation (Quaternion.Lerp (rotation, rot, sensitivity * Time.fixedDeltaTime), id);
 		}
 
 		private int findRotationIndex(Mechanic id) {
@@ -109,19 +195,30 @@ namespace UnityFreeFlight {
 		}
 
 		public Quaternion getPhysicsRotation() {
-			return rotation;
+			return physicsRotation;
 		}
 
-		public void applyPhysicsRotation(Quaternion rotation, Mechanic registerID) {
+		/// <summary>
+		/// Add a physics rotation. The rotation only affects physics, and 
+		/// no rotation is added to the game object. Multiple calls *reset* the rotation. NOTE: The 
+		/// rotation is stored within flight physics, and can only be undone with releasePhysicsRotation()
+		/// </summary>
+		/// <param name="rot">Rot.</param>
+		/// <param name="registerID">Register I.</param>
+		public void applyPhysicsRotation(Quaternion rot, Mechanic registerID) {
 			int id = findRotationIndex(registerID);
 			if (id > -1) {
-				physicsRotations[id] = rotation;
+				physicsRotations[id] = rot;
 			} else {
-				physicsRotations.Add (rotation);
+				physicsRotations.Add (rot);
 				physicsRotationRegister.Add (registerID);
 			}
 		}
 
+		/// <summary>
+		/// Releases the physics rotation for the specified mechanic.
+		/// </summary>
+		/// <param name="id">Identifier.</param>
 		public void releasePhysicsRotation(Mechanic id) {
 			for (int i = 0; i < physicsRotationRegister.Count; i++) {
 				if (physicsRotationRegister[i].Equals (id)) {
@@ -132,26 +229,34 @@ namespace UnityFreeFlight {
 		}
 
 		/// <summary>
+		/// Releases all stored physics rotations for all mechanics.
+		/// </summary>
+		public void releaseAllPhysicsRotations() {
+			physicsRotations.Clear ();
+		}
+
+		/// <summary>
 		/// Calculate flight physics, then apply them to the rigidbody.
 		/// </summary>
 		/// <param name="rigidbody">Rigidbody.</param>
-		public void applyPhysics(Rigidbody rigidbody) {
+		public void applyPhysics() {
 
-			rotation = rigidbody.rotation;
+			addRotation (getBankedTurnRotation (rotation));
+
+			physicsRotation = rotation;
 			foreach (Quaternion quat in physicsRotations) {
-				rotation *= quat;
+				physicsRotation *= quat;
 			}
 
 			//TODO: swap rigidbody.velocity for the relative airspeed. Current calculation does not take into
 			//account wind or other forces.
-			physicsTick (rigidbody.velocity, rotation);
+			physicsTick (rigidbody.velocity, physicsRotation);
 
 			if (rigidbody.isKinematic)
 				return;
 			
-			rigidbody.rotation = getBankedTurnRotation(rigidbody.rotation);
 			rigidbody.velocity = Vector3.Lerp (rigidbody.velocity, 
-			                                   getDirectionalVelocity(rigidbody.rotation, rigidbody.velocity), 
+			                                   getDirectionalVelocity(rotation, rigidbody.velocity), 
 			                                   Time.deltaTime);	
 
 			rigidbody.AddForce (_liftForceVector);
@@ -161,7 +266,7 @@ namespace UnityFreeFlight {
 		/// <summary>
 		/// Calculate lift, drag, and angle of attack for this physics timestep.
 		/// </summary>
-		public void physicsTick(Vector3 relativeAirVelocity, Quaternion rotation) {
+		private void physicsTick(Vector3 relativeAirVelocity, Quaternion rotation) {
 			if (relativeAirVelocity == Vector3.zero)
 				return;
 
@@ -197,6 +302,31 @@ namespace UnityFreeFlight {
 				return Quaternion.LookRotation(relativeAirVelocity) * Vector3.up * liftForce;
 			}
 			return Vector3.zero;
+		}
+
+		/// <summary>
+		/// Check if wings are completely open
+		/// </summary>
+		/// <returns><c>true</c>, if wings are open, <c>false</c> otherwise.</returns>
+		public bool wingsOpen() {
+			if (wingExposureArea == wingArea)
+				return true;
+			return false;
+		}
+		
+		/// <summary>
+		/// Set the left and right wing exposure to the wind. zero is closed, and one
+		/// is open. Therefore, .5 would be a half folded wing that would generate half
+		/// as much lift. 
+		/// </summary>
+		/// <param name="cleftWingExposure">Cleft wing exposure.</param>
+		/// <param name="crightWingExposure">Cright wing exposure.</param>
+		public void setWingExposure(float cleftWingExposure, float crightWingExposure) {
+			//Make sure area is never actually zero, as this is technically impossible and 
+			//causes physics to fail.
+			leftWingExposure = (cleftWingExposure == 0.0f) ? 0.01f : cleftWingExposure;
+			rightWingExposure = (crightWingExposure == 0.0f) ? 0.01f : crightWingExposure;
+			wingExposureArea = wingArea * (leftWingExposure + rightWingExposure) / 2;
 		}
 		
 		
@@ -296,7 +426,7 @@ namespace UnityFreeFlight {
 			// A pretty snappy mechanism for getting the job done.
 			//Apply Yaw rotations. Yaw rotation is only applied if we have angular roll. (roll is applied directly by the 
 			//player)
-			Quaternion angVel = Quaternion.identity;
+			Quaternion angVel = rotation;
 			//Get the current amount of Roll, it will determine how much yaw we apply.
 			float zRot = Mathf.Sin (theCurrentRotation.eulerAngles.z * Mathf.Deg2Rad) * Mathf.Rad2Deg;
 			//We don't want to change the pitch in turns, so we'll preserve this value.
@@ -308,7 +438,7 @@ namespace UnityFreeFlight {
 			angVel.eulerAngles = rot;
 			angVel *= theCurrentRotation;	
 			angVel.eulerAngles = new Vector3(prevX, angVel.eulerAngles.y, angVel.eulerAngles.z);
-			
+
 			//Done!
 			return angVel;	
 		}
