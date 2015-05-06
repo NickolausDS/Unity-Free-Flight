@@ -12,10 +12,19 @@ namespace UnityFreeFlight {
 		public Text text;
 		protected string preparedStatsInfo;
 		protected BindingFlags flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static;
+		//This fixes a problem where the object we're 'stating' isn't finished initializing until
+		//Start time. This object needs to initialize in OnEnable time, but can't start throwing errors
+		//until we're sure things have loaded properly. 
+		private bool hasStarted = false;
 		
 		// Use this for initialization
 		public virtual void OnEnable () {
+			try {
 			autoConfig ();
+			} catch (UnityException ue) {
+				if (hasStarted)
+					throw ue;
+			}
 			nullCheck ("text", text, gameObject.name + " missing a 'Text' UI object to display stats information");
 			
 		}
@@ -23,6 +32,7 @@ namespace UnityFreeFlight {
 		//Doing an additional autoconfig fixes a problem where this script loads before the 
 		//object we're stat-ing. This way, we'll always be stat-ing the correct objects. 
 		public virtual void Start() {
+			hasStarted = true;
 			autoConfig ();
 		}
 
@@ -33,8 +43,8 @@ namespace UnityFreeFlight {
 		/// <param name="headerTitle">Header title.</param>
 		/// <param name="additionalInformation">information appended to the stats info.</param>
 		public void defaultUpdate(System.Object obj, string headerTitle, string additionalInformation="") {
-			if (obj == null)
-				throw new UnityException("Please set a target object for " + gameObject.name);
+			nullCheck ("Internal Default Update 'obj'", obj, "Either the 'auto config' failed for this script, or it needs to be set to " +
+				"execute later in 'Editor -> Project Settings -> Script Execution Order'");
 			
 			preparedStatsInfo = headerTitle + ":\n";
 			foreach (PropertyInfo propertyInfo in getProperites(obj, flags)) {
