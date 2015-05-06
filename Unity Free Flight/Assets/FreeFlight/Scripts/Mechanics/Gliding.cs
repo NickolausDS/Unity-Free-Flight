@@ -25,6 +25,12 @@ namespace UnityFreeFlight {
 		public float bankSensitivity = 2.0f;
 		public float maxPitch = 20.0f;
 		public float pitchSensitivity = 2.0f;
+		[Tooltip ("Adjust the pitch based on the angle of attack in flight. (allows stalls and dive recovery)")]
+		public bool pitchByAOA = true;
+		[Tooltip ("The default pitch when doing normal gliding")]
+		public float defaultPitch = -5f;
+		//variable where we'll store pitch adjustments
+		private float pitchAdjustment;
 		
 		public override void init (GameObject go, FlightPhysics fm, FlightInputs fi) {
 			base.init (go, fm, fi);
@@ -41,7 +47,8 @@ namespace UnityFreeFlight {
 		
 		public override void FFFixedUpdate () {
 			flightPhysics.addBank (flightInputs.inputBank * maxBank, bankSensitivity);
-			flightPhysics.addPitch (flightInputs.inputPitch * maxPitch + flightPhysics.angleOfAttack + 5f, pitchSensitivity);
+			pitchAdjustment = (pitchByAOA? -flightPhysics.angleOfAttack : 0f) + defaultPitch;
+			flightPhysics.addPitch (flightInputs.inputPitch * maxPitch + pitchAdjustment, pitchSensitivity);
 
 		}
 
