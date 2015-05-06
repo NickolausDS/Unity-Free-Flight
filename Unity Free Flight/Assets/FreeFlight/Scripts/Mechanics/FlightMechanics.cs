@@ -16,6 +16,8 @@ namespace UnityFreeFlight {
 		public Diving diving = new Diving ();
 		public Flapping flapping = new Flapping ();
 		public Landing landing = new Landing ();
+		public Turning turning = new Turning ();
+		public Pitching pitching = new Pitching ();
 	}
 
 }
