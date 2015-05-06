@@ -104,7 +104,7 @@ namespace UnityFreeFlight {
 		/// <param name="sensitivity">Sensitivity.</param>
 		public void addPitch(float angle, float sensitivity) {
 			Quaternion rot = Quaternion.identity;
-			rot.eulerAngles = new Vector3 (angle, rotation.eulerAngles.y, rotation.eulerAngles.z);
+			rot.eulerAngles = new Vector3 (-angle, rotation.eulerAngles.y, rotation.eulerAngles.z);
 			addRotation (Quaternion.Lerp (rotation, rot, sensitivity * Time.fixedDeltaTime));
 		}
 
