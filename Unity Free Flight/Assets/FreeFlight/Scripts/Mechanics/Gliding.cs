@@ -21,14 +21,19 @@ namespace UnityFreeFlight {
 
 		[Header("General")]
 		//Basic gliding input, values in degrees
-		public float maxBank = 45.0f;
+		[Tooltip ("The speed bank returns to normal")]
 		public float bankSensitivity = 2.0f;
-		public float maxPitch = 20.0f;
+		[Tooltip ("The speed pitch returns to normal")]
 		public float pitchSensitivity = 2.0f;
+		[Tooltip ("The speed pitch and bank adjustments to their default positions")]
+		public float sensitivity = 2.0f;
 		[Tooltip ("Adjust the pitch based on the angle of attack in flight. (allows stalls and dive recovery)")]
 		public bool pitchByAOA = true;
 		[Tooltip ("The default pitch when doing normal gliding")]
 		public float defaultPitch = -5f;
+		//I have no idea why this would ever be changed, but I've included it for 'completion'. 
+		[Tooltip ("The default resting position for bank. (Why would you want this non-zero!?)")]
+		public float defaultBank = 0f;
 		//variable where we'll store pitch adjustments
 		private float pitchAdjustment;
 		
@@ -46,9 +51,9 @@ namespace UnityFreeFlight {
 		}
 		
 		public override void FFFixedUpdate () {
-			flightPhysics.addBank (flightInputs.inputBank * maxBank, bankSensitivity);
+			flightPhysics.addBank (defaultBank, sensitivity);
 			pitchAdjustment = (pitchByAOA? -flightPhysics.angleOfAttack : 0f) + defaultPitch;
-			flightPhysics.addPitch (flightInputs.inputPitch * maxPitch + pitchAdjustment, pitchSensitivity);
+			flightPhysics.addPitch (pitchAdjustment, sensitivity);
 
 		}
 
