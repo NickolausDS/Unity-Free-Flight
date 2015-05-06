@@ -23,7 +23,7 @@ namespace UnityFreeFlight {
 		public AudioClip[] sounds;
 		public SoundManager soundManager = new SoundManager();
 
-		[Header("General")]
+		[Header("General -- Flight")]
 		[Tooltip("Units/second of force applied to object")]
 		public float flapStrength = 5.0f;
 		[Tooltip("Time in seconds before any flap force is applied")]
@@ -31,9 +31,13 @@ namespace UnityFreeFlight {
 		[Tooltip("Duration in seconds of flap (not connected to animation length)")]
 		public float duration = .5f;
 		private float startTime;
+		[Tooltip("The pitch angle for flapping.")]
+		public float pitchAngle = 5f;
+
 		//maximum angle to apply downward force. 90 is down. Private, because I don't think people will
 		//want to change this.
 		private float maxAngle = 90f;
+		[Header("General -- Takeoff Flapping")]
 		[Tooltip("The maximum airspeed for vectoring lift downwards. Higher numbers make easier takeoff")]
 		public float maxVectoring = 4f;
 		[Tooltip("The strength of a downward vectored flap compared to a forward vectored flap.")]
@@ -101,6 +105,7 @@ namespace UnityFreeFlight {
 				float angle = Mathf.Clamp ((maxVectoring - flightPhysics.airspeed) * scale, 0.1f, maxAngle); 
 				float strength = angle / maxAngle * takeoffStrengthMult + flapStrength;
 				rigidbody.AddForce (getFlapForce (angle, strength));
+				flightPhysics.addPitch (pitchAngle, 4);
 			}
 		}
 
