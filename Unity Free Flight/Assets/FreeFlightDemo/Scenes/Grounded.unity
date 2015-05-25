@@ -324,6 +324,8 @@ MonoBehaviour:
       - Diving
       - Flapping
       - Flaring
+      - Pitching
+      - Turning
       defaultMechanicTypeName: Gliding
       finishMechanicTypeName: Landing
       flightMechanics:
@@ -338,9 +340,12 @@ MonoBehaviour:
             type: 3}
           soundManager:
             audioSource: {fileID: 1292586816}
-          maxTurnBank: 45
-          maxPitch: 20
-          directionalSensitivity: 2
+          bankSensitivity: 2
+          pitchSensitivity: 2
+          sensitivity: 2
+          pitchByAOA: 1
+          defaultPitch: -5
+          defaultBank: 0
         flaring:
           name: Anonymous Mechanic
           enabled: 1
@@ -351,9 +356,6 @@ MonoBehaviour:
             audioSource: {fileID: 0}
           flareAngle: 70
           flareSpeed: 3
-          pitchAdjustment: 20
-          bankAdjustment: 35
-          directionalSensitivity: 2
         diving:
           name: Anonymous Mechanic
           enabled: 1
@@ -366,12 +368,19 @@ MonoBehaviour:
           name: Anonymous Mechanic
           enabled: 1
           chainRules: 02000000
-          flappingAnimation: Flapping
-          flapStrength: 20
+          flappingParameter: Flapping
+          flappingState: Base Layer.Flapping
+          useSMB: 1
           sounds:
           - {fileID: 8300000, guid: 24a927e62b21f47e9a5445931cf7668b, type: 3}
           soundManager:
             audioSource: {fileID: 0}
+          flapStrength: 20
+          lagTime: 0
+          duration: .5
+          pitchAngle: 5
+          maxVectoring: 4
+          takeoffStrengthMult: 1.5
         landing:
           name: Anonymous Mechanic
           enabled: 1
@@ -386,13 +395,29 @@ MonoBehaviour:
           crashSpeed: 20
           soundManager:
             audioSource: {fileID: 0}
+        turning:
+          name: Anonymous Mechanic
+          enabled: 1
+          chainRules: 
+          bankingParameter: 
+          maxBank: 45
+          bankSensitivity: 2
+        pitching:
+          name: Anonymous Mechanic
+          enabled: 1
+          chainRules: 
+          pitchParameter: 
+          maxPitch: 20
+          sensitivity: 2
+          minimumAirspeed: 2
+          maximumAngleOfAttack: 10
       flightPhysics:
         weight: 1
         wingEfficiency: .899999976
         wingExposureArea: .50999999
         leftWingExposure: 1
         rightWingExposure: 1
-        rotation: {x: 0, y: 0, z: 0, w: 0}
+        physicsMode: 1
       rigidbody: {fileID: 0}
     groundMode:
       name: Base Mode
@@ -447,7 +472,7 @@ AudioSource:
   Mute: 0
   Priority: 128
   DopplerLevel: 1
-  MinDistance: 1
+  MinDistance: .461517334
   MaxDistance: 500
   Pan2D: 0
   rolloffMode: 0
@@ -692,10 +717,10 @@ AudioSource:
   Mute: 0
   Priority: 128
   DopplerLevel: 1
-  MinDistance: 1
+  MinDistance: 1.41999996
   MaxDistance: 500
   Pan2D: 0
-  rolloffMode: 0
+  rolloffMode: 1
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
