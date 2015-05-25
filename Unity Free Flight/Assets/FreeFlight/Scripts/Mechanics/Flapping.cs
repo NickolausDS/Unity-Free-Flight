@@ -137,8 +137,9 @@ namespace UnityFreeFlight {
 				if (fsmb != null)
 					fsmb.flap = flap;
 				else {
-					Debug.LogError ( string.Format ("Free Flight: Flapping -- Please add {0} to the flapping state in the animation controller" +
-					                                " for object {1}.", flappingSMB.GetType().Name, gameObject.name));
+					Debug.LogError ( string.Format ("Free Flight: Flapping -- 'useSMB' was checked, but no attached object was found. " +
+						"Please add 'FlappingSMB' to the flapping state in the animation controller" +
+					    " for object {1}.", gameObject.name));
 					useSMBStatus = false;
 				}
 			} else if (fsmb != null) {

@@ -54,38 +54,46 @@ public class ModeManagerDrawer : PropertyDrawer {
 			EditorGUILayout.BeginHorizontal();
 			SerializedProperty curMech = flightModeMechTypeNames.GetArrayElementAtIndex(i);
 
-			int newValue = EditorGUILayout.Popup(mechanicNames.IndexOf (
-				curMech.stringValue), mechanicNames.ToArray());
+			List<String> selectableMechanics = getSelectableMechanics (flightModeMechTypeNames, mechanicNames, curMech.stringValue);
+			int newValue = EditorGUILayout.Popup(selectableMechanics.IndexOf (
+				curMech.stringValue), selectableMechanics.ToArray());
 			if (newValue > -1)
-				curMech.stringValue = mechanicNames[newValue];
+				curMech.stringValue = selectableMechanics[newValue];
 
 			if (GUILayout.Button ('\u2193'.ToString()))
 				flightModeMechTypeNames.MoveArrayElement(i, i+1);
-			if (GUILayout.Button ("+")) 
+			if (GUILayout.Button ("+")) {
 				flightModeMechTypeNames.InsertArrayElementAtIndex(i);
-			if (GUILayout.Button ("-")) 
+				flightModeMechTypeNames.GetArrayElementAtIndex(i+1).stringValue = "";
+			}
+			if (GUILayout.Button ("-")) {
 				flightModeMechTypeNames.DeleteArrayElementAtIndex(i);
+				return;
+			}
 
 			if (curMech.stringValue != "")
 				EditorGUILayout.PropertyField(modeMechs.FindPropertyRelative(curMech.stringValue.ToLower())
 			                              .FindPropertyRelative("enabled"));
 
-			EditorGUILayout.EndHorizontal();
+				EditorGUILayout.EndHorizontal();
 
-			EditorGUILayout.LabelField("Chain Rules");
-			SerializedProperty chain = modeMechs.FindPropertyRelative(curMech.stringValue.ToLower ()).FindPropertyRelative ("chainRules");
-			//Only lower precedence chains are allowed, so get rid of everything above this (minus one for the current mechanic)
-			int chainSize = flightModeMechTypeNames.arraySize - i - 1;
-			for (int j = 0; j < chainSize; j++) {
-				int chainRule = flightModeMechTypeNames.arraySize - chainSize + j;
-				EditorGUILayout.BeginHorizontal ();
-				EditorGUILayout.LabelField(flightModeMechTypeNames.GetArrayElementAtIndex(chainRule).stringValue);
-				setChainForMechanicIndex(chainRule, chain, EditorGUILayout.Toggle(getChainMechanicIndex(chainRule, chain)));
-				EditorGUILayout.EndHorizontal ();
+			if (curMech.stringValue != "") {
+				EditorGUILayout.LabelField("Chain Rules");
+				SerializedProperty chain = modeMechs.FindPropertyRelative(curMech.stringValue.ToLower ()).FindPropertyRelative ("chainRules");
+				//Only lower precedence chains are allowed, so get rid of everything above this (minus one for the current mechanic)
+				int chainSize = flightModeMechTypeNames.arraySize - i - 1;
+				for (int j = 0; j < chainSize; j++) {
+					int chainRule = flightModeMechTypeNames.arraySize - chainSize + j;
+					EditorGUILayout.BeginHorizontal ();
+					EditorGUILayout.LabelField(flightModeMechTypeNames.GetArrayElementAtIndex(chainRule).stringValue);
+					setChainForMechanicIndex(chainRule, chain, EditorGUILayout.Toggle(getChainMechanicIndex(chainRule, chain)));
+					EditorGUILayout.EndHorizontal ();
+				}
 			}
 
 		}
 
+		//Add a button for adding the first mechanic
 		if (flightModeMechTypeNames.arraySize == 0) 
 			if (GUILayout.Button ("+")) 
 				flightModeMechTypeNames.InsertArrayElementAtIndex(0);
@@ -111,6 +119,17 @@ public class ModeManagerDrawer : PropertyDrawer {
 		EditorGUI.indentLevel-=1;
 
 		EditorGUILayout.PropertyField (mode.FindPropertyRelative ("flightPhysics"), true);
+
+	}
+
+	public List<string> getSelectableMechanics(SerializedProperty curUsedMechs, List<string> allMechs, string currentMech) {
+		List<string> selectableMechs = new List<string> (allMechs);
+		for (int i = 0; i < curUsedMechs.arraySize; i++) {
+			selectableMechs.Remove(curUsedMechs.GetArrayElementAtIndex(i).stringValue);
+		}
+		selectableMechs.Insert (0, currentMech);
+
+		return selectableMechs;
 
 	}
 
