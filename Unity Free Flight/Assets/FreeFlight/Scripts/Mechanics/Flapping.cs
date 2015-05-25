@@ -11,13 +11,17 @@ namespace UnityFreeFlight {
 	/// some general settings with regard to flap behavior. 
 	/// </summary>
 	[Serializable]
-	public class Flapping : Mechanic {
+	public class Flapping : Mechanic  {
 
 		[Header("Animation")]
 		public string flappingParameter = "Flapping";
 		public string flappingState = "Base Layer.Flapping";
 		private int paramHash;
 		private int stateHash;
+		[Tooltip ("Use the Flapping State Machine Behaviour instead of normal detection. Results in smoother flaps, but needs to be set on" +
+			"the Flapping state in the animation controller")]
+		public bool useSMB = false;
+		private FlappingSMB flappingSMB;
 
 		[Header("Sound")]
 		public AudioClip[] sounds;
@@ -52,7 +56,8 @@ namespace UnityFreeFlight {
 			if (!animator.HasState (0, stateHash)) {
 				Debug.LogWarning ("Flapping: Animation Controller doesn't appear to have the '" + flappingState + "' state.");
 			}
-			
+			setupSMB (ref useSMB, ref flappingSMB);
+
 		}
 
 		public override bool FFInputSatisfied () {
@@ -65,13 +70,15 @@ namespace UnityFreeFlight {
 		public override void FFStart () {}
 
 		public override void FFFixedUpdate () {
-			if (animator.GetNextAnimatorStateInfo(0).fullPathHash != stateHash &&
-			    animator.GetCurrentAnimatorStateInfo(0).fullPathHash != stateHash &&
-			    FFInputSatisfied()
-			    ) {
-					soundManager.playRandomSound(sounds);
-					animator.SetTrigger (paramHash);
-					startTime = Time.time;
+			#if UNITY_EDITOR
+			//allows for dynamic setting/unsetting during playmode for testing
+			setupSMB (ref useSMB, ref flappingSMB);
+			#endif
+
+			if (animator.GetCurrentAnimatorStateInfo(0).fullPathHash != stateHash && flightInputs.inputFlap) {
+				animator.SetTrigger (paramHash);
+				if (!useSMB)
+					flap ();
 			}
 
 			applyFlapForce ();
@@ -82,6 +89,11 @@ namespace UnityFreeFlight {
 		/// </summary>
 		public override bool FFFinish () {
 			return isDoneFlapping();
+		}
+
+		public void flap() {
+			soundManager.playRandomSound(sounds);
+			startTime = Time.time;
 		}
 
 		/// <summary>
@@ -117,6 +129,22 @@ namespace UnityFreeFlight {
 		/// <param name="strength>strength of flap.</para>">
 		public Vector3 getFlapForce(float angle, float strength) {
 			return rigidbody.rotation * Quaternion.AngleAxis (angle, Vector3.left) * Vector3.forward * strength;
+		}
+
+		private void setupSMB(ref bool useSMBStatus, ref FlappingSMB fsmb) {
+			if (useSMBStatus) {
+				fsmb = animator.GetBehaviour<FlappingSMB> ();
+				if (fsmb != null)
+					fsmb.flap = flap;
+				else {
+					Debug.LogError ( string.Format ("Free Flight: Flapping -- Please add {0} to the flapping state in the animation controller" +
+					                                " for object {1}.", flappingSMB.GetType().Name, gameObject.name));
+					useSMBStatus = false;
+				}
+			} else if (fsmb != null) {
+				fsmb.flap = null;
+			}
+
 		}
 
 
