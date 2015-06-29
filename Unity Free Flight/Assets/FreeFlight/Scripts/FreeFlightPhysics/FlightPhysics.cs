@@ -347,8 +347,12 @@ namespace UnityFreeFlight {
 		/// <returns>The lift coefficient.</returns>
 		/// <param name="angleDegrees">Angle degrees.</param>
 		public float getLiftCoefficient(float angleDegrees) {
-			angleDegrees = Mathf.Clamp (angleDegrees, -1f, 26.2f);
-			return -1f / 100f * (angleDegrees * angleDegrees - 26f * angleDegrees - 31f);
+
+			//angleDegrees = Mathf.Clamp (angleDegrees, -1f, 26.2f);
+			if (angleDegrees < -1f || angleDegrees > 26f)
+				return -Mathf.Abs ((angleDegrees - 13) / 26f) + 1f;
+			else
+				return Mathf.Clamp (-1f / 100f * (angleDegrees * angleDegrees - 26f * angleDegrees - 31f), 0f, 2f);
 		}
 
 		/// <summary>
