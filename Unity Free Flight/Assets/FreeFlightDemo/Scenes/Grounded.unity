@@ -153,6 +153,10 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: baec086904791744185aaa07a6cf55c2, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &259297203 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 160174, guid: 91df570bd3ad54a18b0fefe51b657583, type: 2}
+  m_PrefabInternal: {fileID: 1251816674}
 --- !u!1001 &427484740
 Prefab:
   m_ObjectHideFlags: 0
@@ -195,7 +199,7 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 01853f2c218454ed9837dc4dd12a8ef9, type: 2}
   m_IsPrefabParent: 0
---- !u!1 &473495049
+--- !u!1 &473495049 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 110942, guid: 4e05a4981ac3648908cb19192b8ed3d0, type: 2}
   m_PrefabInternal: {fileID: 1465029537}
@@ -245,6 +249,7 @@ MonoBehaviour:
   m_SubmitButton: Submit
   m_CancelButton: Cancel
   m_InputActionsPerSecond: 10
+  m_RepeatDelay: .5
   m_AllowActivationOnMobileDevice: 0
 --- !u!114 &767223157
 MonoBehaviour:
@@ -257,7 +262,7 @@ MonoBehaviour:
   m_Script: {fileID: -619905303, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_FirstSelected: {fileID: 0}
+  m_FirstSelected: {fileID: 259297203}
   m_sendNavigationEvents: 1
   m_DragThreshold: 5
 --- !u!4 &767223158
@@ -619,7 +624,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22437374, guid: 91df570bd3ad54a18b0fefe51b657583, type: 2}
       propertyPath: m_RootOrder
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 22437374, guid: 91df570bd3ad54a18b0fefe51b657583, type: 2}
       propertyPath: m_AnchoredPosition.x
@@ -661,30 +666,30 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 11485800, guid: 91df570bd3ad54a18b0fefe51b657583, type: 2}
-      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1622214317}
-    - target: {fileID: 11443970, guid: 91df570bd3ad54a18b0fefe51b657583, type: 2}
-      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 473495049}
     - target: {fileID: 11496952, guid: 91df570bd3ad54a18b0fefe51b657583, type: 2}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1615785687}
+    - target: {fileID: 11443970, guid: 91df570bd3ad54a18b0fefe51b657583, type: 2}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 473495049}
+    - target: {fileID: 11485800, guid: 91df570bd3ad54a18b0fefe51b657583, type: 2}
+      propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1622214317}
     - target: {fileID: 11490904, guid: 91df570bd3ad54a18b0fefe51b657583, type: 2}
-      propertyPath: isPaused
-      value: 0
-      objectReference: {fileID: 0}
+      propertyPath: eventSystem
+      value: 
+      objectReference: {fileID: 767223154}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 91df570bd3ad54a18b0fefe51b657583, type: 2}
   m_IsPrefabParent: 0
---- !u!1 &1292586812
+--- !u!1 &1292586812 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 100002, guid: 9f5e826408d9a0d429bf35c83975e2de, type: 3}
   m_PrefabInternal: {fileID: 1177681287}
---- !u!4 &1292586813
+--- !u!4 &1292586813 stripped
 Transform:
   m_PrefabParentObject: {fileID: 400002, guid: 9f5e826408d9a0d429bf35c83975e2de, type: 3}
   m_PrefabInternal: {fileID: 1177681287}
@@ -851,11 +856,11 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4e05a4981ac3648908cb19192b8ed3d0, type: 2}
   m_IsPrefabParent: 0
---- !u!1 &1615785687
+--- !u!1 &1615785687 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 184962, guid: 4e05a4981ac3648908cb19192b8ed3d0, type: 2}
   m_PrefabInternal: {fileID: 1465029537}
---- !u!1 &1622214317
+--- !u!1 &1622214317 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 177794, guid: 4e05a4981ac3648908cb19192b8ed3d0, type: 2}
   m_PrefabInternal: {fileID: 1465029537}
