@@ -8,37 +8,37 @@ release/031814
 *.mp3
 *.wav
 
-Unity\ Free\ Flight/Assets/Crow/
-Unity\ Free\ Flight/Assets/FreeFlightDemo/Standard\ Assets/
-Unity\ Free\ Flight/Assets/FreeFlightDemo/release
-Unity\ Free\ Flight/Assets/Plugins/
+FreeFlight/Assets/Crow/
+FreeFlight/Assets/FreeFlightDemo/Standard\ Assets/
+FreeFlight/Assets/FreeFlightDemo/release
+FreeFlight/Assets/Plugins/
 
 # =============== #
 # Unity generated #
 # =============== #
-Unity\ Free\ Flight/Temp/
-Unity\ Free\ Flight/Library/
-Unity\ Free\ Flight/Build/
-Unity\ Free\ Flight/Library/ScriptAssemblies/
-Unity\ Free\ Flight/Assets/Standard\ Assets/
-Unity\ Free\ Flight/Assets/Standard\ Assets.meta
+FreeFlight/Temp/
+FreeFlight/Library/
+FreeFlight/Build/
+FreeFlight/Library/ScriptAssemblies/
+FreeFlight/Assets/Standard\ Assets/
+FreeFlight/Assets/Standard\ Assets.meta
 *ShaderCache*
 
 
 # ===================================== #
 # Visual Studio / MonoDevelop generated #
 # ===================================== #
-Unity\ Free\ Flight/ExportedObj/
-Unity\ Free\ Flight/obj/
-Unity\ Free\ Flight/*.svd
-Unity\ Free\ Flight/*.userprefs
-Unity\ Free\ Flight/*.csproj
-Unity\ Free\ Flight/*.pidb
-Unity\ Free\ Flight/*.suo
-Unity\ Free\ Flight/*.sln
-Unity\ Free\ Flight/*.user
-Unity\ Free\ Flight/*.unityproj
-Unity\ Free\ Flight/*.booproj
+FreeFlight/ExportedObj/
+FreeFlight/obj/
+FreeFlight/*.svd
+FreeFlight/*.userprefs
+FreeFlight/*.csproj
+FreeFlight/*.pidb
+FreeFlight/*.suo
+FreeFlight/*.sln
+FreeFlight/*.user
+FreeFlight/*.unityproj
+FreeFlight/*.booproj
 # ============ #
 # OS generated #
 # ============ #
