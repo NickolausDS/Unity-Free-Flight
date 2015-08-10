@@ -2,9 +2,12 @@
 
 
 COMMAND="/Applications/Unity/Unity.app/Contents/MacOS/Unity"
-PROJECT_PATH="../Unity Free Flight"
+PROJECT_PATH="../FreeFlight"
 LOG_FILE="build.out"
 OPTIONS="-quit -batchmode -logFile $LOG_FILE -projectPath=$PROJECT_PATH"
+
+DLLBUILDER="./makeDLL.sh"
+DLLPATH="Assets/FreeFlight/FreeFlight.dll"
 
 PACKAGER="./package.sh"
 
@@ -19,13 +22,18 @@ BUILD_WEB="-buildWebPlayerStreamed $BUILD_PATH"
 SA=Assets/FreeFlightDemo/Standard\ Assets
 
 #Everything core to running Free Flight
-BASIC_ASSETS=("Assets/FreeFlight" "Assets/Editor/FreeFlightEditor.cs" "Assets/Plugins/Pixelplacement")
+BASIC_ASSETS=("Assets/FreeFlight")
 DEMO_ASSETS=("${BASIC_ASSETS[@]} Assets/FreeFlightDemo")
 
 
 touch $LOG_FILE
 tail -n 0 -f "$LOG_FILE" & 
 tail_pid=$!
+
+
+VERSION_FILE="$(dirname $BUILD_PATH)/version.txt"
+#Get version number
+$COMMAND $OPTIONS -executemethod Build.writeVersion $VERSION_FILE &&
 
 $COMMAND $OPTIONS $BUILD_OSX &&
 $PACKAGER "osx" &&
@@ -38,6 +46,10 @@ $PACKAGER "linux" &&
 
 $COMMAND $OPTIONS $BUILD_WEB &&
 $PACKAGER "web" &&
+
+$DLLBUILDER &&
+mv $PROJECT_PATH/Assets/FreeFlight/Scripts $PROJECT_PATH/Assets/FreeFlight/.Scripts &&
+mv $PROJECT_PATH/Assets/FreeFlight/Editor $PROJECT_PATH/Assets/FreeFlight/.Editor &&
 
 $COMMAND $OPTIONS -exportPackage ${BASIC_ASSETS[@]} "${BUILD_PATH}.unitypackage" &&
 $PACKAGER "unitypackage" &&
@@ -53,6 +65,11 @@ else
 fi
 
 kill $tail_pid &> /dev/null
-wait $tail_pid
-rm $LOG_FILE
+wait $tail_pid &> /dev/null
 
+#If export builds were done, we need to clean them up.
+mv $PROJECT_PATH/Assets/FreeFlight/.Scripts $PROJECT_PATH/Assets/FreeFlight/Scripts &> /dev/null
+mv $PROJECT_PATH/Assets/FreeFlight/.Editor $PROJECT_PATH/Assets/FreeFlight/Editor &> /dev/null
+rm -f $LOG_FILE
+rm -f $VERSION_FILE
+rm -f $DLLPATH
