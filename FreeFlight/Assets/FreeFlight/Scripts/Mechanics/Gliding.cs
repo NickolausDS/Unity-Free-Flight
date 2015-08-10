@@ -55,6 +55,7 @@ namespace UnityFreeFlight {
 			pitchAdjustment = (pitchByAOA? -flightPhysics.angleOfAttack : 0f) + defaultPitch;
 			flightPhysics.addPitch (pitchAdjustment, sensitivity);
 
+			applyWindNoise ();
 		}
 
 		public override bool FFFinish () {
@@ -67,24 +68,25 @@ namespace UnityFreeFlight {
 			if (!windNoiseClip)
 				return;
 			
-//			AudioSource windNoiseSource = soundManager.getSource (windNoiseClip);
-//			if (!windNoiseSource) {
-//				Debug.LogError ("Wind source noise has clip but not source!");
-//				return;
-//			}
-			
-//			if (flightPhysics.airspeed > windNoiseStartSpeed) {
-//				float volume = Mathf.Clamp (flightPhysics.airspeed / (windNoiseStartSpeed + windNoiseMaxSpeed), 0.0f, 1.0f);
-//				windNoiseSource.volume = volume;
-//				//We want pitch to pick up at about half the volume
-//				windNoiseSource.pitch = Mathf.Clamp (0.9f + flightPhysics.airspeed / 2.0f / (windNoiseStartSpeed + windNoiseMaxSpeed), 0.9f, 1.5f);
-//				//Use this to see how values are applied at various speeds.
-//				//Debug.Log (string.Format ("Vol {0}, pitch {1}", audio.volume, audio.pitch));
-//				if (! windNoiseSource.isPlaying) 
-//					windNoiseSource.Play ();
-//			} else {
-//				windNoiseSource.Stop ();
-//			}
+			AudioSource windNoiseSource = soundManager.audioSource;
+			if (!windNoiseSource) {
+				Debug.LogError ("Wind source noise has clip but not source!");
+				return;
+			}
+
+			if (flightPhysics.airspeed > windNoiseStartSpeed) {
+				float volume = Mathf.Clamp (flightPhysics.airspeed / (windNoiseStartSpeed + windNoiseMaxSpeed), 0.0f, 1.0f);
+				windNoiseSource.volume = volume;
+				//We want pitch to pick up at about half the volume
+				windNoiseSource.pitch = Mathf.Clamp (0.9f + flightPhysics.airspeed / 2.0f / (windNoiseStartSpeed + windNoiseMaxSpeed), 0.9f, 1.5f);
+				//Use this to see how values are applied at various speeds.
+				//Debug.Log (string.Format ("Vol {0}, pitch {1}", audio.volume, audio.pitch));
+				if (! windNoiseSource.isPlaying) 
+					soundManager.playSound(windNoiseClip);
+					//windNoiseSource.Play ();
+			} else {
+				windNoiseSource.Stop ();
+			}
 			
 		}
 	
