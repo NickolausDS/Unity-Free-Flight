@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections;
 using System.Collections.Generic;
+using UnityFreeFlight;
 
 namespace FreeFlightDemo {
 
@@ -30,6 +31,10 @@ namespace FreeFlightDemo {
 		private GameObject activeMenu;
 		public string[] availableLevels = {"MainMenu", "Grounded"};
 
+		public GameObject versionText;
+		public Color backgroundColor;
+		private Image screenImage;
+
 		// Use this for initialization
 		void Start () {
 			if (!mainMenu)
@@ -48,11 +53,20 @@ namespace FreeFlightDemo {
 			if (!selectable)
 				Debug.LogWarning ("No 'Selectable' component on " + gameObject.name + ". Selecting things on" +
 				                  " this menu may not work for all devices.");
+
+			if (versionText != null)
+				versionText.GetComponent<Text> ().text = "v" + typeof(FreeFlight).Assembly.GetName().Version.ToString();
+
+			screenImage = GetComponent<Image> ();
 		}
 
 		public void pause() {
 			Time.timeScale = 0.0f;
+			if (screenImage != null)
+				screenImage.color = backgroundColor;
+			versionText.SetActive (true);
 			isPaused = true;
+
 			//Disallow the pause menu from stealing interaction from menu items
 			selectable.interactable = false;
 			selectMenu (mainMenu);
@@ -62,10 +76,13 @@ namespace FreeFlightDemo {
 			selectable.interactable = true;
 			eventSystemComponent.UpdateModules ();
 			eventSystemComponent.SetSelectedGameObject (gameObject);
-
-			Time.timeScale = 1.0f;
-			isPaused = false;
 			mainMenu.SetActive (false);
+			
+			Time.timeScale = 1.0f;
+			if (screenImage != null)
+				screenImage.color = Color.clear;
+			versionText.SetActive (false);
+			isPaused = false;
 		}
 
 		public void togglePause() {
