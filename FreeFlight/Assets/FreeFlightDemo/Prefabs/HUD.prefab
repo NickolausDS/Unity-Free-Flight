@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &132542
 GameObject:
   m_ObjectHideFlags: 1
@@ -52,7 +52,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &178956
 GameObject:
   m_ObjectHideFlags: 1
@@ -285,6 +285,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   text: {fileID: 0}
   flightObject: {fileID: 0}
+  visualDebugging: 0
+  logFrameDebugging: 0
+  liftColor: {r: 0, g: 0, b: 1, a: 1}
+  dragColor: {r: 1, g: 0, b: 0, a: 1}
+  velocityColor: {r: 0, g: 1, b: 0, a: 1}
 --- !u!222 &22204278
 CanvasRenderer:
   m_ObjectHideFlags: 1
