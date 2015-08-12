@@ -33,6 +33,7 @@ namespace UnityFreeFlight {
 //		public float anglePitch { get { return getPitch(_inputFlaring); } }
 		public float inputBank { get { return _inputBank; } }
 //		public float angleBank { get { return getBank (); } }
+		public Transform oculusTransform;
 
 		//Even though Inverted as a property here is invisible to the inspector, 
 		//using the property in this way makes it convienient to access externally,

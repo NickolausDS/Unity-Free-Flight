@@ -1206,7 +1206,7 @@ GameObject:
   - 114: {fileID: 11433080}
   m_Layer: 0
   m_Name: OVRCameraRig
-  m_TagString: Untagged
+  m_TagString: OculusCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2418,8 +2418,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 179726}
-  m_LocalRotation: {x: 1.19209275e-07, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -.00200000009, y: .214000002, z: -.164000005}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: .164000005, z: .0829999968}
   m_LocalScale: {x: .00999999978, y: .0100000007, z: .0100000007}
   m_Children:
   - {fileID: 447080}
@@ -3265,7 +3265,11 @@ Prefab:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 100102}

@@ -124,7 +124,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: baec086904791744185aaa07a6cf55c2, type: 2}
       propertyPath: m_RootOrder
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: baec086904791744185aaa07a6cf55c2, type: 2}
       propertyPath: m_LocalScale.x
@@ -198,7 +198,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: 01853f2c218454ed9837dc4dd12a8ef9, type: 2}
       propertyPath: m_RootOrder
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 01853f2c218454ed9837dc4dd12a8ef9, type: 2}
@@ -364,7 +364,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22437374, guid: 91df570bd3ad54a18b0fefe51b657583, type: 2}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 22437374, guid: 91df570bd3ad54a18b0fefe51b657583, type: 2}
       propertyPath: m_AnchoredPosition.x
@@ -462,7 +462,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22445950, guid: 4e05a4981ac3648908cb19192b8ed3d0, type: 2}
       propertyPath: m_RootOrder
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 22445950, guid: 4e05a4981ac3648908cb19192b8ed3d0, type: 2}
       propertyPath: m_AnchoredPosition.x
@@ -504,6 +504,26 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 110942, guid: 4e05a4981ac3648908cb19192b8ed3d0, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 22406452, guid: 4e05a4981ac3648908cb19192b8ed3d0, type: 2}
+      propertyPath: m_AnchoredPosition.x
+      value: -315
+      objectReference: {fileID: 0}
+    - target: {fileID: 22406452, guid: 4e05a4981ac3648908cb19192b8ed3d0, type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: -196
+      objectReference: {fileID: 0}
+    - target: {fileID: 22356938, guid: 4e05a4981ac3648908cb19192b8ed3d0, type: 2}
+      propertyPath: m_RenderMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 22356938, guid: 4e05a4981ac3648908cb19192b8ed3d0, type: 2}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 1859927910}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4e05a4981ac3648908cb19192b8ed3d0, type: 2}
   m_IsPrefabParent: 0
@@ -515,3 +535,8 @@ GameObject:
 GameObject:
   m_PrefabParentObject: {fileID: 177794, guid: 4e05a4981ac3648908cb19192b8ed3d0, type: 2}
   m_PrefabInternal: {fileID: 1465029537}
+--- !u!20 &1859927910 stripped
+Camera:
+  m_PrefabParentObject: {fileID: 2056204, guid: 3d2525a78f2024bec962b3cf13a4b531,
+    type: 2}
+  m_PrefabInternal: {fileID: 858796156}
