@@ -1,5 +1,6 @@
 #!/bin/bash
 
+VERSION_SUFFIX="$1"
 
 COMMAND="/Applications/Unity/Unity.app/Contents/MacOS/Unity"
 PROJECT_PATH="../FreeFlight"
@@ -14,7 +15,7 @@ PACKAGER="./package.sh"
 BUILD_PATH="../release/FreeFlight"
 
 BUILD_OSX="-buildOSX64Player $BUILD_PATH"
-BUILD_WINDOWS="-buildWindows64Player $BUILD_PATH.exe"
+BUILD_WINDOWS="-force-d3d11 -buildWindows64Player $BUILD_PATH.exe"
 BUILD_LINUX="-buildLinux64Player $BUILD_PATH.x86_64"
 BUILD_WEB="-buildWebPlayerStreamed $BUILD_PATH"
 
@@ -34,6 +35,7 @@ tail_pid=$!
 VERSION_FILE="$(dirname $BUILD_PATH)/version.txt"
 #Get version number
 $COMMAND $OPTIONS -executemethod Build.writeVersion $VERSION_FILE &&
+echo "$VERSION_SUFFIX" >> $VERSION_FILE
 
 $COMMAND $OPTIONS $BUILD_OSX &&
 $PACKAGER "osx" &&
