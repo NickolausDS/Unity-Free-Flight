@@ -5,7 +5,7 @@ using System.Collections;
 
 		public static void writeVersion() {
 
-			#if !UNITY_WEBPLAYER
+			#if UNITY_STANDALONE
 
 			if (Application.isEditor) {
 				string arg = getSingleArgument ();
@@ -14,6 +14,10 @@ using System.Collections;
 				else 
 					throw new UnityException ("Missing path");
 			}
+			#else
+			Debug.LogWarning ("You can't write version when build target is set to webplayer. Please set the build" +
+		                  "target to 'Standalone' in the Unity build menu.");
+
 			#endif
 		}
 
@@ -28,8 +32,7 @@ using System.Collections;
 		/// <returns>The single argument.</returns>
 		public static string getSingleArgument() {
 			string retval = null;
-
-			#if !UNITY_WEBPLAYER
+			#if UNITY_STANDALONE
 			string[] args = System.Environment.GetCommandLineArgs ();
 			bool executeMethodArg = false;
 			bool methodArg = false;

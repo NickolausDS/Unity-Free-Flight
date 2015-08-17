@@ -26,6 +26,22 @@ SA=Assets/FreeFlightDemo/Standard\ Assets
 BASIC_ASSETS=("Assets/FreeFlight")
 DEMO_ASSETS=("${BASIC_ASSETS[@]} Assets/FreeFlightDemo")
 
+trap interrupt INT
+
+function interrupt() {
+	echo "Caught Ctrl^C! Stopping!"
+	cleanup
+}
+
+function cleanup() {
+	kill $tail_pid &> /dev/null
+	wait $tail_pid &> /dev/null
+	rm -vf $LOG_FILE
+	rm -vf $VERSION_FILE
+	rm -vf "${PROJECT_PATH}/${DLLPATH}"
+	rm -vf "${PROJECT_PATH}/${DLLPATH}.meta"
+	rm -vf  "*.pdb"
+}
 
 touch $LOG_FILE
 tail -n 0 -f "$LOG_FILE" & 
@@ -34,8 +50,14 @@ tail_pid=$!
 
 VERSION_FILE="$(dirname $BUILD_PATH)/version.txt"
 #Get version number
-$COMMAND $OPTIONS -executemethod Build.writeVersion $VERSION_FILE &&
-echo "$VERSION_SUFFIX" >> $VERSION_FILE
+#Build target needs to be set to a platform which can write to a file, or else this will fail.
+$COMMAND $OPTIONS -buildTarget win64 -executemethod Build.writeVersion $VERSION_FILE &&
+
+#Checks whether the version actually got produced. Sometimes this will fail if Unity couldn't
+#Switch the -buildTarget correctly. 
+test $(cat $VERSION_FILE) &&
+#Add the version suffix if there was one
+echo "$(cat $VERSION_FILE)$VERSION_SUFFIX" > "$VERSION_FILE" &&
 
 $COMMAND $OPTIONS $BUILD_OSX &&
 $PACKAGER "osx" &&
@@ -52,6 +74,8 @@ $PACKAGER "web" &&
 $DLLBUILDER &&
 mv $PROJECT_PATH/Assets/FreeFlight/Scripts $PROJECT_PATH/Assets/FreeFlight/.Scripts &&
 mv $PROJECT_PATH/Assets/FreeFlight/Editor $PROJECT_PATH/Assets/FreeFlight/.Editor &&
+mv $PROJECT_PATH/Assets/FreeFlight/Scripts.meta $PROJECT_PATH/Assets/FreeFlight/.Scripts.meta &&
+mv $PROJECT_PATH/Assets/FreeFlight/Editor.meta $PROJECT_PATH/Assets/FreeFlight/.Editor.meta &&
 
 $COMMAND $OPTIONS -exportPackage ${BASIC_ASSETS[@]} "${BUILD_PATH}.unitypackage" &&
 $PACKAGER "unitypackage" &&
@@ -66,12 +90,10 @@ else
 	echo "FAIL! Stopping build process..."
 fi
 
-kill $tail_pid &> /dev/null
-wait $tail_pid &> /dev/null
-
 #If export builds were done, we need to clean them up.
 mv $PROJECT_PATH/Assets/FreeFlight/.Scripts $PROJECT_PATH/Assets/FreeFlight/Scripts &> /dev/null
 mv $PROJECT_PATH/Assets/FreeFlight/.Editor $PROJECT_PATH/Assets/FreeFlight/Editor &> /dev/null
-rm -f $LOG_FILE
-rm -f $VERSION_FILE
-rm -f $DLLPATH
+mv $PROJECT_PATH/Assets/FreeFlight/.Scripts.meta $PROJECT_PATH/Assets/FreeFlight/Scripts.meta &> /dev/null
+mv $PROJECT_PATH/Assets/FreeFlight/.Editor.meta $PROJECT_PATH/Assets/FreeFlight/Editor.meta &> /dev/null
+
+cleanup
