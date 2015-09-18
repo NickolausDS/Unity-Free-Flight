@@ -69,7 +69,7 @@ AnimatorController:
     m_IKPass: 0
     m_SyncedLayerAffectsTiming: 0
     m_Controller: {fileID: 9100000}
---- !u!114 &11483240
+--- !u!114 &11464282
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -737,7 +737,7 @@ AnimatorState:
   m_CycleOffsetParameterActive: 0
   m_Motion: {fileID: 7400000, guid: e90649af4bbda46ac9001208f5735c7d, type: 2}
   m_Tag: 
-  m_SpeedParameter: 
+  m_SpeedParameter: AngularSpeed
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
 --- !u!1102 &110279085
@@ -754,7 +754,7 @@ AnimatorState:
   - {fileID: 110159132}
   - {fileID: 110194308}
   m_StateMachineBehaviours:
-  - {fileID: 11483240}
+  - {fileID: 11464282}
   m_Position: {x: 240, y: -24, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
