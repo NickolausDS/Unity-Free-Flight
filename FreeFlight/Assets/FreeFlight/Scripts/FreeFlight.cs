@@ -22,25 +22,43 @@ public class FreeFlight : MonoBehaviour {
 	public void OnEnable () {
 		if (modeManager == null) {
 			modeManager = new ModeManager ();
-			Debug.Log ("Instantiating Free Flight component");
 		}
-//		Debug.Log ("Initializing...");
-		modeManager.init (gameObject);
+		try {
+			modeManager.init (gameObject);
+		} catch (Exception e) {
+			Debug.LogError (string.Format("({0} -- Free Flight Component): Script Failed Initialization:\n{1}", gameObject.name, e.StackTrace.ToString()));
+			enabled = false;
+		}
 	}
 
 	void SwitchModes(MovementModes newmode) {
-		modeManager.switchModes (newmode);
+		try {
+			modeManager.switchModes (newmode);
+		} catch (Exception e) {
+			Debug.LogError (string.Format("({0} -- Free Flight Component): Script Failed Switching Modes:\n{1}", gameObject.name, e.StackTrace.ToString()));
+			enabled = false;
+		}
 	}
 
 	void Start() {
-		modeManager.start ();
+		try {
+			modeManager.start ();
+		} catch (Exception e) {
+			Debug.LogError (string.Format("({0} -- Free Flight Component): Script failed to start:\n{1}", gameObject.name, e.StackTrace.ToString()));
+			enabled = false;
+		}
 	}
 	
 	/// <summary>
 	/// Get input from the player 
 	/// </summary>
 	void Update() {
-		modeManager.getInputs ();
+		try {
+			modeManager.getInputs ();
+		} catch (Exception e) {
+			Debug.LogError (string.Format("({0} -- Free Flight Component): Script Failed on Get Inputs:\n{1}", gameObject.name, e.StackTrace.ToString()));
+			enabled = false;
+		}
 	}
 	
 	/// <summary>
@@ -48,7 +66,12 @@ public class FreeFlight : MonoBehaviour {
 	/// compute the physics and animation accordingly
 	/// </summary>
 	void FixedUpdate () {	
-		modeManager.applyInputs ();
+		try {
+			modeManager.applyInputs ();
+		} catch (Exception e) {
+			Debug.LogError (string.Format("({0} -- Free Flight Component): Script Failed on Applying Inputs:\n{1}", gameObject.name, e.StackTrace.ToString()));
+			enabled = false;
+		}
 	}
 
 	//Default behaviour when we hit an object (usually the ground) is to switch to a ground controller. 
