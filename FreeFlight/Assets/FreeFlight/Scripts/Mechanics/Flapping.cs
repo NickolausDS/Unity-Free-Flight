@@ -67,13 +67,20 @@ namespace UnityFreeFlight {
 		/// <summary>
 		/// Override FFStart to do nothing. The Stock Begin() isn't what we want
 		/// </summary>
-		public override void FFStart () {}
+		public override void FFStart () {
+
+			//If the user has checked or unchecked the option, reset the behaviour. This allows for dynamic 
+			//setting of state machine behaviours in-game.
+			if (useSMB && flappingSMB == null) {
+				Debug.Log ("Enabling Flapping Animation State Machine Behaviour.");
+				setupSMB (ref useSMB, ref flappingSMB);
+			} else if (!useSMB && flappingSMB != null) {
+				Debug.Log ("Disabling Flapping Animation State Machine Behaviour.");
+				setupSMB (ref useSMB, ref flappingSMB);
+			}
+		}
 
 		public override void FFFixedUpdate () {
-			#if UNITY_EDITOR
-			//allows for dynamic setting/unsetting during playmode for testing
-			setupSMB (ref useSMB, ref flappingSMB);
-			#endif
 
 			if (animator.GetCurrentAnimatorStateInfo(0).fullPathHash != stateHash && flightInputs.inputFlap) {
 				animator.SetTrigger (paramHash);
@@ -144,6 +151,7 @@ namespace UnityFreeFlight {
 				}
 			} else if (fsmb != null) {
 				fsmb.flap = null;
+				fsmb = null;
 			}
 
 		}
