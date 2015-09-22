@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+using UnityEngine.VR;
 
 public class GameController : MonoBehaviour {
 
@@ -18,6 +18,7 @@ public class GameController : MonoBehaviour {
 		oculusEnabled = value;
 		normalCamera.SetActive (!oculusEnabled);
 		oculusCamera.SetActive (oculusEnabled);
+		VRSettings.enabled = oculusEnabled;
 
 		if (oculusEnabled) {
 			if (hud != null)
