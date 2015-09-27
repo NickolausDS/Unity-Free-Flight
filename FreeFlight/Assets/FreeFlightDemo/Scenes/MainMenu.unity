@@ -415,10 +415,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1723443837}
   m_RootOrder: 0
-  m_AnchorMin: {x: .5, y: .5}
-  m_AnchorMax: {x: .5, y: .5}
-  m_AnchoredPosition: {x: -2.4000001, y: 57.2999992}
-  m_SizeDelta: {x: 164.800003, y: 58.9000015}
+  m_AnchorMin: {x: 0, y: .5}
+  m_AnchorMax: {x: 1, y: .5}
+  m_AnchoredPosition: {x: 13.5, y: 57.5}
+  m_SizeDelta: {x: -104.5, y: 58.5999985}
   m_Pivot: {x: .5, y: .5}
 --- !u!114 &487872819
 MonoBehaviour:
@@ -553,7 +553,7 @@ RectTransform:
   m_RootOrder: 2
   m_AnchorMin: {x: .5, y: .5}
   m_AnchorMax: {x: .5, y: .5}
-  m_AnchoredPosition: {x: 0, y: -218}
+  m_AnchoredPosition: {x: 0, y: -166}
   m_SizeDelta: {x: 387, y: 39}
   m_Pivot: {x: .5, y: .5}
 --- !u!114 &659085659
@@ -651,7 +651,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Enable Oculus
+  m_Text: Enable Oculus (Experimental)
 --- !u!222 &670403800
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -688,10 +688,10 @@ RectTransform:
   - {fileID: 670403798}
   m_Father: {fileID: 1723443837}
   m_RootOrder: 1
-  m_AnchorMin: {x: .5, y: .5}
-  m_AnchorMax: {x: .5, y: .5}
-  m_AnchoredPosition: {x: -1.43051147e-06, y: -1.90729997e-06}
-  m_SizeDelta: {x: 160, y: 20}
+  m_AnchorMin: {x: 0, y: .5}
+  m_AnchorMax: {x: 1, y: .5}
+  m_AnchoredPosition: {x: 16.2999992, y: .5}
+  m_SizeDelta: {x: -110, y: 19.8999996}
   m_Pivot: {x: .5, y: .5}
 --- !u!114 &833347355
 MonoBehaviour:
@@ -1196,7 +1196,6 @@ GameObject:
   - 114: {fileID: 1153312606}
   - 222: {fileID: 1153312605}
   - 114: {fileID: 1153312604}
-  - 114: {fileID: 1153312611}
   - 114: {fileID: 1153312610}
   m_Layer: 5
   m_Name: Main Menu
@@ -1223,8 +1222,8 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 176, y: -198}
-  m_SizeDelta: {x: 300, y: 200}
+  m_AnchoredPosition: {x: 206.399994, y: -214.399994}
+  m_SizeDelta: {x: 289.5, y: 212}
   m_Pivot: {x: .5, y: .5}
 --- !u!114 &1153312604
 MonoBehaviour:
@@ -1349,26 +1348,6 @@ MonoBehaviour:
   loadLevelOutputText: {fileID: 659085657}
   disableWebPlayButtonUntilLevelLoad: 1
   disableWebExitButton: 1
---- !u!114 &1153312611
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1153312602}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1b6338ab7d2d742bcad210e1f0f80a70, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  menu: {fileID: 1153312602}
-  autoConfigMenuItems: 1
-  shouldResizeMenu: 1
-  shouldResizeMenuContense: 0
-  items:
-  - {fileID: 70591371}
-  - {fileID: 1046004669}
-  - {fileID: 454529973}
-  paddingPerItem: 20
 --- !u!1 &1213828142
 GameObject:
   m_ObjectHideFlags: 0
@@ -1532,10 +1511,10 @@ RectTransform:
   - {fileID: 1057942637}
   m_Father: {fileID: 1723443837}
   m_RootOrder: 2
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 150, y: -152.899994}
-  m_SizeDelta: {x: 178.199997, y: 40.5999985}
+  m_AnchorMin: {x: 0, y: .5}
+  m_AnchorMax: {x: 1, y: .5}
+  m_AnchoredPosition: {x: 16.2999992, y: -52.0999985}
+  m_SizeDelta: {x: -89.3000031, y: 40.4000015}
   m_Pivot: {x: .5, y: .5}
 --- !u!114 &1264369744
 MonoBehaviour:
@@ -1866,8 +1845,8 @@ RectTransform:
   m_RootOrder: 1
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 176, y: -198}
-  m_SizeDelta: {x: 300, y: 200}
+  m_AnchoredPosition: {x: 205.899994, y: -198}
+  m_SizeDelta: {x: 359.799988, y: 200}
   m_Pivot: {x: .5, y: .5}
 --- !u!114 &1723443838
 MonoBehaviour:

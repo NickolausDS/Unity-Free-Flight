@@ -844,7 +844,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: .39199999}
+  m_Color: {r: 1, g: 1, b: 1, a: .652999997}
   m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
   m_Type: 1
   m_PreserveAspect: 0
@@ -1748,7 +1748,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Enable Oculus
+  m_Text: 'Enable Oculus (Experimental)
+
 
 '
 --- !u!114 &11485800
@@ -1985,7 +1986,7 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Toggle+ToggleEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
-  m_IsOn: 1
+  m_IsOn: 0
 --- !u!114 &11498982
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2260,10 +2261,10 @@ RectTransform:
   - {fileID: 22412636}
   m_Father: {fileID: 22427414}
   m_RootOrder: 1
-  m_AnchorMin: {x: .5, y: .5}
-  m_AnchorMax: {x: .5, y: .5}
-  m_AnchoredPosition: {x: 0, y: 85}
-  m_SizeDelta: {x: 160, y: 20}
+  m_AnchorMin: {x: 0, y: .5}
+  m_AnchorMax: {x: 1, y: .5}
+  m_AnchoredPosition: {x: 0, y: 83}
+  m_SizeDelta: {x: -80, y: 22}
   m_Pivot: {x: .5, y: .5}
 --- !u!224 &22407394
 RectTransform:
@@ -2363,10 +2364,10 @@ RectTransform:
   - {fileID: 22407394}
   m_Father: {fileID: 22427414}
   m_RootOrder: 5
-  m_AnchorMin: {x: .5, y: .5}
-  m_AnchorMax: {x: .5, y: .5}
-  m_AnchoredPosition: {x: 0, y: -45}
-  m_SizeDelta: {x: 180, y: 30}
+  m_AnchorMin: {x: 0, y: .5}
+  m_AnchorMax: {x: 1, y: .5}
+  m_AnchoredPosition: {x: 0, y: -88}
+  m_SizeDelta: {x: -56, y: 30}
   m_Pivot: {x: .5, y: .5}
 --- !u!224 &22416944
 RectTransform:
@@ -2439,10 +2440,10 @@ RectTransform:
   - {fileID: 22414916}
   m_Father: {fileID: 22437374}
   m_RootOrder: 1
-  m_AnchorMin: {x: .5, y: .5}
-  m_AnchorMax: {x: .5, y: .5}
-  m_AnchoredPosition: {x: 0, y: -21}
-  m_SizeDelta: {x: 209, y: 320}
+  m_AnchorMin: {x: 0, y: .5}
+  m_AnchorMax: {x: 0, y: .5}
+  m_AnchoredPosition: {x: 434, y: 4}
+  m_SizeDelta: {x: 303, y: 320}
   m_Pivot: {x: .5, y: .5}
 --- !u!224 &22429752
 RectTransform:
@@ -2456,10 +2457,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 22427414}
   m_RootOrder: 0
-  m_AnchorMin: {x: .5, y: .5}
-  m_AnchorMax: {x: .5, y: .5}
-  m_AnchoredPosition: {x: 0, y: 125}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchorMin: {x: 0, y: .5}
+  m_AnchorMax: {x: 0, y: .5}
+  m_AnchoredPosition: {x: 151.5, y: 125}
+  m_SizeDelta: {x: 226, y: 30}
   m_Pivot: {x: .5, y: .5}
 --- !u!224 &22437374
 RectTransform:
@@ -2530,10 +2531,10 @@ RectTransform:
   - {fileID: 22484706}
   m_Father: {fileID: 22427414}
   m_RootOrder: 4
-  m_AnchorMin: {x: .5, y: .5}
-  m_AnchorMax: {x: .5, y: .5}
-  m_AnchoredPosition: {x: 0, y: -85}
-  m_SizeDelta: {x: 100, y: 20}
+  m_AnchorMin: {x: 0, y: .5}
+  m_AnchorMax: {x: 0, y: .5}
+  m_AnchoredPosition: {x: 151.5, y: -38}
+  m_SizeDelta: {x: 122, y: 20}
   m_Pivot: {x: .5, y: .5}
 --- !u!224 &22442724
 RectTransform:
@@ -2602,10 +2603,10 @@ RectTransform:
   - {fileID: 22463570}
   m_Father: {fileID: 22427414}
   m_RootOrder: 3
-  m_AnchorMin: {x: .5, y: .5}
-  m_AnchorMax: {x: .5, y: .5}
-  m_AnchoredPosition: {x: 0, y: 5}
-  m_SizeDelta: {x: 100, y: 20}
+  m_AnchorMin: {x: 0, y: .5}
+  m_AnchorMax: {x: 0, y: .5}
+  m_AnchoredPosition: {x: 151.5, y: 2}
+  m_SizeDelta: {x: 122, y: 20}
   m_Pivot: {x: .5, y: .5}
 --- !u!224 &22455076
 RectTransform:
@@ -2621,10 +2622,10 @@ RectTransform:
   - {fileID: 22460900}
   m_Father: {fileID: 22427414}
   m_RootOrder: 2
-  m_AnchorMin: {x: .5, y: .5}
-  m_AnchorMax: {x: .5, y: .5}
-  m_AnchoredPosition: {x: 0, y: 45}
-  m_SizeDelta: {x: 160, y: 20}
+  m_AnchorMin: {x: 0, y: .5}
+  m_AnchorMax: {x: 0, y: .5}
+  m_AnchoredPosition: {x: 151.5, y: 42}
+  m_SizeDelta: {x: 225, y: 21}
   m_Pivot: {x: .5, y: .5}
 --- !u!224 &22456756
 RectTransform:
