@@ -22,8 +22,13 @@ namespace UnityFreeFlight {
 		public float flareAngle = 70.0f;
 		public float flareSpeed = 3.0f;
 		
-		public override void init (GameObject go, FlightPhysics fp, FlightInputs fi) {
-			base.init (go, fp, fi);
+		private FlightPhysics flightPhysics;
+		private FlightInputs flightInputs;
+		
+		public override void init (GameObject go, System.Object customPhysics, Inputs inputs) {
+			flightPhysics = (FlightPhysics)customPhysics;
+			flightInputs = (FlightInputs)inputs;
+			base.init (go);
 			name = "Flaring Mechanic";
 			setupAnimation (flaringAnimation, ref flaringHash);
 		}

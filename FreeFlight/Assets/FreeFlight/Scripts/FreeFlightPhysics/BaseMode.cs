@@ -24,6 +24,7 @@ namespace UnityFreeFlight {
 		[HideInInspector]
 		public string name = "Base Mode";
 
+		public bool usePhysics;
 		public bool alwaysApplyPhysics;
 
 		protected GameObject gameObject;
@@ -70,7 +71,8 @@ namespace UnityFreeFlight {
 				Debug.LogException(e);
 			}
 
-			applyPhysics ();
+			if (usePhysics)
+				applyPhysics ();
 		}
 
 		/// <summary>
@@ -100,14 +102,16 @@ namespace UnityFreeFlight {
 			if (inputs != null)
 				inputs.resetInputs ();
 			defaultMechanic.FFFinish ();
-			
-			finishMechanic.FFStart ();
-			finishMechanic.FFFinish ();	
+
+			if (finishMechanic != null) {
+				finishMechanic.FFStart ();
+				finishMechanic.FFFinish ();	
+			}
 		}
 		
 		protected virtual void applyPhysics() {
-			alwaysApplyPhysics = false;
-			throw new NotImplementedException("Physics for this mode has not been implemented. Disabling...");
+			usePhysics = false;
+			Debug.LogError(name + " is not equipped with custom physics. Disabling...");
 		}
 
 		

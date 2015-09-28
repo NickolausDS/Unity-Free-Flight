@@ -9,12 +9,16 @@ using UnityFreeFlight;
 public class ModeManagerDrawer : PropertyDrawer {
 
 	bool flightModeFoldout;
+	bool groundModeFoldout;
 
 	public override void OnGUI (Rect position, SerializedProperty property, GUIContent label) {
 		EditorGUILayout.PropertyField (property.FindPropertyRelative("_activeMode"));
 
-		//TODO Ground mode still uses a generic property field, as it hasn't been refactored yet.
-		EditorGUILayout.PropertyField (property.FindPropertyRelative ("groundMode"), true);
+
+		groundModeFoldout = EditorPrefs.GetBool ("groundModeFoldout");
+		if(groundModeFoldout = EditorGUILayout.Foldout (groundModeFoldout, "Ground Mode"))
+			displayMode (position, property.FindPropertyRelative ("groundMode"), label);
+		EditorPrefs.SetBool ("groundModeFoldout", groundModeFoldout);
 
 
 		flightModeFoldout = EditorPrefs.GetBool ("flightModeFoldout");
@@ -25,10 +29,12 @@ public class ModeManagerDrawer : PropertyDrawer {
 
 
 	public void displayMode(Rect position, SerializedProperty mode, GUIContent label) {
+
+		EditorGUILayout.PropertyField (mode.FindPropertyRelative ("usePhysics"));
 		EditorGUILayout.PropertyField (mode.FindPropertyRelative ("alwaysApplyPhysics"));
 
-		List<string> mechanicNames = getMechanicNames ();
-		SerializedProperty modeMechs = mode.FindPropertyRelative ("flightMechanics");
+		SerializedProperty modeMechs = mode.FindPropertyRelative (mode.name + "Mechanics");
+		List<string> mechanicNames = getMechanicNames (modeMechs);
 
 
 		EditorGUILayout.LabelField ("Default Mechanic:");
@@ -118,7 +124,9 @@ public class ModeManagerDrawer : PropertyDrawer {
 		}
 		EditorGUI.indentLevel-=1;
 
-		EditorGUILayout.PropertyField (mode.FindPropertyRelative ("flightPhysics"), true);
+		SerializedProperty physics = mode.FindPropertyRelative (mode.name + "Physics");
+		if (physics != null)
+			EditorGUILayout.PropertyField (physics, true);
 
 	}
 
@@ -172,6 +180,18 @@ public class ModeManagerDrawer : PropertyDrawer {
 			//We need the value to not exist and it doesn't. Nothing to do.
 			return;
 		}
+	}
+
+	public List<string> getMechanicNames(SerializedProperty mechanicSubset) {
+		List<string> subsetNames = new List<string> ();
+		List<string> supersetNames = getMechanicNames ();
+		foreach (string name in supersetNames) {
+			if (mechanicSubset.FindPropertyRelative(name.ToLower()) != null) {
+				subsetNames.Add(name);
+			}
+		}
+		return subsetNames;
+
 	}
 
 	public List<string> getMechanicNames() {

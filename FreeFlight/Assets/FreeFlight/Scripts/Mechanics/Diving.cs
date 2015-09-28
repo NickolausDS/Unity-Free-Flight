@@ -17,9 +17,13 @@ namespace UnityFreeFlight {
 		public AudioClip divingSound;
 		public SoundManager soundManager = new SoundManager();
 
+		private FlightPhysics flightPhysics;
+		private FlightInputs flightInputs;
 
-		public override void init (GameObject go, FlightPhysics fp, FlightInputs fi) {
-			base.init (go, fp, fi);
+		public override void init (GameObject go, System.Object customPhysics, Inputs inputs) {
+			flightPhysics = (FlightPhysics)customPhysics;
+			flightInputs = (FlightInputs)inputs;
+			base.init (go);
 			name = "Diving Mechanic";
 			setupAnimation (divingAnimation, ref divingHash);
 

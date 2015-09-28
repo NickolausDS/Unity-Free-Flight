@@ -30,8 +30,11 @@ namespace UnityFreeFlight {
 		[Header ("Sound")]
 		public SoundManager soundManager = new SoundManager();
 
-		public override void init (GameObject go, FlightPhysics fp, FlightInputs fi) {
-			base.init (go, fp, fi);
+		private FlightPhysics flightPhysics;
+
+		public override void init (GameObject go, System.Object customPhysics, Inputs inputs) {
+			flightPhysics = (FlightPhysics)customPhysics;
+			base.init (go);
 			soundManager.init (go);
 			mainMonbehaviour = gameObject.GetComponent<FreeFlight> ();
 			setupAnimation (landingAnimation, ref landingHash);

@@ -37,8 +37,11 @@ namespace UnityFreeFlight {
 		//variable where we'll store pitch adjustments
 		private float pitchAdjustment;
 		
-		public override void init (GameObject go, FlightPhysics fm, FlightInputs fi) {
-			base.init (go, fm, fi);
+		private FlightPhysics flightPhysics;
+
+		public override void init (GameObject go, System.Object customPhysics, Inputs inputs) {
+			flightPhysics = (FlightPhysics)customPhysics;
+			base.init (go);
 			setupAnimation (glidingAnimation, ref glidingHash);
 		}
 		
@@ -47,7 +50,8 @@ namespace UnityFreeFlight {
 		}
 
 		public override void FFStart () {
-			animator.SetBool (glidingHash, true);
+			if (glidingHash != 0)
+				animator.SetBool (glidingHash, true);
 		}
 		
 		public override void FFFixedUpdate () {
@@ -59,7 +63,8 @@ namespace UnityFreeFlight {
 		}
 
 		public override bool FFFinish () {
-			animator.SetBool (glidingHash, false);
+			if (glidingHash != 0)
+				animator.SetBool (glidingHash, false);
 			return true;
 		}
 		

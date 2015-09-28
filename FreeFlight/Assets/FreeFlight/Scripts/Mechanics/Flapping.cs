@@ -47,8 +47,13 @@ namespace UnityFreeFlight {
 		[Tooltip("The strength of a downward vectored flap compared to a forward vectored flap.")]
 		public float takeoffStrengthMult = 1.5f;
 
-		public override void init (GameObject go, FlightPhysics fp, FlightInputs fi) {
-			base.init (go, fp, fi);
+		private FlightPhysics flightPhysics;
+		private FlightInputs flightInputs;
+		
+		public override void init (GameObject go, System.Object customPhysics, Inputs inputs) {
+			flightPhysics = (FlightPhysics)customPhysics;
+			flightInputs = (FlightInputs)inputs;
+			base.init (go);
 			soundManager.init (go);
 			name = "Flapping Mechanic";
 			setupAnimation (flappingParameter, ref paramHash);

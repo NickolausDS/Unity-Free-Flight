@@ -24,8 +24,13 @@ namespace UnityFreeFlight {
 		public float bankSensitivity = 2.0f;
 		private float currentBank;
 		
-		public override void init (GameObject go, FlightPhysics fm, FlightInputs fi) {
-			base.init (go, fm, fi);
+		private FlightPhysics flightPhysics;
+		private FlightInputs flightInputs;
+		
+		public override void init (GameObject go, System.Object customPhysics, Inputs inputs) {
+			flightPhysics = (FlightPhysics)customPhysics;
+			flightInputs = (FlightInputs)inputs;
+			base.init (go);
 			setupAnimation (bankingParameter, ref bankingHash);
 		}
 		

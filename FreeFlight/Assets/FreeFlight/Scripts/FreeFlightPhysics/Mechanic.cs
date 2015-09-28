@@ -23,20 +23,16 @@ namespace UnityFreeFlight {
 		protected GameObject gameObject;
 		protected Rigidbody rigidbody;
 		protected Animator animator;
-		protected FlightPhysics flightPhysics;
-		protected FlightInputs flightInputs;
 
 		/// <summary>
 		/// Special Method, called on OnEnable() of master component. Do any initializing or caching here. 
 		/// </summary>
 		/// <param name="go">Go.</param>
 		/// <param name="sm">Sm.</param>
-		public virtual void init(GameObject go, FlightPhysics fp, FlightInputs fi) {
+		public virtual void init(GameObject go, System.Object customPhysics = null, Inputs inputs = null) {
 			gameObject = go;
-			flightPhysics = fp;
 			animator = gameObject.GetComponentInChildren <Animator> ();
 			rigidbody = gameObject.GetComponent <Rigidbody> ();
-			flightInputs = fi;
 		}
 
 		/// <summary>
@@ -77,7 +73,10 @@ namespace UnityFreeFlight {
 		/// <param name="layer">The animation layer.</param>
 		/// <param name="animHash">Animation hash.</param>
 		public void setupAnimation(string animString, ref int animHash) {
-			if (animator != null && animString != null && !animString.Equals("")) {
+			if (animString == null || animString.Equals (""))
+				return;
+
+			if (animator != null) {
 				foreach (AnimatorControllerParameter param in animator.parameters) {
 					if (param.name.Equals (animString)) {
 						animHash = Animator.StringToHash (animString);
@@ -85,7 +84,7 @@ namespace UnityFreeFlight {
 					}
 				}
 				animHash = 0;
-				Debug.LogWarning (string.Format ("Object {0} does not appear to have the {1} animation.", gameObject.name, animString));
+				Debug.LogWarning (string.Format ("Object {0} does not appear to have the '{1}' animation.", gameObject.name, animString));
 			}
 		}
 

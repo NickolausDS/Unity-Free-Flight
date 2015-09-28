@@ -24,8 +24,8 @@ namespace UnityFreeFlight {
 			defaultUpdate (fPhysics, "Flight Physics: " + flightObject.name);
 
 			if (visualDebugging && frigidbody != null) {
-				Debug.DrawRay(flightObject.transform.position, ffComponent.modeManager.flightMode.flightPhysics.liftForceVector, liftColor);
-				Debug.DrawRay(flightObject.transform.position, ffComponent.modeManager.flightMode.flightPhysics.dragForceVector, dragColor);
+				Debug.DrawRay(flightObject.transform.position, ffComponent.modeManager.flightMode.flightModePhysics.liftForceVector, liftColor);
+				Debug.DrawRay(flightObject.transform.position, ffComponent.modeManager.flightMode.flightModePhysics.dragForceVector, dragColor);
 				Debug.DrawRay(flightObject.transform.position, frigidbody.velocity, velocityColor);
 			}
 
@@ -48,7 +48,7 @@ namespace UnityFreeFlight {
 
 			nullCheck ("Free Flight Component", ffComponent, "Please add a Free Flight component in order to show physics stats");
 
-			fPhysics = ffComponent.modeManager.flightMode.flightPhysics;
+			fPhysics = ffComponent.modeManager.flightMode.flightModePhysics;
 		}
 	}
 

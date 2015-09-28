@@ -15,25 +15,25 @@ namespace UnityFreeFlight {
 	public class FlightMode : BaseMode {
 	
 		public FlightInputs flightInputs;
-		public FlightMechanics flightMechanics;
-		public FlightPhysics flightPhysics;
+		public FlightMechanics flightModeMechanics;
+		public FlightPhysics flightModePhysics;
 
 		public Rigidbody rigidbody;
 
 		public void setupMechanics() {
 
 			foreach (Mechanic mech in mechanics) {
-				mech.init (gameObject, flightPhysics, flightInputs);
+				mech.init (gameObject, flightModePhysics, flightInputs);
 			}
 			
 			if (defaultMechanic != null) {
-				defaultMechanic.init (gameObject, flightPhysics, flightInputs);
+				defaultMechanic.init (gameObject, flightModePhysics, flightInputs);
 			} else {
 				Debug.LogError ("Default Flight Mechanic not setup!");
 			}
 
 			if (finishMechanic != null) {
-				finishMechanic.init (gameObject, flightPhysics, flightInputs);
+				finishMechanic.init (gameObject, flightModePhysics, flightInputs);
 			}
 
 		}
@@ -45,20 +45,21 @@ namespace UnityFreeFlight {
 
 			if (flightInputs == null)
 				flightInputs = new FlightInputs ();
-			if (flightMechanics == null)
-				flightMechanics = new FlightMechanics ();
-			if (flightPhysics == null)
-				flightPhysics = new FlightPhysics ();
+			if (flightModeMechanics == null)
+				flightModeMechanics = new FlightMechanics ();
+			if (flightModePhysics == null)
+				flightModePhysics = new FlightPhysics ();
 
-			flightPhysics.init (rigidbody);
+			flightModePhysics.init (rigidbody);
 
 			inputs = flightInputs;
 
 			name = "Flight Mode";
+			usePhysics = true;
 
-			flightMechanics.load<Mechanic> (defaultMechanicTypeName, ref defaultMechanic);
-			flightMechanics.load<Mechanic> (mechanicTypeNames, ref mechanics);
-			flightMechanics.load<Mechanic> (finishMechanicTypeName, ref finishMechanic);
+			flightModeMechanics.load<Mechanic> (defaultMechanicTypeName, ref defaultMechanic);
+			flightModeMechanics.load<Mechanic> (mechanicTypeNames, ref mechanics);
+			flightModeMechanics.load<Mechanic> (finishMechanicTypeName, ref finishMechanic);
 
 			setupMechanics ();
 		}
@@ -76,9 +77,8 @@ namespace UnityFreeFlight {
 			rigidbody.isKinematic = false;
 		}
 
-		protected override void applyPhysics ()
-		{
-			flightPhysics.applyPhysics();
+		protected override void applyPhysics () {
+			flightModePhysics.applyPhysics();
 		}
 
 	}
