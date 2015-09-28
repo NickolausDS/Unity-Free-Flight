@@ -26,7 +26,8 @@ public class FreeFlight : MonoBehaviour {
 		try {
 			modeManager.init (gameObject);
 		} catch (Exception e) {
-			Debug.LogError (string.Format("({0} -- Free Flight Component): Script Failed Initialization:\n{1}", gameObject.name, e.StackTrace.ToString()));
+			Debug.LogError (string.Format("({0} -- Free Flight Component): Script Failed Initialization: [{1}] {2} \n{3}", 
+			                              gameObject.name, e.GetType().ToString(), e.Message, e.StackTrace.ToString()));
 			enabled = false;
 		}
 	}
@@ -35,7 +36,8 @@ public class FreeFlight : MonoBehaviour {
 		try {
 			modeManager.switchModes (newmode);
 		} catch (Exception e) {
-			Debug.LogError (string.Format("({0} -- Free Flight Component): Script Failed Switching Modes:\n{1}", gameObject.name, e.StackTrace.ToString()));
+			Debug.LogError (string.Format("({0} -- Free Flight Component): Script Failed Switching Modes: [{1}] {2} \n{3}", 
+			                              gameObject.name, e.GetType().ToString(), e.Message, e.StackTrace.ToString()));
 			enabled = false;
 		}
 	}
@@ -44,7 +46,8 @@ public class FreeFlight : MonoBehaviour {
 		try {
 			modeManager.start ();
 		} catch (Exception e) {
-			Debug.LogError (string.Format("({0} -- Free Flight Component): Script failed to start:\n{1}", gameObject.name, e.StackTrace.ToString()));
+			Debug.LogError (string.Format("({0} -- Free Flight Component): Script failed to start: [{1}] {2} \n{3}", 
+			                              gameObject.name, e.GetType().ToString(), e.Message, e.StackTrace.ToString()));
 			enabled = false;
 		}
 	}
@@ -56,7 +59,8 @@ public class FreeFlight : MonoBehaviour {
 		try {
 			modeManager.getInputs ();
 		} catch (Exception e) {
-			Debug.LogError (string.Format("({0} -- Free Flight Component): Script Failed on Get Inputs:\n{1}", gameObject.name, e.StackTrace.ToString()));
+			Debug.LogError (string.Format("({0} -- Free Flight Component): Script Failed on Get Inputs: [{1}] {2} \n{3}", 
+			                              gameObject.name, e.GetType().ToString(), e.Message, e.StackTrace.ToString()));
 			enabled = false;
 		}
 	}
@@ -69,7 +73,8 @@ public class FreeFlight : MonoBehaviour {
 		try {
 			modeManager.applyInputs ();
 		} catch (Exception e) {
-			Debug.LogError (string.Format("({0} -- Free Flight Component): Script Failed on Applying Inputs:\n{1}", gameObject.name, e.StackTrace.ToString()));
+			Debug.LogError (string.Format("({0} -- Free Flight Component): Script Failed on Applying Inputs: [{1}] {2} \n{3}", 
+			                              gameObject.name, e.GetType().ToString(), e.Message, e.StackTrace.ToString()));
 			enabled = false;
 		}
 	}
