@@ -10,10 +10,14 @@ using System.Reflection;
 /// Free Flight -- a Unity Component that adds flight to any unity object. 
 /// </summary>
 [RequireComponent (typeof(Rigidbody))]
-[assembly:AssemblyVersion ("0.5.0")]
+[assembly:AssemblyVersion ("0.5.0.2")]
 public class FreeFlight : MonoBehaviour {
 	
 	public ModeManager modeManager;
+
+	public static string version() {
+		return UnityFreeFlight.Version.version ();
+	}
 
 	//=============
 	//Unity Events

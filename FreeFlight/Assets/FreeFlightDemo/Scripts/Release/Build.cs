@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityFreeFlight;
+
+namespace UnityFreeFlight {
 	
 	public static class Build {
 
@@ -10,7 +13,7 @@ using System.Collections;
 			if (Application.isEditor) {
 				string arg = getSingleArgument ();
 				if (arg != null)
-					System.IO.File.WriteAllText (arg, "v" + typeof(FreeFlight).Assembly.GetName ().Version.ToString ());
+					System.IO.File.WriteAllText (arg, UnityFreeFlight.Version.version());
 				else 
 					throw new UnityException ("Missing path");
 			}
@@ -59,3 +62,4 @@ using System.Collections;
 		}
 	}
 
+}

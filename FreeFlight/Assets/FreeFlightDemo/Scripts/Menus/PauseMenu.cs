@@ -55,7 +55,7 @@ namespace FreeFlightDemo {
 				                  " this menu may not work for all devices.");
 
 			if (versionText != null)
-				versionText.GetComponent<Text> ().text = "v" + typeof(FreeFlight).Assembly.GetName().Version.ToString();
+				versionText.GetComponent<Text> ().text = UnityFreeFlight.Version.version();
 
 			screenImage = GetComponent<Image> ();
 		}
