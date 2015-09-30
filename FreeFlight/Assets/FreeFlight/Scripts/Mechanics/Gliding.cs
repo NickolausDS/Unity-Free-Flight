@@ -67,7 +67,13 @@ namespace UnityFreeFlight {
 				animator.SetBool (glidingHash, false);
 			return true;
 		}
-		
+
+		/// <summary>
+		/// Applies vairable wind speed when flying at various speeds.
+		/// NOTE (v0.5.0-alpha2): This should probably be removed once wind is implemented, and 
+		/// be handled by the global world physics engine. It's a problem because wind can be 
+		/// herd while standing on the ground, not just from flying very fast. 
+		/// </summary>
 		private void applyWindNoise() {
 			
 			if (!windNoiseClip)
@@ -75,7 +81,8 @@ namespace UnityFreeFlight {
 			
 			AudioSource windNoiseSource = soundManager.audioSource;
 			if (!windNoiseSource) {
-				Debug.LogError ("Wind source noise has clip but not source!");
+				Debug.LogError (string.Format("({0}) Gliding: Please a new separate AudioSource Component for background wind noise." +
+					" A separate Audio Source will ensure it isn't cut off by other audio clips.", gameObject.name));
 				return;
 			}
 
