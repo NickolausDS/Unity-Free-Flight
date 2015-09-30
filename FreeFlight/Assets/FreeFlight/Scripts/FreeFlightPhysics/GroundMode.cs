@@ -22,38 +22,10 @@ namespace UnityFreeFlight {
 			if (groundModeMechanics == null)
 				groundModeMechanics = new GroundMechanics ();
 
-			inputs = groundInputs;
-			
 			name = "Ground Mode";
-			
-			groundModeMechanics.load<Mechanic> (defaultMechanicTypeName, ref defaultMechanic);
-			groundModeMechanics.load<Mechanic> (mechanicTypeNames, ref mechanics);
-			groundModeMechanics.load<Mechanic> (finishMechanicTypeName, ref finishMechanic);
-			
-			setupMechanics ();
+
+			base.setupMechanics (groundModeMechanics, groundInputs);
 		}
-
-		public void setupMechanics() {
-			
-			foreach (Mechanic mech in mechanics) {
-				mech.init (gameObject, null, groundInputs);
-			}
-			
-			if (defaultMechanic != null) {
-				defaultMechanic.init (gameObject, null, groundInputs);
-			} else {
-				Debug.LogError ("Default Ground Mechanic not setup!");
-			}
-			
-			if (finishMechanic != null) {
-				finishMechanic.init (gameObject, null, groundInputs);
-			}
-			
-		}
-
-
-
-
 	}
 
 }

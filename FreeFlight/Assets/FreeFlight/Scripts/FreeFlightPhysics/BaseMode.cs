@@ -6,6 +6,7 @@ using UnityFreeFlight;
 
 
 
+
 namespace UnityFreeFlight {
 
 	/// <summary>
@@ -60,9 +61,43 @@ namespace UnityFreeFlight {
 			gameObject = go;
 		}
 
-//		public virtual void setupMechanics() {
-//			throw new NotImplementedException ("setupMechanics needs to be implemented");
-//		}
+		/// <summary>
+		/// Do initialization for the modes mechanics. Mode Mechanics **MUST** be instantiated **ONLY** if they are null, 
+		/// otherwise serialized data will be overwritten with default values. The same goes for inputs and physics.
+		/// </summary>
+		/// <param name="modeMechanics">Mode mechanics.</param>
+		/// <param name="modeInputs">Mode inputs.</param>
+		/// <param name="customPhysics">Custom physics.</param>
+		public void setupMechanics(PolymorphicSerializer modeMechanics,Inputs modeInputs,System.Object customPhysics = null) {
+
+			inputs = modeInputs;
+			
+			if (modeMechanics == null)
+				throw new NullReferenceException ("Mode failed setupMechanics(): 'Mode mechanics' must be instantiated or " +
+					"deserialized before calling this method.");
+			if (inputs == null)
+				throw new NullReferenceException ("Mode failed setupMechanics(): 'inputs' must be instantiated or deserialized " +
+					"before calling this method.");
+			
+			modeMechanics.load<Mechanic> (defaultMechanicTypeName, ref defaultMechanic);
+			modeMechanics.load<Mechanic> (mechanicTypeNames, ref mechanics);
+			modeMechanics.load<Mechanic> (finishMechanicTypeName, ref finishMechanic);
+			
+			foreach (Mechanic mech in mechanics) {
+				mech.init (gameObject, customPhysics, inputs);
+			}
+			
+			if (defaultMechanic != null) {
+				defaultMechanic.init (gameObject, customPhysics, inputs);
+			} else {
+				Debug.LogError ("Default Flight Mechanic not setup!");
+			}
+			
+			if (finishMechanic != null) {
+				finishMechanic.init (gameObject, customPhysics, inputs);
+			}
+
+		}
 
 		public virtual void applyInputs () {
 			try {

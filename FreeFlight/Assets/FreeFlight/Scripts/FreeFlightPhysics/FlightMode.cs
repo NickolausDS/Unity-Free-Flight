@@ -20,28 +20,11 @@ namespace UnityFreeFlight {
 
 		public Rigidbody rigidbody;
 
-		public void setupMechanics() {
-
-			foreach (Mechanic mech in mechanics) {
-				mech.init (gameObject, flightModePhysics, flightInputs);
-			}
-			
-			if (defaultMechanic != null) {
-				defaultMechanic.init (gameObject, flightModePhysics, flightInputs);
-			} else {
-				Debug.LogError ("Default Flight Mechanic not setup!");
-			}
-
-			if (finishMechanic != null) {
-				finishMechanic.init (gameObject, flightModePhysics, flightInputs);
-			}
-
-		}
-
 		public override void init (GameObject go) {
 			base.init (go);
-			rigidbody = gameObject.GetComponent<Rigidbody> ();
 
+			rigidbody = gameObject.GetComponent<Rigidbody> ();
+			flightModePhysics.init (rigidbody);
 
 			if (flightInputs == null)
 				flightInputs = new FlightInputs ();
@@ -50,18 +33,11 @@ namespace UnityFreeFlight {
 			if (flightModePhysics == null)
 				flightModePhysics = new FlightPhysics ();
 
-			flightModePhysics.init (rigidbody);
-
-			inputs = flightInputs;
-
 			name = "Flight Mode";
 			usePhysics = true;
 
-			flightModeMechanics.load<Mechanic> (defaultMechanicTypeName, ref defaultMechanic);
-			flightModeMechanics.load<Mechanic> (mechanicTypeNames, ref mechanics);
-			flightModeMechanics.load<Mechanic> (finishMechanicTypeName, ref finishMechanic);
+			base.setupMechanics(flightModeMechanics, flightInputs, flightModePhysics);
 
-			setupMechanics ();
 		}
 
 
