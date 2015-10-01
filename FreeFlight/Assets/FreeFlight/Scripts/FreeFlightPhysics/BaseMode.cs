@@ -134,6 +134,11 @@ namespace UnityFreeFlight {
 		/// the other modes, and reset any crazy values you temporarily set.
 		/// </summary>
 		public virtual void finishMode () {
+
+			for(LinkedListNode<Mechanic> node = currentMechanics.Last; node != null; node = node.Previous) {
+				node.Value.FFFinish();
+			}
+
 			if (inputs != null)
 				inputs.resetInputs ();
 			defaultMechanic.FFFinish ();
