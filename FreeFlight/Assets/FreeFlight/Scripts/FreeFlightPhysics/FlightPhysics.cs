@@ -27,18 +27,21 @@ namespace UnityFreeFlight {
 		//Span -- 1.715M | Chord -- .7M
 		//Area -- 1.2sqMet | Aspect Ratio -- 2.45:1
 		//Weight .08 - 2.3 KG
-		public float weight = 1f;	// in kilograms
-		public float wingArea { get { return .51f; } }
-		public float aspectRatio { get { return 3f; } }
-		[Range(.7f, .999f)]
+		[Tooltip ("Junk in your avian trunk. Corresponds roughly to Kilograms. Higher values equal higher airspeed.")]
+		public float mass = 1f;
+		[Tooltip ("Total square wing area. Higher values equal more lift and more drag.")]
+		public float wingArea = .51f;
+		[Range(2f, 13f)][Tooltip("Ratio of wingspan to wing chord. Higher values equal less drag and less maneuverability.")]
+		public float aspectRatio = 3f;
+		[Range(.7f, .999f)][Tooltip("Efficiency of wing as an airfoil. Lower values equal higher lift induced drag.")]
 		public float wingEfficiency = 0.9f; 
 
 		[HideInInspector]
 		public float wingExposureArea;
-		[Range (0.001f, 1.0f)]
-		public float leftWingExposure;
-		[Range (0.001f, 1.0f)]
-		public float rightWingExposure;
+		[Range (0.001f, 1.0f)][HideInInspector]
+		public float leftWingExposure = 1f;
+		[Range (0.001f, 1.0f)][HideInInspector]
+		public float rightWingExposure = 1f;
 
 		private Transform transform;
 		private Rigidbody rigidbody;
@@ -79,11 +82,6 @@ namespace UnityFreeFlight {
 		public float formDragForce { get { return _formDragForce; } }
 		private Vector3 _dragForceVector;
 		public Vector3 dragForceVector { get { return _dragForceVector; } }
-
-		public FlightPhysics () {
-			//open the wings
-			setWingExposure (1f, 1f);
-		}
 
 		/// <summary>
 		/// Initialization for flight physics, specifically when using rigidbodies. You need to 
@@ -269,6 +267,12 @@ namespace UnityFreeFlight {
 		private void physicsTick(Vector3 relativeAirVelocity, Quaternion rotation) {
 			if (relativeAirVelocity == Vector3.zero)
 				return;
+
+			#if UNITY_EDITOR
+			//Recalculate area of wing exposed
+			//Allows for dynamic editing of wing size during playmode in editor.
+			setWingExposure(leftWingExposure, rightWingExposure);
+			#endif
 
 			_airspeed = relativeAirVelocity.magnitude;
 			

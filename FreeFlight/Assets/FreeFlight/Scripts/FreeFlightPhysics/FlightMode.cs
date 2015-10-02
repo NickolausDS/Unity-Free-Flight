@@ -51,6 +51,10 @@ namespace UnityFreeFlight {
 			//Don't use rigidbody based auto rotation, it fights with physics
 			rigidbody.freezeRotation = true;
 			rigidbody.isKinematic = false;
+
+			rigidbody.mass = flightModePhysics.mass;
+			//Open the wings
+			flightModePhysics.setWingExposure (1f, 1f);
 		}
 
 		protected override void applyPhysics () {
