@@ -127,7 +127,7 @@ namespace UnityFreeFlight {
 			if (startTime + lagTime < Time.time && startTime + duration + lagTime > Time.time) {
 				float scale = maxAngle / maxVectoring;
 				float angle = Mathf.Clamp ((maxVectoring - flightPhysics.airspeed) * scale, 0.1f, maxAngle); 
-				float strength = angle / maxAngle * takeoffStrengthMult + flapStrength;
+				float strength = angle / maxAngle * takeoffStrengthMult + flapStrength * flightPhysics.wingArea;
 				rigidbody.AddForce (getFlapForce (angle, strength));
 				flightPhysics.addPitch (pitchAngle, 4);
 			}
