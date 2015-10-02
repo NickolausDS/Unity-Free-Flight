@@ -2979,6 +2979,7 @@ MonoBehaviour:
     managers: []
     flightMode:
       name: Base Mode
+      usePhysics: 0
       alwaysApplyPhysics: 0
       mechanicTypeNames:
       - Diving
@@ -2988,14 +2989,14 @@ MonoBehaviour:
       - Turning
       defaultMechanicTypeName: Gliding
       finishMechanicTypeName: Landing
-      flightMechanics:
+      flightModeMechanics:
         gliding:
           name: Anonymous Mechanic
           enabled: 1
           chainRules: 
           glidingAnimation: Flying
-          windNoiseStartSpeed: 0
-          windNoiseMaxSpeed: 30
+          windNoiseStartSpeed: 20
+          windNoiseMaxSpeed: 200
           windNoiseClip: {fileID: 8300000, guid: b9532bedd6555433aae7d02f546bfab7,
             type: 3}
           soundManager:
@@ -3009,7 +3010,7 @@ MonoBehaviour:
         flaring:
           name: Anonymous Mechanic
           enabled: 1
-          chainRules: 0300000004000000
+          chainRules: 04000000
           flaringAnimation: Flaring
           flareSoundClip: {fileID: 0}
           soundManager:
@@ -3035,12 +3036,12 @@ MonoBehaviour:
           - {fileID: 8300000, guid: 24a927e62b21f47e9a5445931cf7668b, type: 3}
           soundManager:
             audioSource: {fileID: 0}
-          flapStrength: 20
+          flapStrength: 10
           lagTime: 0
           duration: .5
           pitchAngle: 5
           maxVectoring: 4
-          takeoffStrengthMult: 1.5
+          takeoffStrengthMult: 30
         landing:
           name: Anonymous Mechanic
           enabled: 1
@@ -3072,33 +3073,58 @@ MonoBehaviour:
           sensitivity: 2
           minimumAirspeed: 2
           maximumAngleOfAttack: 10
-      flightPhysics:
-        weight: 1
+      flightModePhysics:
+        mass: 1
+        wingArea: .50999999
+        aspectRatio: 3
         wingEfficiency: .899999976
-        wingExposureArea: .50999999
+        wingExposureArea: 0
         leftWingExposure: 1
         rightWingExposure: 1
         physicsMode: 1
       rigidbody: {fileID: 0}
     groundMode:
       name: Base Mode
+      usePhysics: 0
       alwaysApplyPhysics: 0
-      mechanicTypeNames: []
-      defaultMechanicTypeName: 
+      mechanicTypeNames:
+      - Launching
+      - Walking
+      defaultMechanicTypeName: Idle
       finishMechanicTypeName: 
-      enabledTakeoff: 1
-      takeoffSoundClip: {fileID: 0}
-      launchTime: .200000003
-      enabledLaunchIfAirborn: 1
-      minHeightToLaunchIfAirborn: 2
-      enabledGround: 1
-      walkingNoiseClip: {fileID: 0}
-      maxGroundForwardSpeed: 15
-      groundDrag: 5
-      maxGroundTurningDegreesSecond: 40
-      enabledJumping: 0
-      jumpHeight: .5
-      jumpingNoiseClip: {fileID: 0}
+      groundModeMechanics:
+        idle:
+          name: Anonymous Mechanic
+          enabled: 1
+          chainRules: 
+          idleAnimation: 
+          sounds: []
+          soundManager:
+            audioSource: {fileID: 0}
+        walking:
+          name: Anonymous Mechanic
+          enabled: 1
+          chainRules: 
+          walkingAnimation: Walking
+          walkingSpeed: Speed
+          angularSpeed: AngularSpeed
+          sounds: []
+          soundManager:
+            audioSource: {fileID: 0}
+          maxGroundForwardSpeed: 40
+          groundDrag: 5
+          maxGroundTurningDegreesSecond: 40
+        launching:
+          name: Anonymous Mechanic
+          enabled: 1
+          chainRules: 
+          launchingAnimation: 
+          sounds: []
+          soundManager:
+            audioSource: {fileID: 0}
+          launchTime: .200000003
+          enabledLaunchIfAirborn: 1
+          minHeightToLaunchIfAirborn: 2
     _activeMode: 1
 --- !u!114 &11414938
 MonoBehaviour:
