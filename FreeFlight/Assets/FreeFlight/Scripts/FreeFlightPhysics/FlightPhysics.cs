@@ -43,7 +43,8 @@ namespace UnityFreeFlight {
 		[Range (0.001f, 1.0f)][HideInInspector]
 		public float rightWingExposure = 1f;
 
-		private Transform transform;
+		//Physics currently (v0.5.0-alpha2) only supports rigidbodies.
+		//private Transform transform;
 		private Rigidbody rigidbody;
 
 		//Physics modes. These allow for switching between applying physics to a rigidbody, or directly

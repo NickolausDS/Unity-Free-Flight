@@ -90,7 +90,7 @@ namespace UnityFreeFlight {
 			if (defaultMechanic != null) {
 				defaultMechanic.init (gameObject, customPhysics, inputs);
 			} else {
-				Debug.LogError ("Default Flight Mechanic not setup!");
+				Debug.LogError ("Default Mechanic not setup!");
 			}
 			
 			if (finishMechanic != null) {
