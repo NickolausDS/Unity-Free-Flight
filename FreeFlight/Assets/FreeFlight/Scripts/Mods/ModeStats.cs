@@ -17,6 +17,8 @@ namespace UnityFreeFlight {
 		}
 		
 		public void Update () {
+			fMode = ffComponent.modeManager.currentMode;
+
 			string stats = "";
 			foreach (Mechanic mech in fMode.mechanics) {
 				if (fMode.currentMechanics.Contains (mech))
@@ -45,9 +47,7 @@ namespace UnityFreeFlight {
 			ffComponent = flightObject.GetComponent<FreeFlight> ();
 			
 			nullCheck ("", flightObject, "This object can only display stats info for objects with a Free Flight Component.");
-			
-			fMode = ffComponent.modeManager.flightMode;
-			
+
 		}
 	}
 }
