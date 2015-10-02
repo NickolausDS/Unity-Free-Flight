@@ -21,10 +21,11 @@ SPATH="../FreeFlight/Assets/FreeFlight/"
 #Output DLL, and it's recommended to rename the file to it's intended value
 #by calling mv below
 SOURCES="$SPATH/Scripts/FreeFlight.cs $SPATH/Scripts/FreeFlightPhysics/ \
-$SPATH/Editor $SPATH/Scripts/Mechanics/"
+$SPATH/Editor $SPATH/Scripts/Mechanics/ $SPATH/Scripts/GroundMechanics/ \
+$SPATH/Scripts/Version.cs"
 
 #The desired name to output
-OUTPUT="${SPATH}FreeFlight.dll"
+OUTPUT="${SPATH}/FreeFlight.dll"
 
 #Build the list of sources
 SRC_LIST=$(find ${SOURCES} -name *.cs)

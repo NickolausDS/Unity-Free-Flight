@@ -1,7 +1,5 @@
 #!/bin/bash
 
-VERSION_SUFFIX="$1"
-
 COMMAND="/Applications/Unity/Unity.app/Contents/MacOS/Unity"
 PROJECT_PATH="../FreeFlight"
 LOG_FILE="build.out"
@@ -57,7 +55,7 @@ $COMMAND $OPTIONS -buildTarget win64 -executemethod Build.writeVersion $VERSION_
 #Switch the -buildTarget correctly. 
 test $(cat $VERSION_FILE) &&
 #Add the version suffix if there was one
-echo "$(cat $VERSION_FILE)$VERSION_SUFFIX" > "$VERSION_FILE" &&
+echo "$(cat $VERSION_FILE)" > "$VERSION_FILE" &&
 
 $COMMAND $OPTIONS $BUILD_OSX &&
 $PACKAGER "osx" &&
@@ -71,11 +69,12 @@ $PACKAGER "linux" &&
 $COMMAND $OPTIONS $BUILD_WEB &&
 $PACKAGER "web" &&
 
-$DLLBUILDER &&
-mv $PROJECT_PATH/Assets/FreeFlight/Scripts $PROJECT_PATH/Assets/FreeFlight/.Scripts &&
-mv $PROJECT_PATH/Assets/FreeFlight/Editor $PROJECT_PATH/Assets/FreeFlight/.Editor &&
-mv $PROJECT_PATH/Assets/FreeFlight/Scripts.meta $PROJECT_PATH/Assets/FreeFlight/.Scripts.meta &&
-mv $PROJECT_PATH/Assets/FreeFlight/Editor.meta $PROJECT_PATH/Assets/FreeFlight/.Editor.meta &&
+#(Oct 2015 v0.5.0-alpha2) Disabled DLLs because packaging them this way breaks scenes
+#$DLLBUILDER &&
+#mv $PROJECT_PATH/Assets/FreeFlight/Scripts $PROJECT_PATH/Assets/FreeFlight/.Scripts &&
+#mv $PROJECT_PATH/Assets/FreeFlight/Editor $PROJECT_PATH/Assets/FreeFlight/.Editor &&
+#mv $PROJECT_PATH/Assets/FreeFlight/Scripts.meta $PROJECT_PATH/Assets/FreeFlight/.Scripts.meta &&
+#mv $PROJECT_PATH/Assets/FreeFlight/Editor.meta $PROJECT_PATH/Assets/FreeFlight/.Editor.meta &&
 
 $COMMAND $OPTIONS -exportPackage ${BASIC_ASSETS[@]} "${BUILD_PATH}.unitypackage" &&
 $PACKAGER "unitypackage" &&
@@ -91,9 +90,9 @@ else
 fi
 
 #If export builds were done, we need to clean them up.
-mv $PROJECT_PATH/Assets/FreeFlight/.Scripts $PROJECT_PATH/Assets/FreeFlight/Scripts &> /dev/null
-mv $PROJECT_PATH/Assets/FreeFlight/.Editor $PROJECT_PATH/Assets/FreeFlight/Editor &> /dev/null
-mv $PROJECT_PATH/Assets/FreeFlight/.Scripts.meta $PROJECT_PATH/Assets/FreeFlight/Scripts.meta &> /dev/null
-mv $PROJECT_PATH/Assets/FreeFlight/.Editor.meta $PROJECT_PATH/Assets/FreeFlight/Editor.meta &> /dev/null
+#mv $PROJECT_PATH/Assets/FreeFlight/.Scripts $PROJECT_PATH/Assets/FreeFlight/Scripts &> /dev/null
+#mv $PROJECT_PATH/Assets/FreeFlight/.Editor $PROJECT_PATH/Assets/FreeFlight/Editor &> /dev/null
+#mv $PROJECT_PATH/Assets/FreeFlight/.Scripts.meta $PROJECT_PATH/Assets/FreeFlight/Scripts.meta &> /dev/null
+#mv $PROJECT_PATH/Assets/FreeFlight/.Editor.meta $PROJECT_PATH/Assets/FreeFlight/Editor.meta &> /dev/null
 
 cleanup
