@@ -29,7 +29,7 @@ namespace UnityFreeFlight {
 
 		[Header("General -- Flight")]
 		[Tooltip("Units/second of force applied to object")]
-		public float flapStrength = 5.0f;
+		public float flapStrength = 10.0f;
 		[Tooltip("Time in seconds before any flap force is applied")]
 		public float lagTime = 0f;
 		[Tooltip("Duration in seconds of flap (not connected to animation length)")]
@@ -45,7 +45,7 @@ namespace UnityFreeFlight {
 		[Tooltip("The maximum airspeed for vectoring lift downwards. Higher numbers make easier takeoff")]
 		public float maxVectoring = 4f;
 		[Tooltip("The strength of a downward vectored flap compared to a forward vectored flap.")]
-		public float takeoffStrengthMult = 1.5f;
+		public float takeoffStrengthMult = 30f;
 
 		private FlightPhysics flightPhysics;
 		private FlightInputs flightInputs;
