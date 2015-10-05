@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{294161A9-D56F-446D-9BFB-2E856CBE5491}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>UnityFreeFlight</RootNamespace>
+    <AssemblyName>FreeFlight</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <OutputPath>..\FreeFlight\Assets\FreeFlight\Library</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>False</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>..\FreeFlight\Assets\FreeFlight\Library</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>False</ConsolePause>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="UnityEngine">
+      <HintPath>..\..\..\..\..\Applications\Unity\Unity.app\Contents\Frameworks\Managed\UnityEngine.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>..\..\..\..\..\Applications\Unity\Unity.app\Contents\UnityExtensions\Unity\GUISystem\UnityEngine.UI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEditor">
+      <HintPath>..\..\..\..\..\Applications\Unity\Unity.app\Contents\Frameworks\Managed\UnityEditor.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="FreeFlight.cs" />
+    <Compile Include="Version.cs" />
+    <Compile Include="Mechanics\Diving.cs" />
+    <Compile Include="Mechanics\Flapping.cs" />
+    <Compile Include="Mechanics\FlappingSMB.cs" />
+    <Compile Include="Mechanics\Flaring.cs" />
+    <Compile Include="Mechanics\FlightMechanics.cs" />
+    <Compile Include="Mechanics\Gliding.cs" />
+    <Compile Include="Mechanics\Landing.cs" />
+    <Compile Include="Mechanics\Pitching.cs" />
+    <Compile Include="Mechanics\Turning.cs" />
+    <Compile Include="FreeFlightPhysics\BaseMode.cs" />
+    <Compile Include="FreeFlightPhysics\FlightInputs.cs" />
+    <Compile Include="FreeFlightPhysics\FlightMode.cs" />
+    <Compile Include="FreeFlightPhysics\FlightPhysics.cs" />
+    <Compile Include="FreeFlightPhysics\GroundInputs.cs" />
+    <Compile Include="FreeFlightPhysics\GroundMode.cs" />
+    <Compile Include="FreeFlightPhysics\Inputs.cs" />
+    <Compile Include="FreeFlightPhysics\Mechanic.cs" />
+    <Compile Include="FreeFlightPhysics\ModeManager.cs" />
+    <Compile Include="FreeFlightPhysics\PolymorphicSerializer.cs" />
+    <Compile Include="FreeFlightPhysics\SoundManager.cs" />
+    <Compile Include="FreeFlightPhysics\UnitConverter.cs" />
+    <Compile Include="FreeFlightPhysics\WorldPhysics.cs" />
+    <Compile Include="GroundMechanics\GroundMechanics.cs" />
+    <Compile Include="GroundMechanics\Idle.cs" />
+    <Compile Include="GroundMechanics\Launching.cs" />
+    <Compile Include="GroundMechanics\Walking.cs" />
+    <Compile Include="Mods\FlightInputStats.cs" />
+    <Compile Include="Mods\FlightPhysicsStats.cs" />
+    <Compile Include="Mods\ModeStats.cs" />
+    <Compile Include="Mods\StatsObject.cs" />
+    <Compile Include="Editor\FreeFlightEditor.cs" />
+    <Compile Include="Editor\ModeManagerDrawer.cs" />
+    <Compile Include="Editor\UnityTypeResolver.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <None Include="Editor\FreeFlightEditor.cs.meta" />
+    <None Include="Editor\ModeManagerDrawer.cs.meta" />
+    <None Include="Editor\UnityTypeResolver.cs.meta" />
+  </ItemGroup>
+</Project>
