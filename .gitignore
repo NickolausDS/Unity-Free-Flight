@@ -14,6 +14,7 @@ FreeFlight/Assets/FreeFlightDemo/release
 FreeFlight/Assets/Plugins/
 FreeFlight/Assets/OVR/
 FreeFlight/Assets/FreeFlightDemo/Models/MenuTerrain.asset
+FreeFlight/Assets/FreeFlight/Library/
 
 # =============== #
 # Unity generated #
@@ -32,15 +33,15 @@ FreeFlight/Assets/Standard\ Assets.meta
 # ===================================== #
 FreeFlight/ExportedObj/
 FreeFlight/obj/
-FreeFlight/*.svd
-FreeFlight/*.userprefs
-FreeFlight/*.csproj
-FreeFlight/*.pidb
-FreeFlight/*.suo
-FreeFlight/*.sln
-FreeFlight/*.user
-FreeFlight/*.unityproj
-FreeFlight/*.booproj
+*.svd
+*.userprefs
+*.csproj
+*.pidb
+*.suo
+*.sln
+*.user
+*.unityproj
+*.booproj
 # ============ #
 # OS generated #
 # ============ #
