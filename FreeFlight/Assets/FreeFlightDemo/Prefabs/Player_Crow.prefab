@@ -2972,19 +2972,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 100102}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fefe4066b30e94b11ba261565d83c27a, type: 3}
+  m_Script: {fileID: 1796455142, guid: 23e0d9dd3e2a14f478e9f2510baaf19e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   modeManager:
     managers: []
     flightMode:
       name: Base Mode
-      usePhysics: 0
+      usePhysics: 1
       alwaysApplyPhysics: 0
       mechanicTypeNames:
       - Diving
-      - Flapping
       - Flaring
+      - Flapping
       - Pitching
       - Turning
       defaultMechanicTypeName: Gliding
@@ -2995,7 +2995,7 @@ MonoBehaviour:
           enabled: 1
           chainRules: 
           glidingAnimation: Flying
-          windNoiseStartSpeed: 20
+          windNoiseStartSpeed: 10
           windNoiseMaxSpeed: 200
           windNoiseClip: {fileID: 8300000, guid: b9532bedd6555433aae7d02f546bfab7,
             type: 3}
@@ -3010,7 +3010,7 @@ MonoBehaviour:
         flaring:
           name: Anonymous Mechanic
           enabled: 1
-          chainRules: 04000000
+          chainRules: 020000000300000004000000
           flaringAnimation: Flaring
           flareSoundClip: {fileID: 0}
           soundManager:
@@ -3047,8 +3047,7 @@ MonoBehaviour:
           enabled: 1
           chainRules: 
           landingAnimation: 
-          landingSound: {fileID: 8300000, guid: a906575dd0f5c412e8b72f874b6515e2,
-            type: 3}
+          landingSound: {fileID: 0}
           maxStandUpTime: 2
           standUpSpeed: 2
           enabledCrashing: 0

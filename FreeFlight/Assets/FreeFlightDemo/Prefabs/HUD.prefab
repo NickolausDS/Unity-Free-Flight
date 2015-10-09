@@ -246,7 +246,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 110942}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9b420682cf054bc39643ce910866d25, type: 3}
+  m_Script: {fileID: -989971555, guid: 23e0d9dd3e2a14f478e9f2510baaf19e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   text: {fileID: 0}
@@ -280,13 +280,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 177794}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0d467627d1c8642c8a9c4dbb63240b65, type: 3}
+  m_Script: {fileID: 1688648668, guid: 23e0d9dd3e2a14f478e9f2510baaf19e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   text: {fileID: 0}
   flightObject: {fileID: 0}
-  visualDebugging: 0
   logFrameDebugging: 0
+  logHighForceValues: 0
+  logForceLevel: 20
+  visualDebugging: 0
   liftColor: {r: 0, g: 0, b: 1, a: 1}
   dragColor: {r: 1, g: 0, b: 0, a: 1}
   velocityColor: {r: 0, g: 1, b: 0, a: 1}
