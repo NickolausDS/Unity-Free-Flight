@@ -58,12 +58,9 @@
     <Compile Include="Mechanics\Pitching.cs" />
     <Compile Include="Mechanics\Turning.cs" />
     <Compile Include="FreeFlightPhysics\BaseMode.cs" />
-    <Compile Include="FreeFlightPhysics\FlightInputs.cs" />
     <Compile Include="FreeFlightPhysics\FlightMode.cs" />
     <Compile Include="FreeFlightPhysics\FlightPhysics.cs" />
-    <Compile Include="FreeFlightPhysics\GroundInputs.cs" />
     <Compile Include="FreeFlightPhysics\GroundMode.cs" />
-    <Compile Include="FreeFlightPhysics\Inputs.cs" />
     <Compile Include="FreeFlightPhysics\Mechanic.cs" />
     <Compile Include="FreeFlightPhysics\ModeManager.cs" />
     <Compile Include="FreeFlightPhysics\PolymorphicSerializer.cs" />

@@ -13,6 +13,9 @@ namespace UnityFreeFlight {
 	[Serializable]
 	public class Flapping : Mechanic  {
 
+		[Header("Inputs")]
+		public string button = "Jump";
+
 		[Header("Animation")]
 		public string flappingParameter = "Flapping";
 		public string flappingState = "Base Layer.Flapping";
@@ -48,11 +51,9 @@ namespace UnityFreeFlight {
 		public float takeoffStrengthMult = 30f;
 
 		private FlightPhysics flightPhysics;
-		private FlightInputs flightInputs;
-		
-		public override void init (GameObject go, System.Object customPhysics, Inputs inputs) {
+
+		public override void init (GameObject go, System.Object customPhysics) {
 			flightPhysics = (FlightPhysics)customPhysics;
-			flightInputs = (FlightInputs)inputs;
 			base.init (go);
 			soundManager.init (go);
 			name = "Flapping Mechanic";
@@ -66,7 +67,7 @@ namespace UnityFreeFlight {
 		}
 
 		public override bool FFInputSatisfied () {
-			return flightInputs.inputFlap;
+			return Input.GetButton (button);
 		}
 
 		/// <summary>
@@ -87,7 +88,7 @@ namespace UnityFreeFlight {
 
 		public override void FFFixedUpdate () {
 
-			if (animator.GetCurrentAnimatorStateInfo(0).fullPathHash != stateHash && flightInputs.inputFlap) {
+			if (animator.GetCurrentAnimatorStateInfo(0).fullPathHash != stateHash && Input.GetButton (button)) {
 				animator.SetTrigger (paramHash);
 				if (!useSMB)
 					flap ();

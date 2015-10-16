@@ -9,6 +9,9 @@ namespace UnityFreeFlight {
 	[Serializable]
 	public class Diving : Mechanic {
 
+		[Header("Inputs")]
+		public string button = "Dive";
+
 		[Header("Animation")]
 		public string divingAnimation = "Diving";
 		private int divingHash;
@@ -18,11 +21,9 @@ namespace UnityFreeFlight {
 		public SoundManager soundManager = new SoundManager();
 
 		private FlightPhysics flightPhysics;
-		private FlightInputs flightInputs;
 
-		public override void init (GameObject go, System.Object customPhysics, Inputs inputs) {
+		public override void init (GameObject go, System.Object customPhysics) {
 			flightPhysics = (FlightPhysics)customPhysics;
-			flightInputs = (FlightInputs)inputs;
 			base.init (go);
 			name = "Diving Mechanic";
 			setupAnimation (divingAnimation, ref divingHash);
@@ -30,7 +31,7 @@ namespace UnityFreeFlight {
 		}
 		
 		public override bool FFInputSatisfied () {
-			return flightInputs.inputDiving;
+			return Input.GetButton (button);
 		}
 
 		public override void FFStart () {
@@ -39,7 +40,7 @@ namespace UnityFreeFlight {
 		
 		public override void FFFixedUpdate () {
 			//Flare is the same as directional input, except with exagerated pitch and custom speed. 
-			wingFold (flightInputs.inputLeftWingExposure, flightInputs.inputRightWingExposure);
+			wingFold (0f, 0f);
 		}
 
 		public override bool FFFinish ()

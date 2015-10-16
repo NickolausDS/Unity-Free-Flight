@@ -13,6 +13,11 @@ namespace UnityFreeFlight {
 	[Serializable]
 	public class Walking : Mechanic  {
 
+		[Header("Inputs")]
+		public string forwardAxis = "Vertical";
+		public bool invertForward = true;
+		public string turningAxis = "Horizontal";
+
 		[Header("Animation")]
 		public string walkingAnimation = "Walking";
 		private int walkingHash;
@@ -32,20 +37,16 @@ namespace UnityFreeFlight {
 		public float groundDrag = 5;
 		public float maxGroundTurningDegreesSecond = 40;
 
-		private GroundInputs groundInputs;
-		
-		public override void init (GameObject go, System.Object customPhysics, Inputs inputs) {
-			groundInputs = (GroundInputs)inputs;
-			base.init (go, customPhysics, inputs);
+		public override void init (GameObject go, System.Object customPhysics) {
+			base.init (go, customPhysics);
 			soundManager.init (go);
 			setupAnimation (walkingAnimation, ref walkingHash);
 			setupAnimation (walkingSpeed, ref walkingSpeedHash);
 			setupAnimation (angularSpeed, ref angularSpeedHash);
-
 		}
 
 		public override bool FFInputSatisfied () {
-			return groundInputs.inputGroundForward == 0.0f ? false : true;
+			return Input.GetAxis (forwardAxis) != 0 ? true : false;
 		}
 
 		/// <summary>
@@ -56,14 +57,15 @@ namespace UnityFreeFlight {
 
 		public override void FFFixedUpdate () {
 			rigidbody.drag = groundDrag;
-			if (groundInputs.inputGroundForward > 0f) {
+			float inversion = (invertForward ? -1f : 1f);
+			if (Input.GetAxis(forwardAxis) * inversion > 0f) {
 				animator.SetBool (walkingHash, true);
-				rigidbody.AddRelativeForce (Vector3.forward * maxGroundForwardSpeed * groundInputs.inputGroundForward * Time.deltaTime, ForceMode.VelocityChange);
+				rigidbody.AddRelativeForce (Vector3.forward * maxGroundForwardSpeed * Input.GetAxis(forwardAxis) * inversion * Time.deltaTime, ForceMode.VelocityChange);
 			} else {
 				animator.SetBool (walkingHash, false);
 			}
 			
-			float turningSpeed = maxGroundTurningDegreesSecond * groundInputs.inputGroundTurning * Time.deltaTime;
+			float turningSpeed = maxGroundTurningDegreesSecond * Input.GetAxis (turningAxis) * Time.deltaTime;
 			rigidbody.rotation *= Quaternion.AngleAxis (turningSpeed, Vector3.up);
 			
 			animator.SetFloat (walkingSpeedHash, rigidbody.velocity.magnitude);

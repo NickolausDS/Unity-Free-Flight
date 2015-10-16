@@ -12,7 +12,11 @@ namespace UnityFreeFlight {
 	/// </summary>
 	[Serializable]
 	public class Turning : Mechanic {
-		
+
+		[Header("Inputs")]
+		public string axis = "Horizontal";
+		public bool inverted = true;
+
 		[Header("Animation")]
 		[Tooltip("Amount of bank is in degrees")]
 		public string bankingParameter = "";
@@ -25,23 +29,21 @@ namespace UnityFreeFlight {
 		private float currentBank;
 		
 		private FlightPhysics flightPhysics;
-		private FlightInputs flightInputs;
-		
-		public override void init (GameObject go, System.Object customPhysics, Inputs inputs) {
+
+		public override void init (GameObject go, System.Object customPhysics) {
 			flightPhysics = (FlightPhysics)customPhysics;
-			flightInputs = (FlightInputs)inputs;
 			base.init (go);
 			setupAnimation (bankingParameter, ref bankingHash);
 		}
 		
 		public override bool FFInputSatisfied () {
-			return (flightInputs.inputBank != 0f);
+			return (Input.GetAxis(axis) != 0f);
 		}
 		
 		public override void FFStart () {}
 		
 		public override void FFFixedUpdate () {
-			currentBank = flightInputs.inputBank * maxBank;
+			currentBank = Input.GetAxis (axis) * maxBank * -1f;
 			if (bankingHash != 0)
 				animator.SetFloat(bankingHash, currentBank);
 			flightPhysics.addBank (currentBank, bankSensitivity);

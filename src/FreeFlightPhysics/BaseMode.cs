@@ -29,10 +29,6 @@ namespace UnityFreeFlight {
 		public bool alwaysApplyPhysics;
 
 		protected GameObject gameObject;
-		//Not serialized because this is a use of polymorphism, and unity doesn't like that. Child classes
-		//will have special inputs, so they will serialize the data. General methods called in this reference
-		[NonSerialized]
-		protected Inputs inputs;
 
 		[NonSerialized]
 		public List<Mechanic> mechanics = new List<Mechanic> ();
@@ -68,33 +64,28 @@ namespace UnityFreeFlight {
 		/// <param name="modeMechanics">Mode mechanics.</param>
 		/// <param name="modeInputs">Mode inputs.</param>
 		/// <param name="customPhysics">Custom physics.</param>
-		public void setupMechanics(PolymorphicSerializer modeMechanics,Inputs modeInputs,System.Object customPhysics = null) {
+		public void setupMechanics(PolymorphicSerializer modeMechanics,System.Object customPhysics = null) {
 
-			inputs = modeInputs;
-			
 			if (modeMechanics == null)
 				throw new NullReferenceException ("Mode failed setupMechanics(): 'Mode mechanics' must be instantiated or " +
 					"deserialized before calling this method.");
-			if (inputs == null)
-				throw new NullReferenceException ("Mode failed setupMechanics(): 'inputs' must be instantiated or deserialized " +
-					"before calling this method.");
 			
 			modeMechanics.load<Mechanic> (defaultMechanicTypeName, ref defaultMechanic);
 			modeMechanics.load<Mechanic> (mechanicTypeNames, ref mechanics);
 			modeMechanics.load<Mechanic> (finishMechanicTypeName, ref finishMechanic);
 			
 			foreach (Mechanic mech in mechanics) {
-				mech.init (gameObject, customPhysics, inputs);
+				mech.init (gameObject, customPhysics);
 			}
 			
 			if (defaultMechanic != null) {
-				defaultMechanic.init (gameObject, customPhysics, inputs);
+				defaultMechanic.init (gameObject, customPhysics);
 			} else {
 				Debug.LogError ("Default Mechanic not setup!");
 			}
 			
 			if (finishMechanic != null) {
-				finishMechanic.init (gameObject, customPhysics, inputs);
+				finishMechanic.init (gameObject, customPhysics);
 			}
 
 		}
@@ -117,8 +108,6 @@ namespace UnityFreeFlight {
 		public virtual void getInputs() {
 			applyMechanicPrecedence ();
 			applyrecursivePrecedenceChaining ();
-			if (inputs != null)
-				inputs.getInputs ();
 		}
 
 		/// <summary>
@@ -139,8 +128,6 @@ namespace UnityFreeFlight {
 				node.Value.FFFinish();
 			}
 
-			if (inputs != null)
-				inputs.resetInputs ();
 			defaultMechanic.FFFinish ();
 
 			if (finishMechanic != null) {

@@ -21,8 +21,8 @@ namespace UnityFreeFlight {
 		public AudioClip[] sounds;
 		public SoundManager soundManager = new SoundManager();
 
-		public override void init (GameObject go, System.Object customPhysics, Inputs inputs) {
-			base.init (go, customPhysics, inputs);
+		public override void init (GameObject go, System.Object customPhysics) {
+			base.init (go, customPhysics);
 			soundManager.init (go);
 			name = "Idle Mechanic";
 			setupAnimation (idleAnimation, ref idleHash);

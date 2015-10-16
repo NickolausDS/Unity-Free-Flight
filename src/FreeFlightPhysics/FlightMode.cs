@@ -36,7 +36,7 @@ namespace UnityFreeFlight {
 			name = "Flight Mode";
 			usePhysics = true;
 
-			base.setupMechanics(flightModeMechanics, flightInputs, flightModePhysics);
+			base.setupMechanics(flightModeMechanics, flightModePhysics);
 
 		}
 

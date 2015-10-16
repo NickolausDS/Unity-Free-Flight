@@ -32,7 +32,7 @@ namespace UnityFreeFlight {
 
 		private FlightPhysics flightPhysics;
 
-		public override void init (GameObject go, System.Object customPhysics, Inputs inputs) {
+		public override void init (GameObject go, System.Object customPhysics) {
 			flightPhysics = (FlightPhysics)customPhysics;
 			base.init (go);
 			soundManager.init (go);

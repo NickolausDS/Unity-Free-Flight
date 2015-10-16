@@ -7,6 +7,8 @@ namespace UnityFreeFlight {
 	[Serializable]
 	public class Launching : Mechanic {
 
+		[Header("Inputs")]
+		public string button = "Jump";
 
 		[Header("Animation")]
 		public string launchingAnimation;
@@ -21,17 +23,15 @@ namespace UnityFreeFlight {
 		private float launchTimer;
 		public bool enabledLaunchIfAirborn = true;
 		public float minHeightToLaunchIfAirborn = 2f;
-		private GroundInputs groundInputs;
-		
-		public override void init (GameObject go, System.Object customPhysics, Inputs inputs) {
-			groundInputs = (GroundInputs)inputs;
-			base.init (go, customPhysics, inputs);
+
+		public override void init (GameObject go, System.Object customPhysics) {
+			base.init (go, customPhysics);
 			soundManager.init (go);
 			setupAnimation (launchingAnimation, ref launchingHash);
 		}
 
 		public override bool FFInputSatisfied () {  
-			return checkLaunchTimer(groundInputs.inputTakeoff);
+			return checkLaunchTimer(Input.GetButton(button));
 		}
 
 		public override void FFFixedUpdate () {

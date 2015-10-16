@@ -11,7 +11,11 @@ namespace UnityFreeFlight {
 	/// </summary>
 	[Serializable]
 	public class Pitching : Mechanic {
-		
+
+		[Header("Inputs")]
+		public string axis = "Vertical";
+		public bool inverted = true;
+
 		[Header("Animation")]
 		[Tooltip("Amount of pitch is in degrees")]
 		public string pitchParameter = "";
@@ -29,11 +33,9 @@ namespace UnityFreeFlight {
 		private float currentPitch;
 		
 		private FlightPhysics flightPhysics;
-		private FlightInputs flightInputs;
-		
-		public override void init (GameObject go, System.Object customPhysics, Inputs inputs) {
+
+		public override void init (GameObject go, System.Object customPhysics) {
 			flightPhysics = (FlightPhysics)customPhysics;
-			flightInputs = (FlightInputs)inputs;
 			base.init (go);
 			setupAnimation (pitchParameter, ref pitchHash);
 		}
@@ -44,13 +46,13 @@ namespace UnityFreeFlight {
 		/// <returns>true</returns>
 		/// <c>false</c>
 		public override bool FFInputSatisfied () {
-			return (flightInputs.inputPitch != 0f && flightPhysics.angleOfAttack < maximumAngleOfAttack && flightPhysics.airspeed > minimumAirspeed);
+			return (Input.GetAxis(axis) != 0f && flightPhysics.angleOfAttack < maximumAngleOfAttack && flightPhysics.airspeed > minimumAirspeed);
 		}
 		
 		public override void FFStart () {}
 		
 		public override void FFFixedUpdate () {
-			currentPitch = flightInputs.inputPitch * maxPitch;
+			currentPitch = Input.GetAxis(axis) * maxPitch * (inverted ? -1f : 1f);
 			if (pitchHash != 0)
 				animator.SetFloat(pitchHash, currentPitch);
 			flightPhysics.addPitch (currentPitch, sensitivity);

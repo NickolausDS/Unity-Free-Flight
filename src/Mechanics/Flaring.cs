@@ -16,6 +16,9 @@ namespace UnityFreeFlight {
 	[Serializable]
 	public class Flaring : Mechanic {
 
+		[Header("Inputs")]
+		public string button = "WingFlare";
+
 		[Header("Animation")]
 		public string flaringAnimation = "Flaring";
 		private int flaringHash;
@@ -34,18 +37,16 @@ namespace UnityFreeFlight {
 		public float rotationPercentage = 20f;
 		
 		private FlightPhysics flightPhysics;
-		private FlightInputs flightInputs;
-		
-		public override void init (GameObject go, System.Object customPhysics, Inputs inputs) {
+
+		public override void init (GameObject go, System.Object customPhysics) {
 			flightPhysics = (FlightPhysics)customPhysics;
-			flightInputs = (FlightInputs)inputs;
 			base.init (go);
 			name = "Flaring Mechanic";
 			setupAnimation (flaringAnimation, ref flaringHash);
 		}
 		
 		public override bool FFInputSatisfied () {
-			return flightInputs.inputFlaring;
+			return Input.GetButton(button);
 		}
 
 		public override void FFStart () {

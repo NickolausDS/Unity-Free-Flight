@@ -29,7 +29,7 @@ namespace UnityFreeFlight {
 		/// </summary>
 		/// <param name="go">Go.</param>
 		/// <param name="sm">Sm.</param>
-		public virtual void init(GameObject go, System.Object customPhysics = null, Inputs inputs = null) {
+		public virtual void init(GameObject go, System.Object customPhysics = null) {
 			gameObject = go;
 			animator = gameObject.GetComponentInChildren <Animator> ();
 			rigidbody = gameObject.GetComponent <Rigidbody> ();
