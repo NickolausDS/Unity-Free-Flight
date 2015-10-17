@@ -11,20 +11,18 @@ namespace UnityFreeFlight {
 	[Serializable]
 	public class GroundMode : BaseMode {
 
-		public GroundInputs groundInputs;
 		public GroundMechanics groundModeMechanics;
 
 		public override void init (GameObject go) {
 			base.init (go);
 			
-			if (groundInputs == null)
-				groundInputs = new GroundInputs ();
+
 			if (groundModeMechanics == null)
 				groundModeMechanics = new GroundMechanics ();
 
 			name = "Ground Mode";
 
-			base.setupMechanics (groundModeMechanics, groundInputs);
+			base.setupMechanics (groundModeMechanics);
 		}
 	}
 

@@ -7,18 +7,18 @@ namespace UnityFreeFlight {
 
 		public GameObject flightObject;
 		private FreeFlight ffComponent;
-		private FlightInputs fInputs;
-		private GroundInputs gInputs;
+//		private FlightInputs fInputs;
+//		private GroundInputs gInputs;
 
 		public override void OnEnable () {
 			base.OnEnable ();
 		}
 		
 		public void Update () {
-			if (ffComponent.modeManager.activeMode == MovementModes.Flight)
-				defaultUpdate (fInputs, flightObject.name);
-			else if (ffComponent.modeManager.activeMode == MovementModes.Ground)
-				defaultUpdate (gInputs, flightObject.name);
+//			if (ffComponent.modeManager.activeMode == MovementModes.Flight)
+//				defaultUpdate (fInputs, flightObject.name);
+//			else if (ffComponent.modeManager.activeMode == MovementModes.Ground)
+//				defaultUpdate (gInputs, flightObject.name);
 		}
 
 		public override void autoConfig() {
@@ -34,8 +34,8 @@ namespace UnityFreeFlight {
 
 			nullCheck ("", ffComponent, "This object can only display stats info for objects with a Free Flight Component.");
 
-			fInputs = ffComponent.modeManager.flightMode.flightInputs;
-			gInputs = ffComponent.modeManager.groundMode.groundInputs;
+//			fInputs = ffComponent.modeManager.flightMode.flightInputs;
+//			gInputs = ffComponent.modeManager.groundMode.groundInputs;
 
 		}
 

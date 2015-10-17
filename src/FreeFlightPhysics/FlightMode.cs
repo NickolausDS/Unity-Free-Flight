@@ -14,7 +14,6 @@ namespace UnityFreeFlight {
 	[Serializable]
 	public class FlightMode : BaseMode {
 	
-		public FlightInputs flightInputs;
 		public FlightMechanics flightModeMechanics;
 		public FlightPhysics flightModePhysics;
 
@@ -26,8 +25,6 @@ namespace UnityFreeFlight {
 			rigidbody = gameObject.GetComponent<Rigidbody> ();
 			flightModePhysics.init (rigidbody);
 
-			if (flightInputs == null)
-				flightInputs = new FlightInputs ();
 			if (flightModeMechanics == null)
 				flightModeMechanics = new FlightMechanics ();
 			if (flightModePhysics == null)
