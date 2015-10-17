@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
 using System;
-using System.Collections;
-using UnityFreeFlight;
 
 namespace UnityFreeFlight {
 
@@ -13,9 +11,11 @@ namespace UnityFreeFlight {
 
 		public GroundMechanics groundModeMechanics;
 
+		public string[] defaultMechanics = { "Launching", "Walking" };
+		public string defaultDefaultMechanic = "Idle";
+
 		public override void init (GameObject go) {
 			base.init (go);
-			
 
 			if (groundModeMechanics == null)
 				groundModeMechanics = new GroundMechanics ();

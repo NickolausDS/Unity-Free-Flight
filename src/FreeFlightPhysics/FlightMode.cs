@@ -16,8 +16,11 @@ namespace UnityFreeFlight {
 	
 		public FlightMechanics flightModeMechanics;
 		public FlightPhysics flightModePhysics;
-
 		public Rigidbody rigidbody;
+
+		public string[] defaultMechanics = { "Diving", "Flaring", "Flapping", "Pitching", "Turning" };
+		public string defaultDefaultMechanic = "Gliding";
+		public string defaultFinishMechanic = "Landing";
 
 		public override void init (GameObject go) {
 			base.init (go);

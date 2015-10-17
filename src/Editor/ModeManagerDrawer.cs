@@ -33,9 +33,28 @@ public class ModeManagerDrawer : PropertyDrawer {
 		EditorGUILayout.PropertyField (mode.FindPropertyRelative ("usePhysics"));
 		EditorGUILayout.PropertyField (mode.FindPropertyRelative ("alwaysApplyPhysics"));
 
+		displayMechanics(position, mode, label);
+
+
+		SerializedProperty physics = mode.FindPropertyRelative (mode.name + "Physics");
+		if (physics != null)
+			EditorGUILayout.PropertyField (physics, true);
+
+	}
+
+	/// <summary>
+	/// Display menu for configuring the default mechanic, regular mechanic precedence + chain rules, 
+	/// the finish mechanic, then property configuration for all specific mechanics. 
+	/// </summary>
+	/// <param name="position">Position.</param>
+	/// <param name="mode">Mode.</param>
+	/// <param name="label">Label.</param>
+	private void displayMechanics(Rect position, SerializedProperty mode, GUIContent label) {
+
 		SerializedProperty modeMechs = mode.FindPropertyRelative (mode.name + "Mechanics");
 		List<string> mechanicNames = getMechanicNames (modeMechs);
 
+		setMechanicDefaults(mode, mechanicNames);
 
 		EditorGUILayout.LabelField ("Default Mechanic:");
 		EditorGUILayout.BeginHorizontal ();
@@ -51,21 +70,20 @@ public class ModeManagerDrawer : PropertyDrawer {
 		EditorGUILayout.Space ();
 		EditorGUILayout.Space ();
 		EditorGUILayout.EndHorizontal ();
-
+		
 		EditorGUILayout.LabelField ("Mechanics");
 		EditorGUI.indentLevel++;
 		SerializedProperty flightModeMechTypeNames = mode.FindPropertyRelative ("mechanicTypeNames"); 
-
 		for (int i = 0; i < flightModeMechTypeNames.arraySize; i++) {
 			EditorGUILayout.BeginHorizontal();
 			SerializedProperty curMech = flightModeMechTypeNames.GetArrayElementAtIndex(i);
-
+			
 			List<String> selectableMechanics = getSelectableMechanics (flightModeMechTypeNames, mechanicNames, curMech.stringValue);
 			int newValue = EditorGUILayout.Popup(selectableMechanics.IndexOf (
 				curMech.stringValue), selectableMechanics.ToArray());
 			if (newValue > -1)
 				curMech.stringValue = selectableMechanics[newValue];
-
+			
 			if (GUILayout.Button ('\u2193'.ToString()))
 				flightModeMechTypeNames.MoveArrayElement(i, i+1);
 			if (GUILayout.Button ("+")) {
@@ -76,13 +94,13 @@ public class ModeManagerDrawer : PropertyDrawer {
 				flightModeMechTypeNames.DeleteArrayElementAtIndex(i);
 				return;
 			}
-
+			
 			if (curMech.stringValue != "")
 				EditorGUILayout.PropertyField(modeMechs.FindPropertyRelative(curMech.stringValue.ToLower())
-			                              .FindPropertyRelative("enabled"));
-
-				EditorGUILayout.EndHorizontal();
-
+				                              .FindPropertyRelative("enabled"));
+			
+			EditorGUILayout.EndHorizontal();
+			
 			if (curMech.stringValue != "") {
 				EditorGUILayout.LabelField("Chain Rules");
 				SerializedProperty chain = modeMechs.FindPropertyRelative(curMech.stringValue.ToLower ()).FindPropertyRelative ("chainRules");
@@ -96,16 +114,16 @@ public class ModeManagerDrawer : PropertyDrawer {
 					EditorGUILayout.EndHorizontal ();
 				}
 			}
-
+			
 		}
-
+		
 		//Add a button for adding the first mechanic
 		if (flightModeMechTypeNames.arraySize == 0) 
 			if (GUILayout.Button ("+")) 
 				flightModeMechTypeNames.InsertArrayElementAtIndex(0);
-
+		
 		EditorGUI.indentLevel--;
-
+		
 		EditorGUILayout.LabelField ("Finish Mechanic:");
 		EditorGUILayout.BeginHorizontal ();
 		EditorGUI.indentLevel++;
@@ -123,10 +141,53 @@ public class ModeManagerDrawer : PropertyDrawer {
 			EditorGUILayout.PropertyField(modeMechs.FindPropertyRelative(mechName.ToLower()), true);
 		}
 		EditorGUI.indentLevel-=1;
+	}
 
-		SerializedProperty physics = mode.FindPropertyRelative (mode.name + "Physics");
-		if (physics != null)
-			EditorGUILayout.PropertyField (physics, true);
+	/// <summary>
+	/// Setup a default collection of mechanics ONLY IF no mechanics exist and this mode also
+	/// has a default collection defined. Otherwise, nothing changes. This allows for first time
+	/// autoconfiguration when a user drags FreeFlight onto an object.
+	/// </summary>
+	/// <param name="mode">Mode -- the current mode being drawn</param>
+	/// <param name="availableMechs">Available mechs. Full list of available mechs for this mode</param>
+	public void setMechanicDefaults(SerializedProperty mode, List<string> availableMechs) {
+		if (mode.FindPropertyRelative ("mechanicTypeNames").arraySize == 0 &&
+		    mode.FindPropertyRelative ("defaultMechanicTypeName").stringValue.Equals ("") &&
+		    mode.FindPropertyRelative ("finishMechanicTypeName").stringValue.Equals ("")
+		    ) {
+
+			try {
+				SerializedProperty defaultMechanics = mode.FindPropertyRelative ("defaultMechanics");
+				SerializedProperty mechanicTypeNames = mode.FindPropertyRelative ("mechanicTypeNames");
+				for( int i = 0; i < defaultMechanics.arraySize; i++) {
+					string mechName = defaultMechanics.GetArrayElementAtIndex(i).stringValue;
+					if (availableMechs.Contains(mechName)) {
+						mechanicTypeNames.InsertArrayElementAtIndex(i);
+						mechanicTypeNames.GetArrayElementAtIndex(i).stringValue = 
+							defaultMechanics.GetArrayElementAtIndex(i).stringValue;
+					} else {
+						Debug.LogWarning (string.Format("{0}: Missing default mechanic '{1}'", mode.name, mechName)); 
+					}
+				} 
+			} catch (NullReferenceException) {}
+
+			try {
+				string ddm = mode.FindPropertyRelative ("defaultDefaultMechanic").stringValue;
+				if (availableMechs.Contains (ddm))
+					mode.FindPropertyRelative ("defaultMechanicTypeName").stringValue = ddm;
+				else 
+					Debug.LogWarning (string.Format("{0}: Missing default mechanic '{1}'", mode.name, ddm)); 
+			} catch (NullReferenceException) {}
+
+			try {
+				string dfm = mode.FindPropertyRelative ("defaultFinishMechanic").stringValue;
+				if (availableMechs.Contains (dfm))
+					mode.FindPropertyRelative ("finishMechanicTypeName").stringValue = dfm;
+				else
+					Debug.LogWarning (string.Format("{0}: Missing default finishing mechanic '{1}'", mode.name, dfm)); 
+
+			} catch (NullReferenceException) {}
+		}
 
 	}
 
