@@ -9,6 +9,10 @@ namespace UnityFreeFlight {
 
 			serializedObject.Update ();
 			EditorGUILayout.PropertyField( serializedObject.FindProperty ("modeManager"));
+			EditorGUILayout.LabelField( "Misc Options" );
+			EditorGUI.indentLevel++;
+			EditorGUILayout.PropertyField( serializedObject.FindProperty ("disableOnError"));
+			EditorGUI.indentLevel--;
 			serializedObject.ApplyModifiedProperties ();
 		}
 	}

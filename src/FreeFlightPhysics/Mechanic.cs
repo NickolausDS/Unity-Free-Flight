@@ -31,8 +31,10 @@ namespace UnityFreeFlight {
 		/// <param name="sm">Sm.</param>
 		public virtual void init(GameObject go, System.Object customPhysics = null) {
 			gameObject = go;
-			animator = gameObject.GetComponentInChildren <Animator> ();
 			rigidbody = gameObject.GetComponent <Rigidbody> ();
+			animator = gameObject.GetComponentInChildren <Animator> ();
+			if (animator == null)
+				throw new NullReferenceException("Animator not present.");
 		}
 
 		/// <summary>

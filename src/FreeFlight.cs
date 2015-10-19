@@ -13,7 +13,9 @@ using System.Reflection;
 public class FreeFlight : MonoBehaviour {
 	
 	public ModeManager modeManager;
-
+	[Tooltip ("Disable this component when an uncaught Exception happens")]
+	public bool disableOnError = true;
+	
 	public static string version() {
 		return UnityFreeFlight.Version.version ();
 	}
@@ -22,6 +24,10 @@ public class FreeFlight : MonoBehaviour {
 	//Unity Events
 	//=============
 
+	public void Awake() {
+		checkAnimationController ();
+	}
+
 	public void OnEnable () {
 		if (modeManager == null) {
 			modeManager = new ModeManager ();
@@ -29,9 +35,7 @@ public class FreeFlight : MonoBehaviour {
 		try {
 			modeManager.init (gameObject);
 		} catch (Exception e) {
-			Debug.LogError (string.Format("({0} -- Free Flight Component): Script Failed Initialization: [{1}] {2} \n{3}", 
-			                              gameObject.name, e.GetType().ToString(), e.Message, e.StackTrace.ToString()));
-			enabled = false;
+			error (e, "Mechanic Initialization");
 		}
 	}
 
@@ -39,9 +43,7 @@ public class FreeFlight : MonoBehaviour {
 		try {
 			modeManager.switchModes (newmode);
 		} catch (Exception e) {
-			Debug.LogError (string.Format("({0} -- Free Flight Component): Script Failed Switching Modes: [{1}] {2} \n{3}", 
-			                              gameObject.name, e.GetType().ToString(), e.Message, e.StackTrace.ToString()));
-			enabled = false;
+			error (e, "Mode Switch");
 		}
 	}
 
@@ -49,9 +51,7 @@ public class FreeFlight : MonoBehaviour {
 		try {
 			modeManager.start ();
 		} catch (Exception e) {
-			Debug.LogError (string.Format("({0} -- Free Flight Component): Script failed to start: [{1}] {2} \n{3}", 
-			                              gameObject.name, e.GetType().ToString(), e.Message, e.StackTrace.ToString()));
-			enabled = false;
+			error (e, "Mechanic Start");
 		}
 	}
 	
@@ -62,9 +62,7 @@ public class FreeFlight : MonoBehaviour {
 		try {
 			modeManager.getInputs ();
 		} catch (Exception e) {
-			Debug.LogError (string.Format("({0} -- Free Flight Component): Script Failed on Get Inputs: [{1}] {2} \n{3}", 
-			                              gameObject.name, e.GetType().ToString(), e.Message, e.StackTrace.ToString()));
-			enabled = false;
+			error (e, "Mechanic Inputs");
 		}
 	}
 	
@@ -76,9 +74,7 @@ public class FreeFlight : MonoBehaviour {
 		try {
 			modeManager.applyInputs ();
 		} catch (Exception e) {
-			Debug.LogError (string.Format("({0} -- Free Flight Component): Script Failed on Applying Inputs: [{1}] {2} \n{3}", 
-			                              gameObject.name, e.GetType().ToString(), e.Message, e.StackTrace.ToString()));
-			enabled = false;
+			error (e, "Mechanic Fixed Update");
 		}
 	}
 
@@ -88,5 +84,18 @@ public class FreeFlight : MonoBehaviour {
 		modeManager.switchModes (MovementModes.Ground);
 	}
 
+	private void error(Exception e, string section) {
+		Debug.LogError (string.Format("({0} -- Free Flight Component): Exception in {1}: [{2}] {3} \n{4}", 
+		                              gameObject.name, section, e.GetType().ToString(), e.Message, e.StackTrace.ToString()));
+		if (disableOnError)
+			enabled = false;
+	}
+
+	private void checkAnimationController() {
+		Animator animator = gameObject.GetComponentInChildren<Animator> ();
+		if (animator == null)
+			Debug.LogWarning (string.Format(
+				"An Animator needs to be attached to '{0}' or one of its children", gameObject.name));
+	}
 
 }
