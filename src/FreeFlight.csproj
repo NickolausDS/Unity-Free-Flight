@@ -71,7 +71,6 @@
     <Compile Include="GroundMechanics\Idle.cs" />
     <Compile Include="GroundMechanics\Launching.cs" />
     <Compile Include="GroundMechanics\Walking.cs" />
-    <Compile Include="Mods\FlightInputStats.cs" />
     <Compile Include="Mods\FlightPhysicsStats.cs" />
     <Compile Include="Mods\ModeStats.cs" />
     <Compile Include="Mods\StatsObject.cs" />

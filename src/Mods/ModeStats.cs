@@ -19,20 +19,36 @@ namespace UnityFreeFlight {
 		public void Update () {
 			fMode = ffComponent.modeManager.currentMode;
 
-			string stats = "";
-			foreach (Mechanic mech in fMode.mechanics) {
-				if (fMode.currentMechanics.Contains (mech))
-				    stats += ">" + mech.GetType().Name + "\n";
-				else 
-					stats += mech.GetType().Name + "\n";
-			}
-			stats += "\n\n";
-			for (LinkedListNode<Mechanic> node = fMode.currentMechanics.First; node != null; node = node.Next) {
-				stats += node.Value.GetType().Name + "-->";
-			}
+			string inputs = buildMechanicInputStatuses(fMode);
+			string chain = buildMechanicChain(fMode);
+
+			string stats = string.Format ("{0}:\n'> ' == mechanic running \n '! ' == mechanic overruled\n\nInputs: \n{1}\n\nChain: \n{2}",
+			               fMode.name, inputs, chain);
 
 			updateText (stats);
 
+		}
+
+		public string buildMechanicInputStatuses(BaseMode mode) {
+			string stats = "";
+			foreach (Mechanic mech in mode.mechanics) {
+				if (mode.currentMechanics.Contains (mech))
+					stats += string.Format ("> :{0} \n", mech.GetType().Name);
+				else if (mech.FFInputSatisfied()) {
+					stats += string.Format ("! :{0} \n", mech.GetType().Name);
+				}
+				else 
+					stats += string.Format("{0} \n", mech.GetType().Name);
+			}
+			return stats;
+		}
+
+		public string buildMechanicChain(BaseMode mode) {
+			string stats = "";
+			for (LinkedListNode<Mechanic> node = mode.currentMechanics.First; node != null; node = node.Next) {
+				stats += node.Value.GetType().Name + "-->";
+			}
+			return stats;
 		}
 		
 		public override void autoConfig() {
