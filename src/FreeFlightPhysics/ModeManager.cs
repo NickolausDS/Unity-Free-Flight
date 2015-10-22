@@ -14,6 +14,16 @@ namespace UnityFreeFlight {
 	/// input groups, and which set of code is applied to each set of inputs. 
 	/// on those inputs. 
 	//TODO: Mode manager has no way to continue applying physics to non-current modes. 
+	//TODO 2: (Oct 2015 ~pre-v0.5.0) Mode Manager defines flight mode and ground mode explicitly. This
+	//makes the code below rather dirty, as ONLY the two modes below can ever exist. "MovementModes" enum is 
+	//another dirty solution -- it cements the two modes and requires a recompile for adding more. One 
+	//of two solutions should be used: Modes should be loaded dynamically with the Polymorphic Serializer ( 
+	//as is done with mechanics), or be loaded with ScriptableObjects (which is how Unity defines the _proper_
+	//methodology for loading dynamic scripts). 
+	//TODO 3: As mentioned in the point above, the "MovementModes" enum is a terrible solution. It was an early hack
+	//to get modes working, and needs to be updated. It prevents dynamic additions/removals of modes without changes to
+	//the code below. A better solution would be to mirror the Mechanics Editor, which gathers mode information by applying 
+	//reflection on the current list of dynamic modes (once dynamic modes are also implemented).
 	/// </summary>
 	[Serializable]
 	public class ModeManager {
@@ -23,8 +33,6 @@ namespace UnityFreeFlight {
 
 		public FlightMode flightMode;
 		public GroundMode groundMode;
-//		public SoundManager soundManager;
-
 
 		[SerializeField]
 		private MovementModes _activeMode = MovementModes.Ground;
