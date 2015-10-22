@@ -14,6 +14,9 @@ public class ModeManagerDrawer : PropertyDrawer {
 	public override void OnGUI (Rect position, SerializedProperty property, GUIContent label) {
 		EditorGUILayout.PropertyField (property.FindPropertyRelative("_activeMode"));
 
+		setMechanicDefaults(property.FindPropertyRelative("groundMode"));
+		setMechanicDefaults(property.FindPropertyRelative("flightMode"));
+
 
 		groundModeFoldout = EditorPrefs.GetBool ("groundModeFoldout");
 		if(groundModeFoldout = EditorGUILayout.Foldout (groundModeFoldout, "Ground Mode"))
@@ -53,8 +56,6 @@ public class ModeManagerDrawer : PropertyDrawer {
 
 		SerializedProperty modeMechs = mode.FindPropertyRelative (mode.name + "Mechanics");
 		List<string> mechanicNames = getMechanicNames (modeMechs);
-
-		setMechanicDefaults(mode, mechanicNames);
 
 		EditorGUILayout.LabelField ("Default Mechanic:");
 		EditorGUILayout.BeginHorizontal ();
@@ -150,7 +151,10 @@ public class ModeManagerDrawer : PropertyDrawer {
 	/// </summary>
 	/// <param name="mode">Mode -- the current mode being drawn</param>
 	/// <param name="availableMechs">Available mechs. Full list of available mechs for this mode</param>
-	public void setMechanicDefaults(SerializedProperty mode, List<string> availableMechs) {
+	public void setMechanicDefaults(SerializedProperty mode) {
+		SerializedProperty modeMechs = mode.FindPropertyRelative (mode.name + "Mechanics");
+		List<string> availableMechs = getMechanicNames (modeMechs);
+
 		if (mode.FindPropertyRelative ("mechanicTypeNames").arraySize == 0 &&
 		    mode.FindPropertyRelative ("defaultMechanicTypeName").stringValue.Equals ("") &&
 		    mode.FindPropertyRelative ("finishMechanicTypeName").stringValue.Equals ("")
