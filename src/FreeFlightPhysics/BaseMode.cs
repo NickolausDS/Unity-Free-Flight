@@ -41,7 +41,7 @@ namespace UnityFreeFlight {
 
 
 		public List<string> mechanicTypeNames = new List<string> ();
-		public string defaultMechanicTypeName = "";
+		public string defaultMechanicTypeName;
 		public string finishMechanicTypeName;
 
 
@@ -73,19 +73,34 @@ namespace UnityFreeFlight {
 			modeMechanics.load<Mechanic> (defaultMechanicTypeName, ref defaultMechanic);
 			modeMechanics.load<Mechanic> (mechanicTypeNames, ref mechanics);
 			modeMechanics.load<Mechanic> (finishMechanicTypeName, ref finishMechanic);
-			
+
 			foreach (Mechanic mech in mechanics) {
+				try {
 				mech.init (gameObject, customPhysics);
+				} catch {
+					Debug.LogError(string.Format ("{0} in {1} failed initialization", mech.name, name));
+					throw;
+				}
 			}
 			
-			if (defaultMechanic != null) {
-				defaultMechanic.init (gameObject, customPhysics);
+			if (defaultMechanic != null) {				
+				try {
+					defaultMechanic.init (gameObject, customPhysics);
+				} catch {
+					Debug.LogError(string.Format ("{0} in {1} failed initialization", defaultMechanic.name, name));
+					throw;
+				}
 			} else {
 				Debug.LogError (string.Format ("({0}): Default Mechanic cannot be null!", name));
 			}
 			
 			if (finishMechanic != null) {
-				finishMechanic.init (gameObject, customPhysics);
+				try {
+					finishMechanic.init (gameObject, customPhysics);
+				} catch {
+					Debug.LogError(string.Format ("{0} in {1} failed initialization", finishMechanic.name, name));
+					throw;
+				}
 			}
 
 		}
