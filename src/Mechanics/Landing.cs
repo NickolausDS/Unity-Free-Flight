@@ -9,7 +9,8 @@ namespace UnityFreeFlight {
 	public class Landing : Mechanic {
 
 		[Header ("Landing")]
-		public string landingAnimation = "landing";
+		[Tooltip("Animation Controller trigger parameter for Landing Animation")]
+		public string landingTrigger = "";
 		private int landingHash;
 		public AudioClip landingSound;
 		[Tooltip("Time in seconds until standup will snap to the correct rotation")]
@@ -21,7 +22,8 @@ namespace UnityFreeFlight {
 
 		[Header ("Crashing")]
 		public bool enabledCrashing = false;
-		public string crashingAnimation = "crashing";
+		[Tooltip("Animation Controller trigger parameter for Crashing Animation")]
+		public string crashingTrigger = "";
 		private int crashingHash;
 		public AudioClip crashSound;
 		[Tooltip ("The speed a crash will happen instead of a landing")]
@@ -37,8 +39,8 @@ namespace UnityFreeFlight {
 			base.init (go);
 			soundManager.init (go);
 			mainMonbehaviour = gameObject.GetComponent<FreeFlight> ();
-			setupAnimation (landingAnimation, ref landingHash);
-			setupAnimation (crashingAnimation, ref crashingHash);
+			setupAnimation (landingTrigger, ref landingHash);
+			setupAnimation (crashingTrigger, ref crashingHash);
 		}
 
 
@@ -51,7 +53,7 @@ namespace UnityFreeFlight {
 			//Do a regular landing otherwise
 			} else {
 				if (landingHash != 0)
-					animator.SetTrigger(landingAnimation);
+					animator.SetTrigger(landingHash);
 				mainMonbehaviour.StartCoroutine (standUp ());
 			}
 		}

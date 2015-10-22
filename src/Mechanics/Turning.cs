@@ -17,9 +17,9 @@ namespace UnityFreeFlight {
 		public string axis = "Horizontal";
 		public bool inverted = true;
 
-		[Header("Animation")]
-		[Tooltip("Amount of bank is in degrees")]
-		public string bankingParameter = "";
+		[Header("Animation Parameters")]
+		[Tooltip("Animation Controller float for amount of bank in degrees")]
+		public string bankingFloat = "";
 		private int bankingHash;
 		
 		[Header("General")]
@@ -33,7 +33,7 @@ namespace UnityFreeFlight {
 		public override void init (GameObject go, System.Object customPhysics) {
 			flightPhysics = (FlightPhysics)customPhysics;
 			base.init (go);
-			setupAnimation (bankingParameter, ref bankingHash);
+			setupAnimation (bankingFloat, ref bankingHash);
 		}
 		
 		public override bool FFInputSatisfied () {

@@ -12,8 +12,9 @@ namespace UnityFreeFlight {
 		[Header("Inputs")]
 		public string button = "Dive";
 
-		[Header("Animation")]
-		public string divingAnimation = "Diving";
+		[Header("Animation Parameter")]
+		[Tooltip("Animation Controller bool parameter for diving animation")]
+		public string diveBool = "";
 		private int divingHash;
 
 		[Header("Sound")]
@@ -26,7 +27,7 @@ namespace UnityFreeFlight {
 			flightPhysics = (FlightPhysics)customPhysics;
 			base.init (go);
 			name = "Diving Mechanic";
-			setupAnimation (divingAnimation, ref divingHash);
+			setupAnimation (diveBool, ref divingHash);
 
 		}
 		

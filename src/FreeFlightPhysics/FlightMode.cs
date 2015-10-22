@@ -18,7 +18,7 @@ namespace UnityFreeFlight {
 		public FlightPhysics flightModePhysics;
 		public Rigidbody rigidbody;
 
-		public string[] defaultMechanics = { "Diving", "Flaring", "Flapping", "Pitching", "Turning" };
+		public string[] defaultMechanics = {"Flapping", "Pitching", "Turning"};
 		public string defaultDefaultMechanic = "Gliding";
 		public string defaultFinishMechanic = "Landing";
 

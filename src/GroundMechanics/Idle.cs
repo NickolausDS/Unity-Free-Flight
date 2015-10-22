@@ -13,8 +13,9 @@ namespace UnityFreeFlight {
 	[Serializable]
 	public class Idle: Mechanic  {
 
-		[Header("Animation")]
-		public string idleAnimation;
+		[Header("Animation Parameters")]
+		[Tooltip("Animation Controller bool parameter for idle 'standing' animation")]
+		public string idleBool;
 		private int idleHash;
 
 		[Header("Sound")]
@@ -25,7 +26,7 @@ namespace UnityFreeFlight {
 			base.init (go, customPhysics);
 			soundManager.init (go);
 			name = "Idle Mechanic";
-			setupAnimation (idleAnimation, ref idleHash);
+			setupAnimation (idleBool, ref idleHash);
 		}
 
 		public override bool FFInputSatisfied () {

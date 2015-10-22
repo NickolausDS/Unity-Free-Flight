@@ -18,12 +18,15 @@ namespace UnityFreeFlight {
 		public bool invertForward = true;
 		public string turningAxis = "Horizontal";
 
-		[Header("Animation")]
-		public string walkingAnimation = "Walking";
+		[Header("Animation Parameters")]
+		[Tooltip("Animation Controller bool parameter for walking animation")]
+		public string walkBool = "";
 		private int walkingHash;
-		public string walkingSpeed = "Speed";
+		[Tooltip("Animation Controller float parameter for walking speed")]
+		public string walkSpeed = "";
 		private int walkingSpeedHash;
-		public string angularSpeed = "AngularSpeed";
+		[Tooltip("Animation Controller float parameter for walking angular speed")]
+		public string angularSpeed = "";
 		private int angularSpeedHash;
 
 		[Header("Sound")]
@@ -40,8 +43,8 @@ namespace UnityFreeFlight {
 		public override void init (GameObject go, System.Object customPhysics) {
 			base.init (go, customPhysics);
 			soundManager.init (go);
-			setupAnimation (walkingAnimation, ref walkingHash);
-			setupAnimation (walkingSpeed, ref walkingSpeedHash);
+			setupAnimation (walkBool, ref walkingHash);
+			setupAnimation (walkSpeed, ref walkingSpeedHash);
 			setupAnimation (angularSpeed, ref angularSpeedHash);
 		}
 
@@ -59,24 +62,29 @@ namespace UnityFreeFlight {
 			rigidbody.drag = groundDrag;
 			float inversion = (invertForward ? -1f : 1f);
 			if (Input.GetAxis(forwardAxis) * inversion > 0f) {
-				animator.SetBool (walkingHash, true);
+				if (walkingHash != 0)
+					animator.SetBool (walkingHash, true);
 				rigidbody.AddRelativeForce (Vector3.forward * maxGroundForwardSpeed * Input.GetAxis(forwardAxis) * inversion * Time.deltaTime, ForceMode.VelocityChange);
 			} else {
-				animator.SetBool (walkingHash, false);
+				if (walkingHash != 0)
+					animator.SetBool (walkingHash, false);
 			}
 			
 			float turningSpeed = maxGroundTurningDegreesSecond * Input.GetAxis (turningAxis) * Time.deltaTime;
 			rigidbody.rotation *= Quaternion.AngleAxis (turningSpeed, Vector3.up);
-			
-			animator.SetFloat (walkingSpeedHash, rigidbody.velocity.magnitude);
-			animator.SetFloat (angularSpeedHash, turningSpeed);
+
+			if (walkingSpeedHash != 0)
+				animator.SetFloat (walkingSpeedHash, rigidbody.velocity.magnitude);
+			if (angularSpeedHash != 0)
+				animator.SetFloat (angularSpeedHash, turningSpeed);
 		}
 
 		/// <summary>
 		/// Since flapping animation is done on a trigger, we want to override the default behavior.
 		/// </summary>
 		public override bool FFFinish () {
-			animator.SetBool (walkingHash, false);
+			if (walkingHash != 0)
+				animator.SetBool (walkingHash, false);
 			return true;
 		}
 

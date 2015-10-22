@@ -15,7 +15,7 @@ namespace UnityFreeFlight {
 	public class Mechanic {
 
 		[HideInInspector]
-		public string name = "Anonymous Mechanic"; 
+		public string name; 
 		[HideInInspector]
 		public bool enabled = true;
 		[HideInInspector]
@@ -35,6 +35,9 @@ namespace UnityFreeFlight {
 			animator = gameObject.GetComponentInChildren <Animator> ();
 			if (animator == null)
 				throw new NullReferenceException("Animator not present.");
+			if (name == null || name.Equals("")) {
+				name = this.GetType().Name;
+			}
 		}
 
 		/// <summary>
@@ -86,7 +89,8 @@ namespace UnityFreeFlight {
 					}
 				}
 				animHash = 0;
-				Debug.LogWarning (string.Format ("Object {0} does not appear to have the '{1}' animation.", gameObject.name, animString));
+				Debug.LogWarning (string.Format ("Object '{0}' Component 'Free Flight' Mechanic '{1}' does not appear to have the '{2}' animation parameter.", 
+				                                 gameObject.name, name, animString));
 			}
 		}
 

@@ -10,8 +10,9 @@ namespace UnityFreeFlight {
 		[Header("Inputs")]
 		public string button = "Jump";
 
-		[Header("Animation")]
-		public string launchingAnimation;
+		[Header("Animation Parameters")]
+		[Tooltip("Animation Controller bool parameter for launching animation")]
+		public string launchBool;
 		private int launchingHash;
 		
 		[Header("Sound")]
@@ -27,7 +28,7 @@ namespace UnityFreeFlight {
 		public override void init (GameObject go, System.Object customPhysics) {
 			base.init (go, customPhysics);
 			soundManager.init (go);
-			setupAnimation (launchingAnimation, ref launchingHash);
+			setupAnimation (launchBool, ref launchingHash);
 		}
 
 		public override bool FFInputSatisfied () {  

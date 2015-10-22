@@ -9,8 +9,9 @@ namespace UnityFreeFlight {
 	[Serializable]
 	public class Gliding : Mechanic {
 
-		[Header("Animation")]
-		public string glidingAnimation = "Gliding";
+		[Header("Animation Parameters")]
+		[Tooltip("Animation Controller bool parameter for Gliding Animation")]
+		public string glidingBool = "Gliding";
 		private int glidingHash;
 
 		[Header("Sound")]
@@ -42,7 +43,7 @@ namespace UnityFreeFlight {
 		public override void init (GameObject go, System.Object customPhysics) {
 			flightPhysics = (FlightPhysics)customPhysics;
 			base.init (go);
-			setupAnimation (glidingAnimation, ref glidingHash);
+			setupAnimation (glidingBool, ref glidingHash);
 		}
 		
 		public override bool FFInputSatisfied () {

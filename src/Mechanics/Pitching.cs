@@ -16,9 +16,9 @@ namespace UnityFreeFlight {
 		public string axis = "Vertical";
 		public bool inverted = true;
 
-		[Header("Animation")]
-		[Tooltip("Amount of pitch is in degrees")]
-		public string pitchParameter = "";
+		[Header("Animation Parameters")]
+		[Tooltip("Animation Controller float for amount of pitch in degrees")]
+		public string pitchFloat = "";
 		private int pitchHash;
 		
 		[Header("General")]
@@ -37,7 +37,7 @@ namespace UnityFreeFlight {
 		public override void init (GameObject go, System.Object customPhysics) {
 			flightPhysics = (FlightPhysics)customPhysics;
 			base.init (go);
-			setupAnimation (pitchParameter, ref pitchHash);
+			setupAnimation (pitchFloat, ref pitchHash);
 		}
 
 		/// <summary>

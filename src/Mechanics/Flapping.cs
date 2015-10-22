@@ -16,15 +16,22 @@ namespace UnityFreeFlight {
 		[Header("Inputs")]
 		public string button = "Jump";
 
-		[Header("Animation")]
-		public string flappingParameter = "Flapping";
-		public string flappingState = "Base Layer.Flapping";
+		[Header("Animation Parameters")]
+		[Tooltip("Animation Controller trigger for Flapping Animation")]
+		public string flappingTrigger = "Flapping";
 		private int paramHash;
-		private int stateHash;
+
+
+		[Header("Animation SMB")]
 		[Tooltip ("Use the Flapping State Machine Behaviour instead of normal detection. Results in smoother flaps, but needs to be set on" +
-			"the Flapping state in the animation controller")]
+		          "the Flapping state in the animation controller")]
 		public bool useSMB = false;
 		private FlappingSMB flappingSMB;
+		private int stateHash;
+		[Tooltip("Animation Controller state name for Flapping Animation")]
+		public string flappingState = "";
+
+
 
 		[Header("Sound")]
 		public AudioClip[] sounds;
@@ -56,13 +63,15 @@ namespace UnityFreeFlight {
 			flightPhysics = (FlightPhysics)customPhysics;
 			base.init (go);
 			soundManager.init (go);
-			name = "Flapping Mechanic";
-			setupAnimation (flappingParameter, ref paramHash);
-			stateHash = Animator.StringToHash (flappingState);
-			if (!animator.HasState (0, stateHash)) {
-				Debug.LogWarning ("Flapping: Animation Controller doesn't appear to have the '" + flappingState + "' state.");
+			setupAnimation (flappingTrigger, ref paramHash);
+			if (flappingState != null && !flappingState.Equals("")) {
+				stateHash = Animator.StringToHash (flappingState);
+				if (!animator.HasState (0, stateHash)) {
+					Debug.LogWarning (string.Format ("Object '{0}' Component 'Free Flight' Mechanic '{1}' does not appear to have the '{2}' animation State Name.", 
+					                                 gameObject.name, name, flappingState));				
+				}
+				setupSMB (ref useSMB, ref flappingSMB);
 			}
-			setupSMB (ref useSMB, ref flappingSMB);
 
 		}
 
@@ -89,7 +98,8 @@ namespace UnityFreeFlight {
 		public override void FFFixedUpdate () {
 
 			if (animator.GetCurrentAnimatorStateInfo(0).fullPathHash != stateHash && Input.GetButton (button)) {
-				animator.SetTrigger (paramHash);
+				if (paramHash != 0)
+					animator.SetTrigger (paramHash);
 				if (!useSMB)
 					flap ();
 			}
@@ -144,6 +154,12 @@ namespace UnityFreeFlight {
 			return rigidbody.rotation * Quaternion.AngleAxis (angle, Vector3.left) * Vector3.forward * strength;
 		}
 
+		/// <summary>
+		/// Setup State machine behaviour for flapping, so flaps are based on the animation timer rather than a stupid timer. 
+		/// Failure can happen if there is no State Machine Behaviour setup in the Game Object's Animation Controller. 
+		/// </summary>
+		/// <param name="useSMBStatus">If true, will attempt to enable. False, disable. Set to false on Fail.</param>
+		/// <param name="fsmb">Attempt to setup on useSMB true, set to null on useSMB false or fail.</param>
 		private void setupSMB(ref bool useSMBStatus, ref FlappingSMB fsmb) {
 			if (useSMBStatus) {
 				fsmb = animator.GetBehaviour<FlappingSMB> ();

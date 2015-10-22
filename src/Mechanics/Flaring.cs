@@ -19,8 +19,9 @@ namespace UnityFreeFlight {
 		[Header("Inputs")]
 		public string button = "WingFlare";
 
-		[Header("Animation")]
-		public string flaringAnimation = "Flaring";
+		[Header("Animation Parameters")]
+		[Tooltip("Animation Controller bool for flaring animation")]
+		public string flaringBool = "";
 		private int flaringHash;
 
 		[Header("Sound")]
@@ -42,7 +43,7 @@ namespace UnityFreeFlight {
 			flightPhysics = (FlightPhysics)customPhysics;
 			base.init (go);
 			name = "Flaring Mechanic";
-			setupAnimation (flaringAnimation, ref flaringHash);
+			setupAnimation (flaringBool, ref flaringHash);
 		}
 		
 		public override bool FFInputSatisfied () {
